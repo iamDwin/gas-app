@@ -1,29 +1,54 @@
-import { Component, Input, Output, EventEmitter, HostListener } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { NgxDatatableModule } from '@swimlane/ngx-datatable';
-import { FormsModule } from '@angular/forms';
+import {
+  Component,
+  Input,
+  Output,
+  EventEmitter,
+  HostListener,
+} from "@angular/core";
+import { CommonModule } from "@angular/common";
+import { NgxDatatableModule } from "@swimlane/ngx-datatable";
+import { FormsModule } from "@angular/forms";
 
 @Component({
-  selector: 'app-data-table',
+  selector: "app-data-table",
   standalone: true,
   imports: [CommonModule, NgxDatatableModule, FormsModule],
   template: `
     <div class="bg-white rounded-lg shadow-sm border border-gray-200">
       <!-- Loading Overlay -->
-      <div *ngIf="loading" class="absolute inset-0 bg-white bg-opacity-75 z-50 flex items-center justify-center">
+      <div
+        *ngIf="loading"
+        class="absolute inset-0 bg-white bg-opacity-75 z-50 flex items-center justify-center"
+      >
         <div class="text-center">
-          <div class="w-12 h-12 border-4 border-primary border-t-transparent rounded-full animate-spin"></div>
+          <div
+            class="w-12 h-12 border-4 border-primary border-t-transparent rounded-full animate-spin"
+          ></div>
           <p class="mt-4 text-gray-600">{{ loadingMessage }}</p>
         </div>
       </div>
 
       <!-- Table Header -->
-      <div class="p-4 border-b border-gray-200 flex justify-between items-center">
+      <div
+        class="p-4 border-b border-gray-200 flex justify-between items-center"
+      >
         <div class="flex items-center">
           <div class="relative">
-            <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-              <svg class="h-5 w-5 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+            <div
+              class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none"
+            >
+              <svg
+                class="h-5 w-5 text-gray-400"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+                />
               </svg>
             </div>
             <input
@@ -45,7 +70,7 @@ import { FormsModule } from '@angular/forms';
         <table class="min-w-full divide-y divide-gray-200">
           <thead>
             <tr>
-              <th 
+              <th
                 *ngFor="let col of columns"
                 [class.cursor-pointer]="col.sortable !== false"
                 (click)="col.sortable !== false && sort(col.prop)"
@@ -53,8 +78,18 @@ import { FormsModule } from '@angular/forms';
               >
                 {{ col.name }}
                 <span *ngIf="col.sortable !== false" class="ml-2 inline-block">
-                  <svg class="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 9l4-4 4 4m0 6l-4 4-4-4"/>
+                  <svg
+                    class="w-3 h-3"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="M8 9l4-4 4 4m0 6l-4 4-4-4"
+                    />
                   </svg>
                 </span>
               </th>
@@ -62,11 +97,13 @@ import { FormsModule } from '@angular/forms';
           </thead>
           <tbody class="bg-white divide-y divide-gray-200">
             <tr *ngFor="let row of paginatedRows" class="hover:bg-gray-50">
-              <td 
-                *ngFor="let col of columns" 
+              <td
+                *ngFor="let col of columns"
                 class="px-6 py-4 whitespace-nowrap text-sm text-gray-900"
               >
-                <ng-container *ngIf="col.prop !== 'actions'; else actionsTemplate">
+                <ng-container
+                  *ngIf="col.prop !== 'actions'; else actionsTemplate"
+                >
                   {{ row[col.prop] }}
                 </ng-container>
                 <ng-template #actionsTemplate>
@@ -75,13 +112,23 @@ import { FormsModule } from '@angular/forms';
                       (click)="toggleActionMenu($event, row)"
                       class="inline-flex items-center justify-center w-8 h-8 text-gray-400 hover:text-gray-500 focus:outline-none rounded-full hover:bg-gray-100"
                     >
-                      <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 5v.01M12 12v.01M12 19v.01M12 6a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2z"/>
+                      <svg
+                        class="w-5 h-5"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke="currentColor"
+                      >
+                        <path
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                          stroke-width="2"
+                          d="M12 5v.01M12 12v.01M12 19v.01M12 6a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2z"
+                        />
                       </svg>
                     </button>
 
                     <!-- Dropdown Menu -->
-                    <div 
+                    <div
                       *ngIf="activeRow === row"
                       class="fixed mt-2 w-48 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 divide-y divide-gray-100 focus:outline-none z-[100]"
                       [style.top]="dropdownTop + 'px'"
@@ -94,7 +141,9 @@ import { FormsModule } from '@angular/forms';
                         <button
                           *ngFor="let action of actions"
                           (click)="onActionClick(action, row)"
-                          [disabled]="action.isDisabled && action.isDisabled(row)"
+                          [disabled]="
+                            action.isDisabled && action.isDisabled(row)
+                          "
                           class="text-sm w-full text-left px-4 py-2 hover:bg-gray-100 disabled:opacity-50 disabled:cursor-not-allowed flex items-center"
                           [class.text-gray-700]="action.type === 'primary'"
                           [class.text-red-600]="action.type === 'danger'"
@@ -117,10 +166,24 @@ import { FormsModule } from '@angular/forms';
       <!-- Pagination -->
       <div class="bg-white px-4 py-3 border-t border-gray-200 sm:px-6">
         <div class="flex items-center justify-between">
-          <div class="flex items-center">
-            <span class="text-sm text-gray-700">
-              Showing {{ startIndex + 1 }} to {{ Math.min(endIndex, filteredRows.length) }} of {{ filteredRows.length }} entries
-            </span>
+          <span class="text-sm text-gray-600 ml-4">
+            Showing {{ startIndex + 1 }} to
+            {{ Math.min(endIndex, filteredRows.length) }} of
+            {{ filteredRows.length }} entries
+          </span>
+
+          <div class="flex items-center space-x-2">
+            <span class="text-sm text-gray-600">Show</span>
+            <select
+              [(ngModel)]="pageSize"
+              (ngModelChange)="onPageSizeChange($event)"
+              class="h-8 px-2 rounded-md border border-gray-200 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent text-sm"
+            >
+              <option *ngFor="let size of pageSizeOptions" [value]="size">
+                {{ size }}
+              </option>
+            </select>
+            <span class="text-sm text-gray-600">entries</span>
           </div>
           <div class="flex items-center space-x-2">
             <button
@@ -141,34 +204,35 @@ import { FormsModule } from '@angular/forms';
         </div>
       </div>
     </div>
-  `
+  `,
 })
 export class DataTableComponent {
   @Input() rows: any[] = [];
   @Input() columns: any[] = [];
-  @Input() defaultSort: string = 'id';
+  @Input() defaultSort: string = "id";
   @Input() actions: TableAction[] = [];
-  @Input() pageSize: number = 8;
   @Input() loading = false;
-  @Input() loadingMessage = 'Loading...';
+  @Input() loadingMessage = "Loading...";
 
   @Output() search = new EventEmitter<string>();
-  @Output() actionClick = new EventEmitter<{action: TableAction, row: any}>();
+  @Output() actionClick = new EventEmitter<{ action: TableAction; row: any }>();
 
-  searchTerm: string = '';
+  searchTerm: string = "";
   filteredRows: any[] = [];
   activeRow: any = null;
-  sortColumn: string = '';
-  sortDirection: 'asc' | 'desc' = 'asc';
+  sortColumn: string = "";
+  sortDirection: "asc" | "desc" = "asc";
   currentPage: number = 1;
+  pageSize: number = 5;
+  pageSizeOptions: number[] = [5, 10, 15, 20, 50, 100];
   dropdownTop: number = 0;
   dropdownLeft: number = 0;
   Math = Math;
 
-  @HostListener('document:click', ['$event'])
+  @HostListener("document:click", ["$event"])
   onDocumentClick(event: MouseEvent) {
     const target = event.target as Element;
-    if (!target?.closest('.relative')) {
+    if (!target?.closest(".relative")) {
       this.activeRow = null;
     }
   }
@@ -203,15 +267,20 @@ export class DataTableComponent {
     }
   }
 
+  onPageSizeChange(newSize: number) {
+    this.pageSize = newSize;
+    this.currentPage = 1; // Reset to first page when changing page size
+  }
+
   toggleActionMenu(event: Event, row: any) {
     event.stopPropagation();
-    
+
     if (this.activeRow === row) {
       this.activeRow = null;
       return;
     }
 
-    const button = (event.target as Element).closest('button');
+    const button = (event.target as Element).closest("button");
     if (button) {
       const rect = button.getBoundingClientRect();
       this.dropdownTop = rect.bottom + window.scrollY;
@@ -250,10 +319,10 @@ export class DataTableComponent {
 
   sort(column: string) {
     if (this.sortColumn === column) {
-      this.sortDirection = this.sortDirection === 'asc' ? 'desc' : 'asc';
+      this.sortDirection = this.sortDirection === "asc" ? "desc" : "asc";
     } else {
       this.sortColumn = column;
-      this.sortDirection = 'asc';
+      this.sortDirection = "asc";
     }
 
     this.filteredRows.sort((a, b) => {
@@ -265,7 +334,7 @@ export class DataTableComponent {
       if (bVal === null) return -1;
 
       const comparison = aVal < bVal ? -1 : 1;
-      return this.sortDirection === 'asc' ? comparison : -comparison;
+      return this.sortDirection === "asc" ? comparison : -comparison;
     });
   }
 
@@ -276,8 +345,8 @@ export class DataTableComponent {
     }
 
     const searchStr = this.searchTerm.toLowerCase();
-    this.filteredRows = this.rows.filter(row => {
-      return Object.keys(row).some(key => {
+    this.filteredRows = this.rows.filter((row) => {
+      return Object.keys(row).some((key) => {
         const value = row[key];
         if (value !== null && value !== undefined) {
           return value.toString().toLowerCase().includes(searchStr);
@@ -290,6 +359,6 @@ export class DataTableComponent {
 
 export interface TableAction {
   label: string;
-  type: 'primary' | 'danger' | 'success' | 'warning' | 'default';
+  type: "primary" | "danger" | "success" | "warning" | "default";
   isDisabled?: (row: any) => boolean;
 }
