@@ -328,7 +328,7 @@ import { OrganizationService } from "../../features/organizations/organization.s
           </div>
         </header>
 
-        <main class="flex-1 p-6 mt-16">
+        <main class="flex-1 mt-16">
           <router-outlet></router-outlet>
         </main>
       </div>

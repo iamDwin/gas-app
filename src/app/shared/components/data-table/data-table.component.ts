@@ -14,7 +14,7 @@ import { FormsModule } from "@angular/forms";
   standalone: true,
   imports: [CommonModule, NgxDatatableModule, FormsModule],
   template: `
-    <div class="bg-white rounded-lg shadow-sm border border-gray-200">
+    <div class="bg-white rounded-xl shadow-sm border border-gray-200">
       <!-- Loading Overlay -->
       <div
         *ngIf="loading"
@@ -34,23 +34,6 @@ import { FormsModule } from "@angular/forms";
       >
         <div class="flex items-center">
           <div class="relative">
-            <div
-              class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none"
-            >
-              <svg
-                class="h-5 w-5 text-gray-400"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-              >
-                <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  stroke-width="2"
-                  d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
-                />
-              </svg>
-            </div>
             <input
               type="text"
               [(ngModel)]="searchTerm"
@@ -164,7 +147,9 @@ import { FormsModule } from "@angular/forms";
       </div>
 
       <!-- Pagination -->
-      <div class="bg-white px-4 py-3 border-t border-gray-200 sm:px-6">
+      <div
+        class="bg-white px-4 py-3 border-t rounded-b-xl border-gray-200 sm:px-6"
+      >
         <div class="flex items-center justify-between">
           <span class="text-sm text-gray-600 ml-4">
             Showing {{ startIndex + 1 }} to
