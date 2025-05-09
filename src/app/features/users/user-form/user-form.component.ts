@@ -1,13 +1,24 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { User } from '../user.model';
-import { DrawerComponent } from '../../../shared/components/drawer/drawer.component';
+import { Component, EventEmitter, Input, Output } from "@angular/core";
+import { CommonModule } from "@angular/common";
+import {
+  FormBuilder,
+  FormGroup,
+  ReactiveFormsModule,
+  Validators,
+} from "@angular/forms";
+import { User } from "../user.model";
+import { DrawerComponent } from "../../../shared/components/drawer/drawer.component";
+import { ButtonComponent } from "../../../shared/components/button/button.component";
 
 @Component({
-  selector: 'app-user-form',
+  selector: "app-user-form",
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, DrawerComponent],
+  imports: [
+    CommonModule,
+    ReactiveFormsModule,
+    DrawerComponent,
+    ButtonComponent,
+  ],
   template: `
     <app-drawer
       [isOpen]="true"
@@ -18,25 +29,25 @@ import { DrawerComponent } from '../../../shared/components/drawer/drawer.compon
         <form [formGroup]="form" class="space-y-4">
           <div>
             <label class="block text-sm font-medium text-gray-700">Name</label>
-            <input 
-              type="text" 
+            <input
+              type="text"
               formControlName="name"
               class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primary focus:ring focus:ring-primary focus:ring-opacity-50"
-            >
+            />
           </div>
 
           <div>
             <label class="block text-sm font-medium text-gray-700">Email</label>
-            <input 
-              type="email" 
+            <input
+              type="email"
               formControlName="email"
               class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primary focus:ring focus:ring-primary focus:ring-opacity-50"
-            >
+            />
           </div>
 
           <div>
             <label class="block text-sm font-medium text-gray-700">Role</label>
-            <select 
+            <select
               formControlName="role"
               class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primary focus:ring focus:ring-primary focus:ring-opacity-50"
             >
@@ -47,51 +58,48 @@ import { DrawerComponent } from '../../../shared/components/drawer/drawer.compon
           </div>
 
           <div>
-            <label class="block text-sm font-medium text-gray-700">Organization ID</label>
-            <input 
-              type="text" 
+            <label class="block text-sm font-medium text-gray-700"
+              >Organization ID</label
+            >
+            <input
+              type="text"
               formControlName="organizationId"
               class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primary focus:ring focus:ring-primary focus:ring-opacity-50"
-            >
+            />
           </div>
         </form>
       </div>
 
       <div drawerFooter>
         <div class="flex justify-end space-x-3">
-          <button 
-            type="button"
-            (click)="onCancel.emit()"
-            class="px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 hover:bg-gray-50"
-          >
+          <app-button variant="default" (click)="onCancel.emit()">
             Cancel
-          </button>
-          <button 
-            type="submit"
+          </app-button>
+          <app-button
+            variant="filled"
             [disabled]="!form.valid"
             (click)="onSubmit()"
-            class="px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-primary hover:bg-primary/90 disabled:opacity-50"
           >
-            {{ user ? 'Update' : 'Create' }}
-          </button>
+            {{ user ? "Update User" : "Create User" }}
+          </app-button>
         </div>
       </div>
     </app-drawer>
-  `
+  `,
 })
 export class UserFormComponent {
   @Input() user?: User;
-  @Output() save = new EventEmitter<Omit<User, 'id' | 'createdAt'>>();
+  @Output() save = new EventEmitter<Omit<User, "id" | "createdAt">>();
   @Output() onCancel = new EventEmitter<void>();
 
   form: FormGroup;
 
   constructor(private fb: FormBuilder) {
     this.form = this.fb.group({
-      name: ['', Validators.required],
-      email: ['', [Validators.required, Validators.email]],
-      role: ['viewer', Validators.required],
-      organizationId: ['', Validators.required]
+      name: ["", Validators.required],
+      email: ["", [Validators.required, Validators.email]],
+      role: ["viewer", Validators.required],
+      organizationId: ["", Validators.required],
     });
   }
 

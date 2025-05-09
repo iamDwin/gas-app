@@ -1,17 +1,25 @@
-import { Component, OnInit } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { User } from './user.model';
-import { UserService } from './user.service';
-import { UserFormComponent } from './user-form/user-form.component';
-import { DataTableComponent, TableAction } from '../../shared/components/data-table/data-table.component';
-import { BreadcrumbService } from '../../shared/services/breadcrumb.service';
-import { NotificationService } from '../../shared/services/notification.service';
-import { ButtonComponent } from '../../shared/components/button/button.component';
+import { Component, OnInit } from "@angular/core";
+import { CommonModule } from "@angular/common";
+import { User } from "./user.model";
+import { UserService } from "./user.service";
+import { UserFormComponent } from "./user-form/user-form.component";
+import {
+  DataTableComponent,
+  TableAction,
+} from "../../shared/components/data-table/data-table.component";
+import { BreadcrumbService } from "../../shared/services/breadcrumb.service";
+import { NotificationService } from "../../shared/services/notification.service";
+import { ButtonComponent } from "../../shared/components/button/button.component";
 
 @Component({
-  selector: 'app-users',
+  selector: "app-users",
   standalone: true,
-  imports: [CommonModule, UserFormComponent, DataTableComponent, ButtonComponent],
+  imports: [
+    CommonModule,
+    UserFormComponent,
+    DataTableComponent,
+    ButtonComponent,
+  ],
   template: `
     <div class="p-4">
       <app-data-table
@@ -24,18 +32,29 @@ import { ButtonComponent } from '../../shared/components/button/button.component
         (actionClick)="onActionClick($event)"
       >
         <div tableActions>
-          <app-button 
-            variant="filled"
-            (click)="openDrawer()"
-            [iconLeft]="'<svg class=&quot;w-5 h-5&quot; fill=&quot;none&quot; viewBox=&quot;0 0 24 24&quot; stroke=&quot;currentColor&quot;><path stroke-linecap=&quot;round&quot; stroke-linejoin=&quot;round&quot; stroke-width=&quot;2&quot; d=&quot;M12 6v6m0 0v6m0-6h6m-6 0H6&quot;/></svg>'"
-          >
+          <app-button variant="semiFilled" (click)="openDrawer()">
             Add User
+            <svg
+              width="18"
+              class="ml-1"
+              height="18"
+              viewBox="0 0 20 20"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M7.5 9.16667L10 11.6667L18.3333 3.33333M13.3333 2.5H6.5C5.09987 2.5 4.3998 2.5 3.86502 2.77248C3.39462 3.01217 3.01217 3.39462 2.77248 3.86502C2.5 4.3998 2.5 5.09987 2.5 6.5V13.5C2.5 14.9001 2.5 15.6002 2.77248 16.135C3.01217 16.6054 3.39462 16.9878 3.86502 17.2275C4.3998 17.5 5.09987 17.5 6.5 17.5H13.5C14.9001 17.5 15.6002 17.5 16.135 17.2275C16.6054 16.9878 16.9878 16.6054 17.2275 16.135C17.5 15.6002 17.5 14.9001 17.5 13.5V10"
+                stroke="currentColor"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              />
+            </svg>
           </app-button>
         </div>
       </app-data-table>
 
       <!-- Drawer -->
-      <div 
+      <div
         class="drawer"
         [class.drawer-open]="isDrawerOpen"
         [class.drawer-closed]="!isDrawerOpen"
@@ -49,42 +68,42 @@ import { ButtonComponent } from '../../shared/components/button/button.component
       </div>
 
       <!-- Backdrop -->
-      <div 
+      <div
         *ngIf="isDrawerOpen"
         class="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity z-50"
         (click)="closeDrawer()"
       ></div>
     </div>
-  `
+  `,
 })
 export class UsersComponent implements OnInit {
   users: User[] = [];
   isDrawerOpen = false;
   selectedUser?: User;
   isLoading = false;
-  loadingMessage = 'Loading users...';
+  loadingMessage = "Loading users...";
 
   columns = [
-    { prop: 'name', name: 'Name' },
-    { prop: 'email', name: 'Email' },
-    { prop: 'role', name: 'Role' },
-    { prop: 'organizationId', name: 'Organization ID' },
-    { prop: 'actions', name: 'Actions', sortable: false }
+    { prop: "name", name: "Name" },
+    { prop: "email", name: "Email" },
+    { prop: "role", name: "Role" },
+    { prop: "organizationId", name: "Organization ID" },
+    { prop: "actions", name: "Actions", sortable: false },
   ];
 
   actions: TableAction[] = [
-    { 
-      label: 'View Details',
-      type: 'primary'
+    {
+      label: "View Details",
+      type: "primary",
     },
-    { 
-      label: 'Edit',
-      type: 'primary'
+    {
+      label: "Edit",
+      type: "primary",
     },
-    { 
-      label: 'Delete',
-      type: 'danger'
-    }
+    {
+      label: "Delete",
+      type: "danger",
+    },
   ];
 
   constructor(
@@ -94,9 +113,7 @@ export class UsersComponent implements OnInit {
   ) {}
 
   ngOnInit() {
-    this.breadcrumbService.setBreadcrumbs([
-      { label: 'Users', link: '/users' }
-    ]);
+    this.breadcrumbService.setBreadcrumbs([{ label: "Users", link: "/users" }]);
 
     this.loadUsers();
   }
@@ -104,22 +121,22 @@ export class UsersComponent implements OnInit {
   loadUsers() {
     this.isLoading = true;
     setTimeout(() => {
-      this.userService.getUsers().subscribe(users => {
+      this.userService.getUsers().subscribe((users) => {
         this.users = users;
         this.isLoading = false;
       });
     }, 3000); // Simulate 3 second loading delay
   }
 
-  onActionClick(event: {action: TableAction, row: User}) {
+  onActionClick(event: { action: TableAction; row: User }) {
     switch (event.action.label) {
-      case 'View Details':
+      case "View Details":
         // Handle view details
         break;
-      case 'Edit':
+      case "Edit":
         this.editUser(event.row);
         break;
-      case 'Delete':
+      case "Delete":
         this.deleteUser(event.row.id);
         break;
     }
@@ -140,46 +157,48 @@ export class UsersComponent implements OnInit {
     this.isDrawerOpen = true;
   }
 
-  saveUser(userData: Omit<User, 'id'>) {
+  saveUser(userData: Omit<User, "id">) {
     this.isLoading = true;
-    this.loadingMessage = this.selectedUser ? 'Updating user...' : 'Creating user...';
-    
+    this.loadingMessage = this.selectedUser
+      ? "Updating user..."
+      : "Creating user...";
+
     setTimeout(() => {
       if (this.selectedUser) {
         this.userService.updateUser({
           ...userData,
-          id: this.selectedUser.id
+          id: this.selectedUser.id,
         });
         this.notificationService.addNotification({
-          title: 'User Updated',
+          title: "User Updated",
           message: `${userData.name} has been updated successfully`,
-          type: 'success'
+          type: "success",
         });
       } else {
         this.userService.addUser(userData);
         this.notificationService.addNotification({
-          title: 'User Created',
+          title: "User Created",
           message: `${userData.name} has been created successfully`,
-          type: 'success'
+          type: "success",
         });
       }
-      
+
       this.isLoading = false;
       this.closeDrawer();
     }, 2000); // Simulate 2 second save delay
   }
 
   deleteUser(id: string) {
-    if (confirm('Are you sure you want to delete this user?')) {
+    if (confirm("Are you sure you want to delete this user?")) {
       this.isLoading = true;
-      this.loadingMessage = 'Deleting user...';
-      
+      this.loadingMessage = "Deleting user...";
+
       setTimeout(() => {
         this.userService.deleteUser(id);
         this.notificationService.addNotification({
-          title: 'User Deleted',
-          message: 'The user has been deleted successfully',
-          type: 'success'
+          title: "User Deleted",
+          message: "The user has been deleted successfully",
+          type: "success",
         });
         this.isLoading = false;
       }, 2000); // Simulate 2 second delete delay

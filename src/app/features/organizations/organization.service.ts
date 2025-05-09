@@ -1,67 +1,71 @@
-import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Observable, map } from 'rxjs';
-import { Organization, CreateOrganizationRequest, OrganizationsResponse, PendingOrganizationsResponse } from './organization.model';
-import { environment } from '../../../environments/environment';
-import { AuthService } from '../../core/auth/auth.service';
+import { Injectable } from "@angular/core";
+import { HttpClient, HttpHeaders } from "@angular/common/http";
+import { Observable, map } from "rxjs";
+import {
+  Organization,
+  CreateOrganizationRequest,
+  OrganizationsResponse,
+  PendingOrganizationsResponse,
+} from "./organization.model";
+import { environment } from "../../../environments/environment";
+import { AuthService } from "../../core/auth/auth.service";
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: "root",
 })
 export class OrganizationService {
   private apiUrl = environment.apiUrl;
-
-  constructor(
-    private http: HttpClient,
-    private authService: AuthService
-  ) {}
+  user = this.authService.getCurrentUser();
+  constructor(private http: HttpClient, private authService: AuthService) {}
 
   private getHeaders(): HttpHeaders {
     const token = this.authService.getAuthToken();
+
     return new HttpHeaders({
-      'Content-Type': 'application/json',
-      'Authorization': `Bearer ${token}`
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
     });
   }
 
   getOrganizations(): Observable<Organization[]> {
     const user = this.authService.getCurrentUser();
     if (!user) {
-      return new Observable(subscriber => subscriber.next([]));
+      return new Observable((subscriber) => subscriber.next([]));
     }
 
-    return this.http.get<OrganizationsResponse>(
-      `${this.apiUrl}/admin/institution/api/v1/get_all_institutions/${user.id}`,
-      { headers: this.getHeaders() }
-    ).pipe(
-      map(response => response.institutionList || [])
-    );
+    return this.http
+      .get<OrganizationsResponse>(
+        `${this.apiUrl}/admin/institution/api/v1/get_all_institutions/${user.name}`,
+        { headers: this.getHeaders() }
+      )
+      .pipe(map((response) => response.institutionList || []));
   }
 
   getPendingOrganizations(): Observable<Organization[]> {
-    const user = this.authService.getCurrentUser();
-    if (!user) {
-      return new Observable(subscriber => subscriber.next([]));
+    if (!this.user) {
+      return new Observable((subscriber) => subscriber.next([]));
     }
 
-    return this.http.get<any>(
-      `${this.apiUrl}/admin/institution/api/v1/get_pending_auths/${user.email}`,
-      { headers: this.getHeaders() }
-    ).pipe(
-      map(response => {
-        console.log('Pending organizations response:', response);
-        // The response is an array directly, not wrapped in institutionList
-        return Array.isArray(response) ? response : [];
-      })
-    );
+    return this.http
+      .get<any>(
+        `${this.apiUrl}/admin/institution/api/v1/get_pending_auths/${this.user.name}`,
+        { headers: this.getHeaders() }
+      )
+      .pipe(
+        map((response) => {
+          return Array.isArray(response) ? response : [];
+        })
+      );
   }
 
-  addOrganization(organization: CreateOrganizationRequest): Observable<Organization> {
+  addOrganization(
+    organization: CreateOrganizationRequest
+  ): Observable<Organization> {
     const user = this.authService.getCurrentUser();
     const payload = {
       ...organization,
-      type: organization.type === 'Upstream' ? 'U' : 'D',
-      createdBy: user?.email || ''
+      type: organization.type === "Upstream" ? "U" : "D",
+      createdBy: user?.email || "",
     };
 
     return this.http.post<Organization>(
@@ -74,7 +78,7 @@ export class OrganizationService {
   updateOrganization(organization: Organization): Observable<Organization> {
     const payload = {
       ...organization,
-      type: organization.type === 'Upstream' ? 'U' : 'D'
+      type: organization.type === "Upstream" ? "U" : "D",
     };
 
     return this.http.patch<Organization>(
@@ -84,26 +88,38 @@ export class OrganizationService {
     );
   }
 
-  approveOrganization(id: string): Observable<void> {
-    return this.http.post<void>(
-      `${this.apiUrl}/admin/institution/api/v1/approve_institution/${id}`,
-      {},
+  approveOrganization(id: string): Observable<any> {
+    let request = {
+      id: id,
+      authorizedBy: this.user?.name,
+      authorizedComment: null,
+      authStatus: 0,
+    };
+    return this.http.post<any>(
+      `${this.apiUrl}/admin/institution/api/v1/authorize_request`,
+      { ...request },
       { headers: this.getHeaders() }
     );
   }
 
-  rejectOrganization(id: string, reason: string): Observable<void> {
-    return this.http.post<void>(
-      `${this.apiUrl}/admin/institution/api/v1/reject_institution/${id}`,
-      { reason },
+  rejectOrganization(id: string, reason?: string): Observable<any> {
+    let request = {
+      id: id, //id of request
+      authorizedBy: this.user?.name,
+      authorizedComment: null,
+      authStatus: 1,
+    };
+    return this.http.post<any>(
+      `${this.apiUrl}/admin/institution/api/v1/authorize_request`,
+      { ...request },
       { headers: this.getHeaders() }
     );
   }
 
-  deleteOrganization(id: string): Observable<void> {
-    return this.http.delete<void>(
-      `${this.apiUrl}/admin/institution/api/v1/delete_institution/${id}`,
-      { headers: this.getHeaders() }
+  deleteOrganization(row: any): Observable<any> {
+    return this.http.delete<any>(
+      `${this.apiUrl}/admin/institution/api/v1/init_delete_institution`,
+      { headers: this.getHeaders(), body: row }
     );
   }
 }

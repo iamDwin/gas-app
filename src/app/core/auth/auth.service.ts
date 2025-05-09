@@ -11,17 +11,40 @@ export interface User {
   email: string;
   role: "admin" | "org_admin" | "org_user" | "viewer";
   organizationId: string | null;
+  organizationName: string | null;
+  organizationType: string | null;
   name: string;
 }
 
 export interface AuthResponse {
   errorCode: string;
   errorMessage: string;
-  roleName: string | null;
+  id: number;
+  userName: string;
+  fullName: string;
+  email: string;
+  roleId: string;
+  roleName: string;
+  institutionId: string;
+  institutionName: string;
+  createdBy: string;
+  institutionType: string;
+  lastLogin: string; // ISO date string
+  passwordChangeDate: string; // ISO date string
+  changePassword: boolean;
+  createdAt: string; // ISO date string
+  type: string;
+  initiatorComment: string;
+  locked: boolean;
+  active: boolean;
   roleWeight: number;
-  institutionName: string | null;
-  token: string | null;
-  services: any | null;
+  token: string;
+  services: {
+    id: number;
+    name: string;
+    weight: number;
+    weightList: string;
+  }[];
 }
 
 @Injectable({
@@ -81,11 +104,13 @@ export class AuthService {
           if (response.errorCode === "0" && response.token) {
             // Successful login
             const user: User = {
-              id: "1", // We'll need to get this from the backend
-              email: username,
+              id: response.id.toString(), // We'll need to get this from the backend
+              email: response.email,
               role: this.mapRoleFromBackend(response.roleName),
-              organizationId: null, // We'll need to get this from the backend
-              name: username, // We'll need to get the actual name from the backend
+              organizationId: response.institutionId, // We'll need to get this from the backend
+              organizationName: response.institutionName, // We'll need to get this from the backend
+              organizationType: response.institutionType, // We'll need to get this from the backend
+              name: response.userName, // We'll need to get the actual name from the backend
             };
 
             localStorage.setItem(this.tokenKey, response.token);
@@ -154,11 +179,13 @@ export class AuthService {
           if (response.errorCode === "0" && response.token) {
             // Successful login
             const user: User = {
-              id: "1", // We'll need to get this from the backend
-              email: username,
+              id: response.id.toString(), // We'll need to get this from the backend
+              email: response.email,
               role: this.mapRoleFromBackend(response.roleName),
-              organizationId: null, // We'll need to get this from the backend
-              name: username, // We'll need to get the actual name from the backend
+              organizationId: response.institutionId, // We'll need to get this from the backend
+              organizationName: response.institutionName, // We'll need to get this from the backend
+              organizationType: response.institutionType, // We'll need to get this from the backend
+              name: response.userName, // We'll need to get the actual name from the backend
             };
 
             localStorage.setItem(this.tokenKey, response.token);

@@ -1,10 +1,10 @@
-import { Component, Input, Output, EventEmitter } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { Component, Input, Output, EventEmitter } from "@angular/core";
+import { CommonModule } from "@angular/common";
 
-export type ButtonVariant = 'default' | 'semiFilled' | 'filled';
+export type ButtonVariant = "default" | "semiFilled" | "filled";
 
 @Component({
-  selector: 'app-button',
+  selector: "app-button",
   standalone: true,
   imports: [CommonModule],
   template: `
@@ -15,24 +15,26 @@ export type ButtonVariant = 'default' | 'semiFilled' | 'filled';
       [class]="getButtonClasses()"
     >
       <ng-container *ngIf="loading">
-        <div class="w-5 h-5 border-2 border-t-transparent rounded-full animate-spin mr-2"></div>
+        <div
+          class="w-5 h-5 border-2 border-t-transparent rounded-full animate-spin mr-2"
+        ></div>
       </ng-container>
-      
+
       <ng-container *ngIf="!loading && iconLeft">
         <span class="mr-2" [innerHTML]="iconLeft"></span>
       </ng-container>
-      
+
       <ng-content></ng-content>
-      
+
       <ng-container *ngIf="!loading && iconRight">
         <span class="ml-2" [innerHTML]="iconRight"></span>
       </ng-container>
     </button>
-  `
+  `,
 })
 export class ButtonComponent {
-  @Input() variant: ButtonVariant = 'default';
-  @Input() type: 'button' | 'submit' = 'button';
+  @Input() variant: ButtonVariant = "default";
+  @Input() type: "button" | "submit" = "button";
   @Input() disabled = false;
   @Input() loading = false;
   @Input() iconLeft?: string;
@@ -42,17 +44,24 @@ export class ButtonComponent {
   @Output() onClick = new EventEmitter<MouseEvent>();
 
   getButtonClasses(): string {
-    const baseClasses = 'inline-flex items-center justify-center h-11 px-4 rounded-md text-sm font-medium transition-colors duration-150 focus:outline-none focus:ring-2 focus:ring-offset-2';
-    const widthClass = this.fullWidth ? 'w-full' : '';
-    
+    const baseClasses =
+      "inline-flex w-max items-center h-10 px-3 rounded-xl transition-all text-[14px] font-semibold";
+    const widthClass = this.fullWidth ? "w-full" : "";
+
     const variantClasses = {
-      default: 'border border-gray-300 text-gray-700 bg-white hover:bg-gray-50 focus:ring-primary',
-      semiFilled: 'border border-primary text-primary bg-primary/10 hover:bg-primary/20 focus:ring-primary',
-      filled: 'border border-transparent text-white bg-primary hover:bg-primary/90 focus:ring-primary'
+      default:
+        "border border-transparent hover:!border-[#75E0A7] hover:!bg-[#ECFDF3] active:!bg-[#DCFAE6] active:!border-[#75E0A7]",
+      semiFilled:
+        "border border-[#D5D7DA] bg-gradient-to-b from-white to-[#FAFAFA] shadow-[0px_-1px_2px_rgba(0,0,0,0.05)_inset,0px_1px_2px_rgba(0,0,0,0.05)] hover:border-[#75E0A7] hover:bg-gradient-to-b hover:from-white hover:to-[#ECFDF3] hover:shadow-[0px_-1px_2px_rgba(0,0,0,0.05)_inset,0px_1px_2px_rgba(0,0,0,0.05)] active:border-[#47CD89] active:bg-gradient-to-b active:from-[#DCFAE6] active:to-[#ABEFC6] active:shadow-[0px_-1px_2px_rgba(0,0,0,0.05)_inset,0px_1px_2px_rgba(0,0,0,0.05)]",
+      filled:
+        "border border-[#47CD89] bg-gradient-to-b from-[#DCFAE6] to-[#ABEFC6] shadow-[0px_-1px_2px_rgba(0,0,0,0.05)_inset,0px_1px_2px_rgba(0,0,0,0.05)] hover:border-[#47CD89] hover:bg-gradient-to-b hover:from-[#ABEFC6] hover:to-[#75E0A7] hover:shadow-[0px_-1px_2px_rgba(0,0,0,0.05)_inset,0px_1px_2px_rgba(0,0,0,0.05)] active:border-[#47CD89] active:bg-gradient-to-b active:from-[#75E0A7] active:to-[#47CD89] active:shadow-[0px_20px_0px_0px_rgba(255,255,255,0.05)_inset,0px_-1px_2px_rgba(0,0,0,0.05)_inset,0px_1px_2px_rgba(0,0,0,0.05)]",
     };
 
-    const disabledClass = this.disabled || this.loading ? 'opacity-50 cursor-not-allowed' : '';
+    const disabledClass =
+      this.disabled || this.loading ? "opacity-50 cursor-not-allowed" : "";
 
-    return `${baseClasses} ${variantClasses[this.variant]} ${widthClass} ${disabledClass}`;
+    return `${baseClasses} ${
+      variantClasses[this.variant]
+    } ${widthClass} ${disabledClass}`;
   }
 }

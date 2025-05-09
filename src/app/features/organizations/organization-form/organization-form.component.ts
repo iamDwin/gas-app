@@ -1,17 +1,28 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { Organization, CreateOrganizationRequest } from '../organization.model';
-import { DrawerComponent } from '../../../shared/components/drawer/drawer.component';
+import { Component, EventEmitter, Input, Output } from "@angular/core";
+import { CommonModule } from "@angular/common";
+import {
+  FormBuilder,
+  FormGroup,
+  ReactiveFormsModule,
+  Validators,
+} from "@angular/forms";
+import { Organization, CreateOrganizationRequest } from "../organization.model";
+import { DrawerComponent } from "../../../shared/components/drawer/drawer.component";
+import { ButtonComponent } from "../../../shared/components/button/button.component";
 
 @Component({
-  selector: 'app-organization-form',
+  selector: "app-organization-form",
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, DrawerComponent],
+  imports: [
+    CommonModule,
+    ReactiveFormsModule,
+    DrawerComponent,
+    ButtonComponent,
+  ],
   template: `
     <app-drawer
       [isOpen]="true"
-      [title]="organization ? 'Edit Organization' : 'Add Organization'"
+      [title]="organization ? 'Edit Organization' : 'Add Institution'"
       (close)="onCancel.emit()"
     >
       <div drawerContent>
@@ -20,65 +31,42 @@ import { DrawerComponent } from '../../../shared/components/drawer/drawer.compon
             <label class="block text-sm font-medium text-gray-700">
               Name <span class="text-red-500">*</span>
             </label>
-            <input 
-              type="text" 
-              formControlName="name"
-              class="mt-1"
-            >
+            <input type="text" formControlName="name" class="mt-1" />
           </div>
 
           <div>
             <label class="block text-sm font-medium text-gray-700">
               Email <span class="text-red-500">*</span>
             </label>
-            <input 
-              type="email" 
-              formControlName="email"
-              class="mt-1"
-            >
+            <input type="email" formControlName="email" class="mt-1" />
           </div>
 
           <div>
             <label class="block text-sm font-medium text-gray-700">
               Address
             </label>
-            <input 
-              type="text" 
-              formControlName="address"
-              class="mt-1"
-            >
+            <input type="text" formControlName="address" class="mt-1" />
           </div>
 
           <div>
             <label class="block text-sm font-medium text-gray-700">
               Phone
             </label>
-            <input 
-              type="tel" 
-              formControlName="phone"
-              class="mt-1"
-            >
+            <input type="tel" formControlName="phone" class="mt-1" />
           </div>
 
           <div>
             <label class="block text-sm font-medium text-gray-700">
               DCV <span class="text-red-500">*</span>
             </label>
-            <input 
-              type="number" 
-              formControlName="dcv"
-              class="mt-1"
-            >
+            <input type="number" formControlName="dcv" class="mt-1" />
           </div>
 
           <div>
             <label class="block text-sm font-medium text-gray-700">
               Type <span class="text-red-500">*</span>
             </label>
-            <select 
-              formControlName="type"
-              class="mt-1"
-            >
+            <select formControlName="type" class="mt-1">
               <option value="Upstream">Upstream</option>
               <option value="Downstream">Downstream</option>
             </select>
@@ -88,25 +76,20 @@ import { DrawerComponent } from '../../../shared/components/drawer/drawer.compon
 
       <div drawerFooter>
         <div class="flex justify-end space-x-3">
-          <button 
-            type="button"
-            (click)="onCancel.emit()"
-            class="px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 hover:bg-gray-50"
-          >
+          <app-button variant="default" (click)="onCancel.emit()">
             Cancel
-          </button>
-          <button 
-            type="submit"
+          </app-button>
+          <app-button
+            variant="filled"
             [disabled]="!form.valid"
             (click)="onSubmit()"
-            class="px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-primary hover:bg-primary/90 disabled:opacity-50"
           >
-            {{ organization ? 'Update' : 'Create' }}
-          </button>
+            {{ organization ? "Update" : "Create Institution" }}
+          </app-button>
         </div>
       </div>
     </app-drawer>
-  `
+  `,
 })
 export class OrganizationFormComponent {
   @Input() organization?: Organization;
@@ -117,12 +100,12 @@ export class OrganizationFormComponent {
 
   constructor(private fb: FormBuilder) {
     this.form = this.fb.group({
-      name: ['', Validators.required],
-      email: ['', [Validators.required, Validators.email]],
-      address: [''],
-      phone: [''],
+      name: ["", Validators.required],
+      email: ["", [Validators.required, Validators.email]],
+      address: [""],
+      phone: [""],
       dcv: [0, [Validators.required, Validators.min(0)]],
-      type: ['Upstream', Validators.required]
+      type: ["Upstream", Validators.required],
     });
   }
 

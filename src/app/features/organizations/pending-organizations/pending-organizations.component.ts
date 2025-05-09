@@ -9,6 +9,7 @@ import {
 import { BreadcrumbService } from "../../../shared/services/breadcrumb.service";
 import { NotificationService } from "../../../shared/services/notification.service";
 import { LoadingService } from "../../../core/services/loading.service";
+import { ToastService } from "../../../shared/services/toast.service";
 
 @Component({
   selector: "app-pending-organizations",
@@ -45,6 +46,7 @@ export class PendingOrganizationsComponent implements OnInit {
       name: "Type",
       transform: (value: string) => (value === "U" ? "Upstream" : "Downstream"),
     },
+    { prop: "action", name: "Request" },
     { prop: "initiatedByName", name: "Initiated By" },
     { prop: "actions", name: "Actions", sortable: false },
   ];
@@ -64,7 +66,8 @@ export class PendingOrganizationsComponent implements OnInit {
     private organizationService: OrganizationService,
     private breadcrumbService: BreadcrumbService,
     private notificationService: NotificationService,
-    private loadingService: LoadingService
+    private loadingService: LoadingService,
+    private toastService: ToastService
   ) {}
 
   ngOnInit() {
@@ -73,19 +76,17 @@ export class PendingOrganizationsComponent implements OnInit {
       { label: "Pending Approvals", link: "/organizations/pending" },
     ]);
 
-    // this.loadPendingOrganizations();
+    this.loadPendingOrganizations();
   }
 
   loadPendingOrganizations() {
     this.isLoading = true;
     this.organizationService.getPendingOrganizations().subscribe({
       next: (orgs) => {
-        console.log("Loaded organizations:", orgs);
         this.organizations = orgs;
         this.isLoading = false;
       },
       error: (error) => {
-        console.error("Error loading pending organizations:", error);
         this.notificationService.addNotification({
           title: "Error",
           message: "Failed to load pending organizations",
@@ -110,20 +111,29 @@ export class PendingOrganizationsComponent implements OnInit {
   approveOrganization(org: Organization) {
     this.loadingService.show("Approving organization...");
     this.organizationService.approveOrganization(org.id).subscribe({
-      next: () => {
+      next: (response) => {
         this.notificationService.addNotification({
-          title: "Organization Approved",
+          title: "Organization Action",
           message: `${org.name} has been approved successfully`,
-          type: "success",
+          type: response.errorCode == 0 ? "success" : "error",
+        });
+        this.toastService.show({
+          title: "Organization Action",
+          message: `${response.errorMessage}`,
+          type: response.errorCode == 0 ? "success" : "error",
         });
         this.loadingService.hide();
         this.loadPendingOrganizations();
       },
       error: (error) => {
-        console.error("Error approving organization:", error);
         this.notificationService.addNotification({
           title: "Error",
-          message: "Failed to approve organization",
+          message: "Failed to perform action on organization",
+          type: "error",
+        });
+        this.toastService.show({
+          title: "Error",
+          message: "Failed to perform action on organization",
           type: "error",
         });
         this.loadingService.hide();
@@ -132,29 +142,37 @@ export class PendingOrganizationsComponent implements OnInit {
   }
 
   rejectOrganization(org: Organization) {
-    const reason = prompt("Please provide a reason for rejection:");
-    if (reason) {
-      this.loadingService.show("Rejecting organization...");
-      this.organizationService.rejectOrganization(org.id, reason).subscribe({
-        next: () => {
-          this.notificationService.addNotification({
-            title: "Organization Rejected",
-            message: `${org.name} has been rejected`,
-            type: "success",
-          });
-          this.loadingService.hide();
-          this.loadPendingOrganizations();
-        },
-        error: (error) => {
-          console.error("Error rejecting organization:", error);
-          this.notificationService.addNotification({
-            title: "Error",
-            message: "Failed to reject organization",
-            type: "error",
-          });
-          this.loadingService.hide();
-        },
-      });
-    }
+    // const reason = prompt("Please provide a reason for rejection:");
+    // if (reason) {
+
+    this.loadingService.show("Rejecting organization...");
+    this.organizationService.rejectOrganization(org.id).subscribe({
+      next: (response) => {
+        this.notificationService.addNotification({
+          title: "Organization Action",
+          message: `${org.name} has been rejected`,
+          type: "success",
+        });
+
+        this.toastService.show({
+          title: "Organization Action",
+          message: `${response.errorMessage}`,
+          type: response.errorCode == 0 ? "success" : "error",
+        });
+
+        this.loadingService.hide();
+        this.loadPendingOrganizations();
+      },
+      error: (error) => {
+        console.error("Error rejecting organization:", error);
+        this.notificationService.addNotification({
+          title: "Error",
+          message: "Failed to reject organization",
+          type: "error",
+        });
+        this.loadingService.hide();
+      },
+    });
+    // }
   }
 }
