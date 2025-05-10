@@ -207,6 +207,252 @@ import { OrganizationService } from "../../features/organizations/organization.s
               </div>
             </div>
 
+            <!-- Users Dropdown -->
+            <div class="relative">
+              <button
+                (click)="toggleUsersMenu()"
+                class="w-full flex items-center px-3 py-3 text-sm font-medium text-gray-900 rounded-md hover:bg-primary/10 hover:text-primary text-left group border-l-2 border-transparent"
+                [class.justify-center]="isSidebarCollapsed"
+                [class.bg-primary-10]="isUsersMenuOpen"
+                [class.text-primary]="isUsersMenuOpen"
+                [class.border-primary]="isUsersMenuOpen"
+              >
+                <span
+                  [innerHTML]="
+                    sanitizer.bypassSecurityTrustHtml(menuItems[2].icon)
+                  "
+                  class="flex-shrink-0"
+                ></span>
+                <span
+                  class="ml-3 transition-opacity duration-300 flex-1"
+                  [class.opacity-0]="isSidebarCollapsed"
+                  [class.w-0]="isSidebarCollapsed"
+                  [class.overflow-hidden]="isSidebarCollapsed"
+                >
+                  Users
+                </span>
+                <svg
+                  class="w-5 h-5 transition-transform duration-200"
+                  [class.rotate-180]="isUsersMenuOpen"
+                  [class.opacity-0]="isSidebarCollapsed"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M19 9l-7 7-7-7"
+                  />
+                </svg>
+              </button>
+
+              <!-- Dropdown Menu -->
+              <div
+                *ngIf="isUsersMenuOpen && !isSidebarCollapsed"
+                class="mt-1 ml-8 space-y-1"
+              >
+                <a
+                  routerLink="/users"
+                  routerLinkActive="bg-primary/10 text-primary"
+                  [routerLinkActiveOptions]="{ exact: true }"
+                  class="flex items-center px-3 py-2 text-sm font-medium text-gray-900 rounded-md hover:bg-primary/10 hover:text-primary group"
+                >
+                  All Users
+                </a>
+                <a
+                  routerLink="/users/pending"
+                  routerLinkActive="bg-primary/10 text-primary"
+                  class="flex items-center px-3 py-2 text-sm font-medium text-gray-900 rounded-md hover:bg-primary/10 hover:text-primary group"
+                >
+                  <span>Pending Approvals</span>
+                  <!-- <span
+                    *ngIf="pendingOrganizations > 0"
+                    class="ml-auto bg-red-500 text-white text-xs font-medium px-2 py-0.5 rounded-full"
+                  >
+                    {{ pendingOrganizations }}
+                  </span> -->
+                </a>
+              </div>
+            </div>
+
+            <!-- Declarations Dropdown -->
+            <div class="relative">
+              <button
+                (click)="toggleDeclarationsMenu()"
+                class="w-full flex items-center px-3 py-3 text-sm font-medium text-gray-900 rounded-md hover:bg-primary/10 hover:text-primary text-left group border-l-2 border-transparent"
+                [class.justify-center]="isSidebarCollapsed"
+                [class.bg-primary-10]="isDeclarationsMenuOpen"
+                [class.text-primary]="isDeclarationsMenuOpen"
+                [class.border-primary]="isDeclarationsMenuOpen"
+              >
+                <span
+                  [innerHTML]="
+                    sanitizer.bypassSecurityTrustHtml(menuItems[3].icon)
+                  "
+                  class="flex-shrink-0"
+                ></span>
+                <span
+                  class="ml-3 transition-opacity duration-300 flex-1"
+                  [class.opacity-0]="isSidebarCollapsed"
+                  [class.w-0]="isSidebarCollapsed"
+                  [class.overflow-hidden]="isSidebarCollapsed"
+                >
+                  Declarations
+                </span>
+                <svg
+                  class="w-5 h-5 transition-transform duration-200"
+                  [class.rotate-180]="isDeclarationsMenuOpen"
+                  [class.opacity-0]="isSidebarCollapsed"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M19 9l-7 7-7-7"
+                  />
+                </svg>
+              </button>
+
+              <!-- Dropdown Menu -->
+              <div
+                *ngIf="isDeclarationsMenuOpen && !isSidebarCollapsed"
+                class="mt-1 ml-8 space-y-1"
+              >
+                <a
+                  routerLink="/declarations"
+                  routerLinkActive="bg-primary/10 text-primary"
+                  [routerLinkActiveOptions]="{ exact: true }"
+                  class="flex items-center px-3 py-2 text-sm font-medium text-gray-900 rounded-md hover:bg-primary/10 hover:text-primary group"
+                >
+                  All Declarations
+                </a>
+                <!-- Add more links as needed -->
+              </div>
+            </div>
+
+            <!-- Allocations Dropdown -->
+            <div class="relative">
+              <button
+                (click)="toggleAllocationsMenu()"
+                class="w-full flex items-center px-3 py-3 text-sm font-medium text-gray-900 rounded-md hover:bg-primary/10 hover:text-primary text-left group border-l-2 border-transparent"
+                [class.justify-center]="isSidebarCollapsed"
+                [class.bg-primary-10]="isAllocationsMenuOpen"
+                [class.text-primary]="isAllocationsMenuOpen"
+                [class.border-primary]="isAllocationsMenuOpen"
+              >
+                <span
+                  [innerHTML]="
+                    sanitizer.bypassSecurityTrustHtml(menuItems[4].icon)
+                  "
+                  class="flex-shrink-0"
+                ></span>
+                <span
+                  class="ml-3 transition-opacity duration-300 flex-1"
+                  [class.opacity-0]="isSidebarCollapsed"
+                  [class.w-0]="isSidebarCollapsed"
+                  [class.overflow-hidden]="isSidebarCollapsed"
+                >
+                  Allocations
+                </span>
+                <svg
+                  class="w-5 h-5 transition-transform duration-200"
+                  [class.rotate-180]="isAllocationsMenuOpen"
+                  [class.opacity-0]="isSidebarCollapsed"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M19 9l-7 7-7-7"
+                  />
+                </svg>
+              </button>
+
+              <!-- Dropdown Menu -->
+              <div
+                *ngIf="isAllocationsMenuOpen && !isSidebarCollapsed"
+                class="mt-1 ml-8 space-y-1"
+              >
+                <a
+                  routerLink="/allocations"
+                  routerLinkActive="bg-primary/10 text-primary"
+                  [routerLinkActiveOptions]="{ exact: true }"
+                  class="flex items-center px-3 py-2 text-sm font-medium text-gray-900 rounded-md hover:bg-primary/10 hover:text-primary group"
+                >
+                  All Allocations
+                </a>
+                <!-- Add more links as needed -->
+              </div>
+            </div>
+
+            <!-- Nominations Dropdown -->
+            <div class="relative">
+              <button
+                (click)="toggleNominationsMenu()"
+                class="w-full flex items-center px-3 py-3 text-sm font-medium text-gray-900 rounded-md hover:bg-primary/10 hover:text-primary text-left group border-l-2 border-transparent"
+                [class.justify-center]="isSidebarCollapsed"
+                [class.bg-primary-10]="isNominationsMenuOpen"
+                [class.text-primary]="isNominationsMenuOpen"
+                [class.border-primary]="isNominationsMenuOpen"
+              >
+                <span
+                  [innerHTML]="
+                    sanitizer.bypassSecurityTrustHtml(menuItems[5].icon)
+                  "
+                  class="flex-shrink-0"
+                ></span>
+                <span
+                  class="ml-3 transition-opacity duration-300 flex-1"
+                  [class.opacity-0]="isSidebarCollapsed"
+                  [class.w-0]="isSidebarCollapsed"
+                  [class.overflow-hidden]="isSidebarCollapsed"
+                >
+                  Nominations
+                </span>
+                <svg
+                  class="w-5 h-5 transition-transform duration-200"
+                  [class.rotate-180]="isNominationsMenuOpen"
+                  [class.opacity-0]="isSidebarCollapsed"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M19 9l-7 7-7-7"
+                  />
+                </svg>
+              </button>
+
+              <!-- Dropdown Menu -->
+              <div
+                *ngIf="isNominationsMenuOpen && !isSidebarCollapsed"
+                class="mt-1 ml-8 space-y-1"
+              >
+                <a
+                  routerLink="/nominations"
+                  routerLinkActive="bg-primary/10 text-primary"
+                  [routerLinkActiveOptions]="{ exact: true }"
+                  class="flex items-center px-3 py-2 text-sm font-medium text-gray-900 rounded-md hover:bg-primary/10 hover:text-primary group"
+                >
+                  All Nominations
+                </a>
+                <!-- Add more links as needed -->
+              </div>
+            </div>
+
+            <!-- Repeat similar structure for Declarations, Allocations, and Nominations -->
+
             <!-- Other Menu Items -->
             <ng-container *ngFor="let item of menuItems.slice(2)">
               <a
@@ -365,6 +611,10 @@ export class LayoutComponent implements OnInit {
   isMobileMenuOpen = false;
   isSidebarCollapsed = false;
   isOrganizationsMenuOpen = false;
+  isUsersMenuOpen = false;
+  isDeclarationsMenuOpen = false;
+  isAllocationsMenuOpen = false;
+  isNominationsMenuOpen = false;
   breadcrumbs: Breadcrumb[] = [{ label: "Dashboard", link: "/dashboard" }];
   showLogoutModal = false;
   pendingOrganizations = 0;
@@ -395,6 +645,7 @@ export class LayoutComponent implements OnInit {
       icon: `<svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"/>
       </svg>`,
+      routerLinkActiveOptions: { exact: false },
     },
     {
       path: "/declarations",
@@ -536,6 +787,30 @@ export class LayoutComponent implements OnInit {
   toggleOrganizationsMenu() {
     if (!this.isSidebarCollapsed) {
       this.isOrganizationsMenuOpen = !this.isOrganizationsMenuOpen;
+    }
+  }
+
+  toggleUsersMenu() {
+    if (!this.isSidebarCollapsed) {
+      this.isUsersMenuOpen = !this.isUsersMenuOpen;
+    }
+  }
+
+  toggleDeclarationsMenu() {
+    if (!this.isSidebarCollapsed) {
+      this.isDeclarationsMenuOpen = !this.isDeclarationsMenuOpen;
+    }
+  }
+
+  toggleAllocationsMenu() {
+    if (!this.isSidebarCollapsed) {
+      this.isAllocationsMenuOpen = !this.isAllocationsMenuOpen;
+    }
+  }
+
+  toggleNominationsMenu() {
+    if (!this.isSidebarCollapsed) {
+      this.isNominationsMenuOpen = !this.isNominationsMenuOpen;
     }
   }
 

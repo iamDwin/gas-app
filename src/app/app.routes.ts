@@ -1,88 +1,126 @@
-import { Routes } from '@angular/router';
-import { AuthGuard } from './core/guards/auth.guard';
-import { RoleGuard } from './core/guards/role.guard';
+import { Routes } from "@angular/router";
+import { AuthGuard } from "./core/guards/auth.guard";
+import { RoleGuard } from "./core/guards/role.guard";
 
 export const routes: Routes = [
   {
-    path: 'login',
-    loadComponent: () => import('./features/auth/login/login.component')
-      .then(m => m.LoginComponent)
+    path: "login",
+    loadComponent: () =>
+      import("./features/auth/login/login.component").then(
+        (m) => m.LoginComponent
+      ),
   },
   {
-    path: 'forgot-password',
-    loadComponent: () => import('./features/auth/forgot-password/forgot-password.component')
-      .then(m => m.ForgotPasswordComponent)
+    path: "forgot-password",
+    loadComponent: () =>
+      import("./features/auth/forgot-password/forgot-password.component").then(
+        (m) => m.ForgotPasswordComponent
+      ),
   },
   {
-    path: '',
+    path: "",
     canActivate: [AuthGuard],
-    loadComponent: () => import('./features/layout/layout.component')
-      .then(m => m.LayoutComponent),
+    loadComponent: () =>
+      import("./features/layout/layout.component").then(
+        (m) => m.LayoutComponent
+      ),
     children: [
       {
-        path: 'dashboard',
-        loadComponent: () => import('./features/dashboard/dashboard.component')
-          .then(m => m.DashboardComponent)
+        path: "dashboard",
+        loadComponent: () =>
+          import("./features/dashboard/dashboard.component").then(
+            (m) => m.DashboardComponent
+          ),
       },
       {
-        path: 'organizations',
+        path: "organizations",
         canActivate: [RoleGuard],
-        data: { role: 'admin' },
+        data: { role: "admin" },
         children: [
           {
-            path: '',
-            loadComponent: () => import('./features/organizations/organizations.component')
-              .then(m => m.OrganizationsComponent)
+            path: "",
+            loadComponent: () =>
+              import("./features/organizations/organizations.component").then(
+                (m) => m.OrganizationsComponent
+              ),
           },
           {
-            path: 'pending',
-            loadComponent: () => import('./features/organizations/pending-organizations/pending-organizations.component')
-              .then(m => m.PendingOrganizationsComponent)
-          }
-        ]
+            path: "pending",
+            loadComponent: () =>
+              import(
+                "./features/organizations/pending-organizations/pending-organizations.component"
+              ).then((m) => m.PendingOrganizationsComponent),
+          },
+        ],
       },
       {
-        path: 'users',
+        path: "users",
         canActivate: [RoleGuard],
-        data: { role: 'admin' },
-        loadComponent: () => import('./features/users/users.component')
-          .then(m => m.UsersComponent)
+        data: { role: "admin" },
+        children: [
+          {
+            path: "",
+            loadComponent: () =>
+              import("./features/users/users.component").then(
+                (m) => m.UsersComponent
+              ),
+          },
+          {
+            path: "pending",
+            loadComponent: () =>
+              import(
+                "./features/users/pending-users/pending-users.component"
+              ).then((m) => m.PendingUsersComponent),
+          },
+        ],
       },
       {
-        path: 'declarations',
-        loadComponent: () => import('./features/declarations/declarations.component')
-          .then(m => m.DeclarationsComponent)
+        path: "declarations",
+        loadComponent: () =>
+          import("./features/declarations/declarations.component").then(
+            (m) => m.DeclarationsComponent
+          ),
       },
       {
-        path: 'contracts',
-        loadComponent: () => import('./features/contracts/contracts.component')
-          .then(m => m.ContractsComponent)
+        path: "contracts",
+        loadComponent: () =>
+          import("./features/contracts/contracts.component").then(
+            (m) => m.ContractsComponent
+          ),
       },
       {
-        path: 'allocations',
-        loadComponent: () => import('./features/allocations/allocations.component')
-          .then(m => m.AllocationsComponent)
+        path: "allocations",
+        loadComponent: () =>
+          import("./features/allocations/allocations.component").then(
+            (m) => m.AllocationsComponent
+          ),
       },
       {
-        path: 'nominations',
-        loadComponent: () => import('./features/nominations/nominations.component')
-          .then(m => m.NominationsComponent)
+        path: "nominations",
+        loadComponent: () =>
+          import("./features/nominations/nominations.component").then(
+            (m) => m.NominationsComponent
+          ),
       },
       {
-        path: 'pending-approvals',
-        loadComponent: () => import('./features/pending-approvals/pending-approvals.component')
-          .then(m => m.PendingApprovalsComponent)
+        path: "pending-approvals",
+        loadComponent: () =>
+          import(
+            "./features/pending-approvals/pending-approvals.component"
+          ).then((m) => m.PendingApprovalsComponent),
       },
       {
-        path: 'reports',
-        loadComponent: () => import('./features/reports/reports.component')
-          .then(m => m.ReportsComponent)
+        path: "reports",
+        loadComponent: () =>
+          import("./features/reports/reports.component").then(
+            (m) => m.ReportsComponent
+          ),
       },
       {
-        path: '',
-        redirectTo: 'dashboard',
-        pathMatch: 'full'
-      }
-    ]
-  }
+        path: "",
+        redirectTo: "dashboard",
+        pathMatch: "full",
+      },
+    ],
+  },
 ];

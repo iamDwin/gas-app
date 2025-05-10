@@ -62,10 +62,10 @@ import { ButtonComponent } from "../../shared/components/button/button.component
         <app-user-form
           *ngIf="isDrawerOpen"
           [user]="selectedUser"
-          (save)="saveUser($event)"
           (onCancel)="closeDrawer()"
         ></app-user-form>
       </div>
+      <!-- (save)="saveUser($event)" -->
 
       <!-- Backdrop -->
       <div
@@ -120,12 +120,22 @@ export class UsersComponent implements OnInit {
 
   loadUsers() {
     this.isLoading = true;
-    setTimeout(() => {
-      this.userService.getUsers().subscribe((users) => {
+
+    this.userService.getUsers().subscribe({
+      next: (users) => {
         this.users = users;
         this.isLoading = false;
-      });
-    }, 3000); // Simulate 3 second loading delay
+      },
+      error: (error) => {
+        console.log({ error });
+        this.notificationService.addNotification({
+          title: "Error",
+          message: "Failed to load users",
+          type: "error",
+        });
+        this.isLoading = false;
+      },
+    });
   }
 
   onActionClick(event: { action: TableAction; row: User }) {
@@ -137,7 +147,7 @@ export class UsersComponent implements OnInit {
         this.editUser(event.row);
         break;
       case "Delete":
-        this.deleteUser(event.row.id);
+        this.deleteUser(event.row.id.toString());
         break;
     }
   }
@@ -163,29 +173,29 @@ export class UsersComponent implements OnInit {
       ? "Updating user..."
       : "Creating user...";
 
-    setTimeout(() => {
-      if (this.selectedUser) {
-        this.userService.updateUser({
-          ...userData,
-          id: this.selectedUser.id,
-        });
-        this.notificationService.addNotification({
-          title: "User Updated",
-          message: `${userData.name} has been updated successfully`,
-          type: "success",
-        });
-      } else {
-        this.userService.addUser(userData);
-        this.notificationService.addNotification({
-          title: "User Created",
-          message: `${userData.name} has been created successfully`,
-          type: "success",
-        });
-      }
+    // setTimeout(() => {
+    //   if (this.selectedUser) {
+    //     this.userService.updateUser({
+    //       ...userData,
+    //       id: this.selectedUser.id,
+    //     });
+    //     this.notificationService.addNotification({
+    //       title: "User Updated",
+    //       message: `${userData.name} has been updated successfully`,
+    //       type: "success",
+    //     });
+    //   } else {
+    //     this.userService.addUser(userData);
+    //     this.notificationService.addNotification({
+    //       title: "User Created",
+    //       message: `${userData.name} has been created successfully`,
+    //       type: "success",
+    //     });
+    //   }
 
-      this.isLoading = false;
-      this.closeDrawer();
-    }, 2000); // Simulate 2 second save delay
+    //   this.isLoading = false;
+    //   this.closeDrawer();
+    // }, 2000);
   }
 
   deleteUser(id: string) {
@@ -194,7 +204,7 @@ export class UsersComponent implements OnInit {
       this.loadingMessage = "Deleting user...";
 
       setTimeout(() => {
-        this.userService.deleteUser(id);
+        // this.userService.deleteUser(id);
         this.notificationService.addNotification({
           title: "User Deleted",
           message: "The user has been deleted successfully",
