@@ -10,6 +10,7 @@ import {
 import { BreadcrumbService } from "../../shared/services/breadcrumb.service";
 import { NotificationService } from "../../shared/services/notification.service";
 import { ButtonComponent } from "../../shared/components/button/button.component";
+import { ToastService } from "../../shared/services/toast.service";
 
 @Component({
   selector: "app-users",
@@ -109,7 +110,8 @@ export class UsersComponent implements OnInit {
   constructor(
     private userService: UserService,
     private breadcrumbService: BreadcrumbService,
-    private notificationService: NotificationService
+    private notificationService: NotificationService,
+    private toastService: ToastService
   ) {}
 
   ngOnInit() {
@@ -130,7 +132,12 @@ export class UsersComponent implements OnInit {
         console.log({ error });
         this.notificationService.addNotification({
           title: "Error",
-          message: "Failed to load users",
+          message: "Failed To Get Users, Please Try Again",
+          type: "error",
+        });
+        this.toastService.show({
+          title: "Error",
+          message: "Failed To Get Users, Please Try Again",
           type: "error",
         });
         this.isLoading = false;

@@ -88,8 +88,13 @@ export class PendingOrganizationsComponent implements OnInit {
       },
       error: (error) => {
         this.notificationService.addNotification({
-          title: "Error",
-          message: "Failed to load pending organizations",
+          title: "Organization Request",
+          message: "Failed To Get Pending Institutions, Please Try Again",
+          type: "error",
+        });
+        this.toastService.show({
+          title: "Organization Request",
+          message: "Failed To Get Pending Institutions, Please Try Again",
           type: "error",
         });
         this.isLoading = false;

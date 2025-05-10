@@ -158,10 +158,16 @@ export class OrganizationsComponent implements OnInit {
       },
       error: (error) => {
         this.notificationService.addNotification({
-          title: "Error",
-          message: "Failed to load organizations",
+          title: "Organization Request",
+          message: "Failed To Get Institutions, Please Try Again",
           type: "error",
         });
+        this.toastService.show({
+          title: "Organization Request",
+          message: "Failed To Get Institutions, Please Try Again",
+          type: "error",
+        });
+
         this.isLoading = false;
       },
     });

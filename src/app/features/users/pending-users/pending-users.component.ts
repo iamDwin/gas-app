@@ -89,7 +89,12 @@ export class PendingUsersComponent implements OnInit {
       error: (error) => {
         this.notificationService.addNotification({
           title: "Error",
-          message: "Failed to load pending users",
+          message: "Failed To Get Pending Users, Please Try Again",
+          type: "error",
+        });
+        this.toastService.show({
+          title: "Error",
+          message: "Failed To Get Pending Users, Please Try Again",
           type: "error",
         });
         this.isLoading = false;
