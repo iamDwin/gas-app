@@ -7,7 +7,7 @@ export interface Organization {
   address: string;
   phone: string;
   dcv: number;
-  type: "Upstream" | "Downstream";
+  type: string;
   code: string;
   createdBy?: string;
   createdAt?: string;

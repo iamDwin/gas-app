@@ -90,6 +90,17 @@ export interface Institution {
             <div class="flex-1">
               <div class="font-medium">{{ institution.name }}</div>
               <div class="text-xs text-gray-500">{{ institution.code }}</div>
+              <div class="text-xs text-gray-500">
+                {{
+                  institution.type === "U"
+                    ? "UPSTREAM"
+                    : institution.type === "D"
+                    ? "DOWNSTREAM"
+                    : institution.type === "M"
+                    ? "MIDSTREAM"
+                    : "UNKNOWN"
+                }}
+              </div>
             </div>
             <svg
               *ngIf="institution.id === selectedInstitution?.id"

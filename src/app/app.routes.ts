@@ -57,11 +57,24 @@ export const routes: Routes = [
         path: "users",
         canActivate: [RoleGuard],
         data: { role: "admin" },
-        loadComponent: () =>
-          import("./features/users/users.component").then(
-            (m) => m.UsersComponent
-          ),
+        children: [
+          {
+            path: "",
+            loadComponent: () =>
+              import("./features/users/users.component").then(
+                (m) => m.UsersComponent
+              ),
+          },
+          {
+            path: "pending",
+            loadComponent: () =>
+              import(
+                "./features/users/pending-users/pending-users.component"
+              ).then((m) => m.PendingUsersComponent),
+          },
+        ],
       },
+
       {
         path: "declarations",
         children: [
