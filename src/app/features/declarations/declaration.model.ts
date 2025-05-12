@@ -9,9 +9,14 @@ export interface Declaration {
   id: string;
   title: string;
   description: string;
-  status: DeclarationStatus;
   organizationId: string;
   createdBy: string;
+  uploadedBy: string;
+  institutionCode: string;
+  declaredQuantity: number;
+  startDate: string;
+  endDate: string;
+  status: DeclarationStatus;
   createdAt: Date;
   updatedAt: Date;
   approvedBy?: string;
@@ -19,6 +24,14 @@ export interface Declaration {
   rejectedBy?: string;
   rejectedAt?: Date;
   rejectionReason?: string;
+}
+
+export interface CreateDeclarationRequest {
+  uploadedBy: string;
+  institutionCode: string;
+  declaredQuantity: number;
+  startDate: string;
+  endDate: string;
 }
 
 export interface DeclarationApproval {

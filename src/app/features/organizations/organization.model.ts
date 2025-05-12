@@ -1,4 +1,4 @@
-import { AuthResponse } from '../../core/auth/auth.service';
+import { AuthResponse } from "../../core/auth/auth.service";
 
 export interface Organization {
   id: string;
@@ -7,8 +7,8 @@ export interface Organization {
   address: string;
   phone: string;
   dcv: number;
-  type: 'Upstream' | 'Downstream';
-  code?: string;
+  type: "Upstream" | "Downstream";
+  code: string;
   createdBy?: string;
   createdAt?: string;
   updatedAt?: string;
@@ -29,7 +29,7 @@ export interface CreateOrganizationRequest {
   address: string;
   phone: string;
   dcv: number;
-  type: 'Upstream' | 'Downstream';
+  type: "Upstream" | "Downstream";
 }
 
 export interface OrganizationsResponse {

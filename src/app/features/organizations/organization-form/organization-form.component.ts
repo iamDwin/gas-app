@@ -67,8 +67,8 @@ import { ButtonComponent } from "../../../shared/components/button/button.compon
               Type <span class="text-red-500">*</span>
             </label>
             <select formControlName="type" class="mt-1">
-              <option value="Upstream">Upstream</option>
-              <option value="Downstream">Downstream</option>
+              <option value="Upstream">UPSTREAM</option>
+              <option value="Downstream">DOWNSTREAM</option>
             </select>
           </div>
         </form>

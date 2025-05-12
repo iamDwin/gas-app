@@ -454,7 +454,7 @@ import { OrganizationService } from "../../features/organizations/organization.s
             <!-- Repeat similar structure for Declarations, Allocations, and Nominations -->
 
             <!-- Other Menu Items -->
-            <ng-container *ngFor="let item of menuItems.slice(6)">
+            <ng-container *ngFor="let item of menuItems.slice(7)">
               <a
                 [routerLink]="item.path"
                 routerLinkActive="bg-primary/10 text-primary border-primary"
@@ -679,14 +679,14 @@ export class LayoutComponent implements OnInit {
       </svg>`,
       count: 0,
     },
-    {
-      path: "/contracts",
-      label: "Contracts",
-      icon: `<svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
-      </svg>`,
-      count: 0,
-    },
+    // {
+    //   path: "/contracts",
+    //   label: "Contracts",
+    //   icon: `<svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+    //     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+    //   </svg>`,
+    //   count: 0,
+    // },
     {
       path: "/reports",
       label: "Reports",
