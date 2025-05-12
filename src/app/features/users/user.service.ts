@@ -1,6 +1,6 @@
 import { Injectable } from "@angular/core";
 import { BehaviorSubject, Observable, map } from "rxjs";
-import { User, UsersResponse } from "./user.model";
+import { userList, UserResponse, UsersResponse } from "./user.model";
 import { environment } from "../../../environments/environment";
 import { AuthService } from "../../core/auth/auth.service";
 import { HttpClient, HttpHeaders } from "@angular/common/http";
@@ -23,45 +23,7 @@ export class UserService {
     });
   }
 
-  // private users = new BehaviorSubject<User[]>([
-  //   {
-  //     id: "1",
-  //     name: "John Doe",
-  //     email: "john@example.com",
-  //     role: "admin",
-  //     organizationId: "1",
-  //   },
-  //   {
-  //     id: "2",
-  //     name: "Jane Smith",
-  //     email: "jane@example.com",
-  //     role: "officer",
-  //     organizationId: "1",
-  //   },
-  //   {
-  //     id: "3",
-  //     name: "Bob Wilson",
-  //     email: "bob@example.com",
-  //     role: "viewer",
-  //     organizationId: "2",
-  //   },
-  //   {
-  //     id: "4",
-  //     name: "Alice Johnson",
-  //     email: "alice@example.com",
-  //     role: "officer",
-  //     organizationId: "2",
-  //   },
-  //   {
-  //     id: "5",
-  //     name: "Charlie Brown",
-  //     email: "charlie@example.com",
-  //     role: "viewer",
-  //     organizationId: "3",
-  //   },
-  // ]);
-
-  getUsers(): Observable<User[]> {
+  getUsers(): Observable<UserResponse[]> {
     if (!this.user) {
       return new Observable((subscriber) => subscriber.next([]));
     }
@@ -71,20 +33,57 @@ export class UserService {
         `${this.apiUrl}/admin/user/api/v1/get_all_users/${this.user.name}`,
         { headers: this.getHeaders() }
       )
-      .pipe(map((response) => response.institutionList || []));
+      .pipe(map((response) => response.users || []));
   }
 
-  getPendingUsers(): Observable<User[]> {
+  getUserRoles(): Observable<any[]> {
+    if (!this.user) {
+      return new Observable((subscriber) => subscriber.next([]));
+    }
+
+    return this.http.get<any>(
+      `${this.apiUrl}/admin/role/api/v1/get_role_list/${this.user.name}`,
+      { headers: this.getHeaders() }
+    );
+  }
+
+  addUser(userData: any): Observable<any[]> {
+    if (!this.user) {
+      return new Observable((subscriber) => subscriber.next([]));
+    }
+
+    return this.http.post<any>(
+      `${this.apiUrl}/admin/user/api/v1/init_create_user`,
+      { ...userData, createdBy: this.user.name },
+      { headers: this.getHeaders() }
+    );
+  }
+
+  updateUser(userData: any): Observable<UserResponse[]> {
     if (!this.user) {
       return new Observable((subscriber) => subscriber.next([]));
     }
 
     return this.http
-      .get<UsersResponse>(
+      .post<UsersResponse>(
+        `${this.apiUrl}/admin/user/api/v1/get_all_users/${this.user.name}`,
+        { ...userData },
+        { headers: this.getHeaders() }
+      )
+      .pipe(map((response) => response.users || []));
+  }
+
+  getPendingUsers(): Observable<any[]> {
+    if (!this.user) {
+      return new Observable((subscriber) => subscriber.next([]));
+    }
+
+    return this.http
+      .get<any>(
         `${this.apiUrl}/admin/user/api/v1/get_pending_auths/${this.user.name}`,
         { headers: this.getHeaders() }
       )
-      .pipe(map((response) => response.institutionList || []));
+      .pipe(map((response) => response.users || []));
   }
 
   // addUser(user: Omit<User, "id">): void {

@@ -288,11 +288,16 @@ export class OrganizationsComponent implements OnInit {
         });
     } else {
       this.organizationService.addOrganization(orgData).subscribe({
-        next: (org) => {
+        next: (org: any) => {
           this.notificationService.addNotification({
             title: "Organization Created",
-            message: `${orgData.name} has been created successfully`,
-            type: "success",
+            message: org.errorMessage,
+            type: org.errorCode === "0" ? "success" : "error",
+          });
+          this.toastService.show({
+            title: "Organization Created",
+            message: org.errorMessage,
+            type: org.errorCode === "0" ? "success" : "error",
           });
           this.loadingService.hide();
           this.closeDrawer();
@@ -301,7 +306,12 @@ export class OrganizationsComponent implements OnInit {
         error: (error) => {
           this.notificationService.addNotification({
             title: "Error",
-            message: "Failed to create organization",
+            message: "Failed To Create Organization, Please Try Again.",
+            type: "error",
+          });
+          this.toastService.show({
+            title: "Error",
+            message: "Failed To Create Organization, Please Try Again.",
             type: "error",
           });
           this.loadingService.hide();

@@ -36,11 +36,10 @@ export class PendingUsersComponent implements OnInit {
   loadingMessage = "Loading pending users...";
 
   columns = [
-    { prop: "name", name: "Name" },
-    { prop: "code", name: "Code" },
+    { prop: "fullName", name: "Name" },
     { prop: "email", name: "Email" },
-    { prop: "phone", name: "Phone" },
-    { prop: "address", name: "Address" },
+    { prop: "roleName", name: "Role" },
+    { prop: "institutionName", name: "institution" },
     {
       prop: "type",
       name: "Type",
@@ -82,8 +81,9 @@ export class PendingUsersComponent implements OnInit {
   loadPendingUsers() {
     this.isLoading = true;
     this.userService.getPendingUsers().subscribe({
-      next: (usrs) => {
-        this.users = usrs;
+      next: (response) => {
+        console.log({ response });
+        this.users = response;
         this.isLoading = false;
       },
       error: (error) => {

@@ -252,7 +252,6 @@ export class AuthService {
   logout(): void {
     // Store the current URL before logging out
     localStorage.setItem(this.returnUrlKey, this.router.url);
-
     localStorage.removeItem(this.tokenKey);
     localStorage.removeItem(this.userKey);
     this.currentUserSubject.next(null);
@@ -260,7 +259,7 @@ export class AuthService {
     this.toastService.show({
       title: "Signed Out",
       message: "You have been successfully signed out",
-      type: "info",
+      type: "success",
     });
   }
 

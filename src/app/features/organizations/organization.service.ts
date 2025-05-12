@@ -65,7 +65,7 @@ export class OrganizationService {
     const payload = {
       ...organization,
       type: organization.type === "Upstream" ? "U" : "D",
-      createdBy: user?.email || "",
+      createdBy: user?.name || "",
     };
 
     return this.http.post<Organization>(
@@ -93,7 +93,7 @@ export class OrganizationService {
       id: id,
       authorizedBy: this.user?.name,
       authorizedComment: null,
-      authStatus: 0,
+      authStatus: 1,
     };
     return this.http.post<any>(
       `${this.apiUrl}/admin/institution/api/v1/authorize_request`,
@@ -107,7 +107,7 @@ export class OrganizationService {
       id: id, //id of request
       authorizedBy: this.user?.name,
       authorizedComment: null,
-      authStatus: 1,
+      authStatus: 0,
     };
     return this.http.post<any>(
       `${this.apiUrl}/admin/institution/api/v1/authorize_request`,

@@ -1,6 +1,6 @@
 import { Component, OnInit } from "@angular/core";
 import { CommonModule } from "@angular/common";
-import { User } from "./user.model";
+import { userList, User, UserResponse } from "./user.model";
 import { UserService } from "./user.service";
 import { UserFormComponent } from "./user-form/user-form.component";
 import {
@@ -11,6 +11,10 @@ import { BreadcrumbService } from "../../shared/services/breadcrumb.service";
 import { NotificationService } from "../../shared/services/notification.service";
 import { ButtonComponent } from "../../shared/components/button/button.component";
 import { ToastService } from "../../shared/services/toast.service";
+import {
+  ConfirmationModalComponent,
+  ConfirmationModalConfig,
+} from "../../shared/components/confirmation-modal/confirmation-modal.component";
 
 @Component({
   selector: "app-users",
@@ -20,13 +24,14 @@ import { ToastService } from "../../shared/services/toast.service";
     UserFormComponent,
     DataTableComponent,
     ButtonComponent,
+    ConfirmationModalComponent,
   ],
   template: `
     <div class="p-4">
       <app-data-table
         [rows]="users"
         [columns]="columns"
-        [actions]="actions"
+        [getActionsForRow]="getActionsForUser"
         [loading]="isLoading"
         [loadingMessage]="loadingMessage"
         defaultSort="name"
@@ -64,9 +69,16 @@ import { ToastService } from "../../shared/services/toast.service";
           *ngIf="isDrawerOpen"
           [user]="selectedUser"
           (onCancel)="closeDrawer()"
+          (save)="saveUser($event)"
         ></app-user-form>
       </div>
-      <!-- (save)="saveUser($event)" -->
+
+      <app-confirmation-modal
+        [show]="showLockModal"
+        [config]="lockModalMessage"
+        (onCancel)="cancelLock()"
+        (onConfirm)="confirmLockUser()"
+      ></app-confirmation-modal>
 
       <!-- Backdrop -->
       <div
@@ -78,33 +90,55 @@ import { ToastService } from "../../shared/services/toast.service";
   `,
 })
 export class UsersComponent implements OnInit {
-  users: User[] = [];
+  users: UserResponse[] = [];
   isDrawerOpen = false;
-  selectedUser?: User;
-  isLoading = false;
+  selectedUser?: userList;
+  showLockModal = false;
+  isLoading = true;
+  userToLock?: User;
   loadingMessage = "Loading users...";
 
+  lockModalConfig: ConfirmationModalConfig = {
+    title: "Lock User",
+    message:
+      "Are you sure you want to lock this user ? This action cannot be undone.",
+    confirmText: "Lock User",
+    cancelText: "Cancel",
+    type: "danger",
+  };
+  unlockModalConfig: ConfirmationModalConfig = {
+    title: "Unlock User",
+    message:
+      "Are you sure you want to unlock this user ? This action cannot be undone.",
+    confirmText: "Unlock User",
+    cancelText: "Cancel",
+    type: "warning",
+  };
+
+  lockModalMessage: ConfirmationModalConfig = this.lockModalConfig;
   columns = [
-    { prop: "name", name: "Name" },
+    { prop: "fullName", name: "Full Name" },
     { prop: "email", name: "Email" },
-    { prop: "role", name: "Role" },
-    { prop: "organizationId", name: "Organization ID" },
+    { prop: "roleName", name: "Role" },
+    { prop: "institutionName", name: "Institution" },
+    { prop: "active", name: "status" },
+    { prop: "locked", name: "Locked" },
     { prop: "actions", name: "Actions", sortable: false },
   ];
 
   actions: TableAction[] = [
     {
-      label: "View Details",
-      type: "primary",
-    },
-    {
       label: "Edit",
       type: "primary",
     },
     {
-      label: "Delete",
-      type: "danger",
+      label: "Deactivate",
+      type: "warning",
     },
+    // {
+    //   label: "Delete",
+    //   type: "danger",
+    // },
   ];
 
   constructor(
@@ -122,14 +156,13 @@ export class UsersComponent implements OnInit {
 
   loadUsers() {
     this.isLoading = true;
-
     this.userService.getUsers().subscribe({
-      next: (users) => {
-        this.users = users;
-        this.isLoading = false;
+      next: (userList) => {
+        console.log({ userList });
+        this.users = userList;
+        // this.isLoading = false;
       },
       error: (error) => {
-        console.log({ error });
         this.notificationService.addNotification({
           title: "Error",
           message: "Failed To Get Users, Please Try Again",
@@ -140,19 +173,79 @@ export class UsersComponent implements OnInit {
           message: "Failed To Get Users, Please Try Again",
           type: "error",
         });
-        this.isLoading = false;
+        // this.isLoading = false;
       },
     });
   }
 
-  onActionClick(event: { action: TableAction; row: User }) {
+  // Method to determine actions based on user status
+  getActionsForUser(user: any): TableAction[] {
+    console.log({ user });
+    const actions: TableAction[] = [
+      {
+        label: "Edit",
+        type: "primary",
+      },
+    ];
+
+    if (user.active) {
+      actions.push({
+        label: "Deactivate",
+        type: "warning",
+      });
+    } else {
+      actions.push({
+        label: "Activate",
+        type: "success",
+      });
+    }
+
+    if (user.locked) {
+      actions.push({
+        label: "Unlock",
+        type: "warning",
+      });
+    } else {
+      actions.push({
+        label: "Lock",
+        type: "danger",
+      });
+    }
+
+    return actions;
+  }
+
+  // onActionClick(event: { action: TableAction; row: userList }) {
+  //   switch (event.action.label) {
+  //     case "View Details":
+  //       break;
+  //     case "Edit":
+  //       this.editUser(event.row);
+  //       break;
+  //     case "Delete":
+  //       this.deleteUser(event.row.id.toString());
+  //       break;
+  //   }
+  // }
+
+  onActionClick(event: { action: TableAction; row: userList }) {
     switch (event.action.label) {
-      case "View Details":
-        // Handle view details
-        break;
       case "Edit":
         this.editUser(event.row);
         break;
+      case "Deactivate":
+        // Implement deactivate logic
+        break;
+      case "Activate":
+        // Implement activate logic
+        break;
+      case "Lock":
+        this.lockAction(event.row, "lock");
+        break;
+      case "Unlock":
+        this.lockAction(event.row, "unlock");
+        break;
+      // Add more cases as needed
       case "Delete":
         this.deleteUser(event.row.id.toString());
         break;
@@ -169,7 +262,7 @@ export class UsersComponent implements OnInit {
     this.selectedUser = undefined;
   }
 
-  editUser(user: User) {
+  editUser(user: userList) {
     this.selectedUser = user;
     this.isDrawerOpen = true;
   }
@@ -180,45 +273,68 @@ export class UsersComponent implements OnInit {
       ? "Updating user..."
       : "Creating user...";
 
-    // setTimeout(() => {
-    //   if (this.selectedUser) {
-    //     this.userService.updateUser({
-    //       ...userData,
-    //       id: this.selectedUser.id,
-    //     });
-    //     this.notificationService.addNotification({
-    //       title: "User Updated",
-    //       message: `${userData.name} has been updated successfully`,
-    //       type: "success",
-    //     });
-    //   } else {
-    //     this.userService.addUser(userData);
-    //     this.notificationService.addNotification({
-    //       title: "User Created",
-    //       message: `${userData.name} has been created successfully`,
-    //       type: "success",
-    //     });
-    //   }
+    if (this.selectedUser) {
+      this.userService.updateUser({
+        ...userData,
+        id: this.selectedUser.id,
+      });
+      this.notificationService.addNotification({
+        title: "User Updated",
+        message: `${userData.name} has been updated successfully`,
+        type: "success",
+      });
+    } else {
+      this.userService.addUser(userData).subscribe({
+        next: (response: any) => {
+          this.notificationService.addNotification({
+            title: "User Request",
+            message: `${response.errorMessage}`,
+            type: response.errorCode == "1" ? "error" : "success",
+          });
+          this.toastService.show({
+            title: "User Request",
+            message: `${response.errorMessage}`,
+            type: response.errorCode == "1" ? "error" : "success",
+          });
+        },
+      });
+    }
 
-    //   this.isLoading = false;
-    //   this.closeDrawer();
-    // }, 2000);
+    this.isLoading = false;
+    this.closeDrawer();
   }
 
   deleteUser(id: string) {
-    if (confirm("Are you sure you want to delete this user?")) {
-      this.isLoading = true;
-      this.loadingMessage = "Deleting user...";
-
-      setTimeout(() => {
-        // this.userService.deleteUser(id);
-        this.notificationService.addNotification({
-          title: "User Deleted",
-          message: "The user has been deleted successfully",
-          type: "success",
-        });
-        this.isLoading = false;
-      }, 2000); // Simulate 2 second delete delay
-    }
+    // if (confirm("Are you sure you want to delete this user?")) {
+    //   this.isLoading = true;
+    //   this.loadingMessage = "Deleting user...";
+    //   setTimeout(() => {
+    //     // this.userService.deleteUser(id);
+    //     this.notificationService.addNotification({
+    //       title: "User Deleted",
+    //       message: "The user has been deleted successfully",
+    //       type: "success",
+    //     });
+    //     this.isLoading = false;
+    //   }, 2000); // Simulate 2 second delete delay
+    // }
   }
+
+  lockAction = (userData: any, action: "lock" | "unlock") => {
+    this.showLockModal = true;
+    this.userToLock = userData;
+    if (action === "lock") this.lockModalMessage = this.lockModalConfig;
+    else this.lockModalMessage = this.unlockModalConfig;
+  };
+
+  cancelLock() {
+    this.showLockModal = false;
+    this.userToLock = undefined;
+  }
+
+  confirmLockUser = () => {
+    console.log(" we confirmed...");
+    this.isLoading = true;
+    this.loadingMessage = "Performing Action...";
+  };
 }

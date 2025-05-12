@@ -6,9 +6,14 @@ import {
   ReactiveFormsModule,
   Validators,
 } from "@angular/forms";
-import { User } from "../user.model";
+import { User, userList } from "../user.model";
 import { DrawerComponent } from "../../../shared/components/drawer/drawer.component";
 import { ButtonComponent } from "../../../shared/components/button/button.component";
+import { OrganizationService } from "../../organizations/organization.service";
+import { Organization } from "../../organizations/organization.model";
+import { NotificationService } from "../../../shared/services/notification.service";
+import { ToastService } from "../../../shared/services/toast.service";
+import { UserService } from "../user.service";
 
 @Component({
   selector: "app-user-form",
@@ -28,11 +33,23 @@ import { ButtonComponent } from "../../../shared/components/button/button.compon
       <div drawerContent>
         <form [formGroup]="form" class="space-y-4">
           <div>
-            <label class="block text-sm font-medium text-gray-700">Name</label>
+            <label class="block text-sm font-medium text-gray-700"
+              >Full Name</label
+            >
             <input
               type="text"
-              formControlName="name"
-              class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primary focus:ring focus:ring-primary focus:ring-opacity-50"
+              formControlName="fullName"
+              class="mt-1 block w-full rounded-xl  border border-gray-200 focus:outline-none focus:ring-2 focus:ring-green-500"
+            />
+          </div>
+          <div>
+            <label class="block text-sm font-medium text-gray-700"
+              >User Name</label
+            >
+            <input
+              type="text"
+              formControlName="userName"
+              class="mt-1 block w-full rounded-xl  border border-gray-200 focus:outline-none focus:ring-2 focus:ring-green-500"
             />
           </div>
 
@@ -41,31 +58,51 @@ import { ButtonComponent } from "../../../shared/components/button/button.compon
             <input
               type="email"
               formControlName="email"
-              class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primary focus:ring focus:ring-primary focus:ring-opacity-50"
+              class="mt-1 block w-full rounded-xl  border border-gray-200 focus:outline-none focus:ring-2 focus:ring-green-500"
             />
+          </div>
+
+          <div>
+            <label class="block text-sm font-medium text-gray-700"
+              >User Type</label
+            >
+            <select
+              formControlName="type"
+              class="mt-1 block w-full rounded-xl  border border-gray-200 focus:outline-none focus:ring-2 focus:ring-green-500"
+            >
+              <option value="M">MIDSTREAM</option>
+              <option value="U">UPSTREAM</option>
+              <option value="D">DOWNSTREAM</option>
+            </select>
           </div>
 
           <div>
             <label class="block text-sm font-medium text-gray-700">Role</label>
             <select
-              formControlName="role"
-              class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primary focus:ring focus:ring-primary focus:ring-opacity-50"
+              formControlName="roleId"
+              class="mt-1 block w-full rounded-xl  border border-gray-200 focus:outline-none focus:ring-2 focus:ring-green-500"
             >
-              <option value="admin">Admin</option>
-              <option value="officer">Officer</option>
-              <option value="viewer">Viewer</option>
+              <option *ngFor="let role of userRoles" [value]="role.id">
+                {{ role.name }}
+              </option>
             </select>
           </div>
 
           <div>
             <label class="block text-sm font-medium text-gray-700"
-              >Organization ID</label
+              >Institutions</label
             >
-            <input
-              type="text"
-              formControlName="organizationId"
-              class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primary focus:ring focus:ring-primary focus:ring-opacity-50"
-            />
+            <select
+              formControlName="institutionId"
+              class="mt-1 block w-full rounded-xl  border border-gray-200 focus:outline-none focus:ring-2 focus:ring-green-500"
+            >
+              <option
+                *ngFor="let institute of organizations"
+                [value]="institute.id"
+              >
+                {{ institute.name }}
+              </option>
+            </select>
           </div>
         </form>
       </div>
@@ -88,20 +125,76 @@ import { ButtonComponent } from "../../../shared/components/button/button.compon
   `,
 })
 export class UserFormComponent {
-  @Input() user?: User;
+  @Input() user?: userList;
   @Output() save = new EventEmitter<Omit<User, "id" | "createdAt">>();
   @Output() onCancel = new EventEmitter<void>();
+  organizations: Organization[] = [];
+  userRoles: any;
 
   form: FormGroup;
-
-  constructor(private fb: FormBuilder) {
+  institutions: any;
+  constructor(
+    private fb: FormBuilder,
+    private organService: OrganizationService,
+    private userService: UserService,
+    private notificationService: NotificationService,
+    private toastService: ToastService
+  ) {
     this.form = this.fb.group({
-      name: ["", Validators.required],
+      fullName: ["", Validators.required],
+      userName: ["", Validators.required],
       email: ["", [Validators.required, Validators.email]],
-      role: ["viewer", Validators.required],
-      organizationId: ["", Validators.required],
+      roleId: ["", Validators.required],
+      type: ["", Validators.required],
+      institutionId: ["", Validators.required],
+    });
+
+    this.loadOrganizations();
+    this.getUserRole();
+  }
+
+  loadOrganizations() {
+    // this.isLoading = true;
+    this.organService.getOrganizations().subscribe({
+      next: (orgs) => {
+        this.organizations = orgs;
+        // this.isLoading = false;
+      },
+      error: (error) => {
+        this.notificationService.addNotification({
+          title: "Organization Request",
+          message: "Failed To Get Institutions, Please Try Again",
+          type: "error",
+        });
+        this.toastService.show({
+          title: "Organization Request",
+          message: "Failed To Get Institutions, Please Try Again",
+          type: "error",
+        });
+        // this.isLoading = false;
+      },
     });
   }
+
+  getUserRole = () => {
+    this.userService.getUserRoles().subscribe({
+      next: (response: any) => {
+        this.userRoles = response.responses;
+      },
+      error: (error: any) => {
+        this.notificationService.addNotification({
+          title: "User Role Request",
+          message: "Failed To Get User Roles, Please Try Again",
+          type: "error",
+        });
+        this.toastService.show({
+          title: "User Role Request",
+          message: "Failed To Get User Roles, Please Try Again",
+          type: "error",
+        });
+      },
+    });
+  };
 
   ngOnInit() {
     if (this.user) {

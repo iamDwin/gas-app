@@ -22,7 +22,7 @@ import { FormsModule } from "@angular/forms";
       >
         <div class="text-center">
           <div
-            class="w-12 h-12 border-4 border-primary border-t-transparent rounded-full animate-spin"
+            class="w-12 h-12 mx-auto mx-auto border-4 border-primary border-t-transparent rounded-full animate-spin"
           ></div>
           <p class="mt-4 text-gray-600">{{ loadingMessage }}</p>
         </div>
@@ -39,7 +39,7 @@ import { FormsModule } from "@angular/forms";
               [(ngModel)]="searchTerm"
               (ngModelChange)="onSearch($event)"
               placeholder="Search..."
-              class="h-10 pl-10 pr-4 block w-64 rounded-md border border-gray-200 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent text-sm"
+              class="h-10 pl-10 pr-4 block w-64 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent text-sm"
             />
           </div>
         </div>
@@ -122,7 +122,7 @@ import { FormsModule } from "@angular/forms";
                     >
                       <div class="py-1" role="none">
                         <button
-                          *ngFor="let action of actions"
+                          *ngFor="let action of getActions(row)"
                           (click)="onActionClick(action, row)"
                           [disabled]="
                             action.isDisabled && action.isDisabled(row)
@@ -198,6 +198,7 @@ export class DataTableComponent {
   @Input() actions: TableAction[] = [];
   @Input() loading = false;
   @Input() loadingMessage = "Loading...";
+  @Input() getActionsForRow?: (row: any) => TableAction[];
 
   @Output() search = new EventEmitter<string>();
   @Output() actionClick = new EventEmitter<{ action: TableAction; row: any }>();
@@ -220,6 +221,10 @@ export class DataTableComponent {
     if (!target?.closest(".relative")) {
       this.activeRow = null;
     }
+  }
+
+  getActions(row: any): TableAction[] {
+    return this.getActionsForRow ? this.getActionsForRow(row) : this.actions;
   }
 
   get startIndex(): number {

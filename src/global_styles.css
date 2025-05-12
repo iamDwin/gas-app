@@ -19,7 +19,7 @@ input[type="number"],
 input[type="password"],
 select,
 textarea {
-  @apply h-11 px-4 w-full rounded-md border-gray-300 shadow-sm;
+  @apply h-11 px-4 w-full rounded-xl border-gray-300 shadow-sm;
 }
 
 input[type="text"]:focus,
@@ -82,12 +82,12 @@ textarea {
 
 /* Action Button */
 .action-button {
-  @apply inline-flex items-center justify-center w-8 h-8 text-gray-400 hover:text-gray-500 focus:outline-none rounded-full hover:bg-gray-100;
+  @apply inline-flex items-center justify-center w-8 h-8 text-gray-400 hover:text-gray-500 focus:outline-none rounded-xl hover:bg-gray-100;
 }
 
 /* Dropdown Menu */
 .dropdown-menu {
-  @apply absolute right-0 mt-2 w-48 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 divide-y divide-gray-100 focus:outline-none z-50;
+  @apply absolute right-0 mt-2 w-48 rounded-xl shadow-lg bg-white ring-1 ring-black ring-opacity-5 divide-y divide-gray-100 focus:outline-none z-50;
 }
 
 .dropdown-item {
@@ -112,5 +112,5 @@ textarea {
 
 /* Loading Overlay */
 .loading-overlay {
-  @apply fixed inset-0 bg-white bg-opacity-90 z-[70] flex items-center justify-center;
+  @apply fixed inset-0 mx-auto bg-white bg-opacity-90 z-[70] flex items-center justify-center;
 }

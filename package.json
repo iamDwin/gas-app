@@ -5,7 +5,7 @@
     "ng": "ng",
     "start": "ng serve",
     "build": "ng build",
-    "dev": "ng serve -o"
+    "dev": "rimraf .angular && ng serve -o"
   },
   "dependencies": {
     "@angular/animations": "^18.1.0",
@@ -21,7 +21,8 @@
     "rxjs": "^7.8.1",
     "tslib": "^2.5.0",
     "zone.js": "~0.14.0",
-    "@swimlane/ngx-datatable": "^20.1.0"
+    "@swimlane/ngx-datatable": "^20.1.0",
+    "rimraf": "^4.4.1"
   },
   "devDependencies": {
     "@angular-devkit/build-angular": "^18.1.0",

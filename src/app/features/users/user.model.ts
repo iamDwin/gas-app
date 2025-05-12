@@ -1,13 +1,13 @@
-// export interface User {
-//   id: string;
-//   name: string;
-//   email: string;
-//   role: 'admin' | 'officer' | 'viewer';
-//   organizationId: string;
-//   createdAt?: Date;
-// }
-
 export interface User {
+  id: string;
+  name: string;
+  email: string;
+  role: "admin" | "officer" | "viewer";
+  organizationId: string;
+  createdAt?: Date;
+}
+
+export interface userList {
   errorCode: "string";
   errorMessage: "string";
   id: 0;
@@ -20,10 +20,10 @@ export interface User {
   institutionName: "string";
   createdBy: "string";
   institutionType: "string";
-  lastLogin: "2025-05-10T10:53:41.750Z";
-  passwordChangeDate: "2025-05-10T10:53:41.750Z";
+  lastLogin: "2025-05-10T14:03:26.256Z";
+  passwordChangeDate: "2025-05-10T14:03:26.256Z";
   changePassword: true;
-  createdAt: "2025-05-10T10:53:41.750Z";
+  createdAt: "2025-05-10T14:03:26.256Z";
   type: "string";
   initiatorComment: "string";
   locked: true;
@@ -40,8 +40,14 @@ export interface User {
   ];
 }
 
+export interface UserResponse {
+  errorCode: "string";
+  errorMessage: "string";
+  users: userList[];
+}
+
 export interface UsersResponse {
   errorCode: string;
   errorMessage: string;
-  institutionList: User[];
+  users: UserResponse[];
 }
