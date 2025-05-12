@@ -47,6 +47,31 @@ export class UserService {
     );
   }
 
+  unlockUser(userData: any): Observable<any> {
+    if (!this.user) {
+      return new Observable((subscriber) => subscriber.next([]));
+    }
+
+    return this.http.post<any>(
+      `${this.apiUrl}/admin/user/api/v1/unlock_user`,
+      { ...userData },
+      { headers: this.getHeaders() }
+    );
+  }
+
+  activateDeativateUser(userData: any, action: string): Observable<any> {
+    if (!this.user) {
+      return new Observable((subscriber) => subscriber.next([]));
+    }
+
+    let path = action === "activate" ? `reactivate_user` : "deactivate_user";
+    return this.http.post<any>(
+      `${this.apiUrl}/admin/user/api/v1/${path}`,
+      { ...userData },
+      { headers: this.getHeaders() }
+    );
+  }
+
   addUser(userData: any): Observable<any[]> {
     if (!this.user) {
       return new Observable((subscriber) => subscriber.next([]));

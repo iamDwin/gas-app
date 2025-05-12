@@ -80,6 +80,13 @@ import {
         (onConfirm)="confirmLockUser()"
       ></app-confirmation-modal>
 
+      <app-confirmation-modal
+        [show]="showActivateModal"
+        [config]="activateModalMessage"
+        (onCancel)="cancelActivate()"
+        (onConfirm)="confirmActivateUser()"
+      ></app-confirmation-modal>
+
       <!-- Backdrop -->
       <div
         *ngIf="isDrawerOpen"
@@ -94,28 +101,44 @@ export class UsersComponent implements OnInit {
   isDrawerOpen = false;
   selectedUser?: userList;
   showLockModal = false;
-  isLoading = true;
+  showActivateModal = false;
+  isLoading = false;
   userToLock?: User;
+  userToActivate?: User;
   loadingMessage = "Loading users...";
+  actAction = "";
 
   lockModalConfig: ConfirmationModalConfig = {
     title: "Lock User",
-    message:
-      "Are you sure you want to lock this user ? This action cannot be undone.",
+    message: "Are you sure you want to lock this user ?",
     confirmText: "Lock User",
     cancelText: "Cancel",
     type: "danger",
   };
   unlockModalConfig: ConfirmationModalConfig = {
     title: "Unlock User",
-    message:
-      "Are you sure you want to unlock this user ? This action cannot be undone.",
+    message: "Are you sure you want to unlock this user ?",
     confirmText: "Unlock User",
     cancelText: "Cancel",
     type: "warning",
   };
+  activateModalConfig: ConfirmationModalConfig = {
+    title: "Activate User",
+    message: "Are you sure you want to activate this user ?",
+    confirmText: "Activate User",
+    cancelText: "Cancel",
+    type: "warning",
+  };
+  deactivateModalConfig: ConfirmationModalConfig = {
+    title: "Deactivate User",
+    message: "Are you sure you want to deactivate this user ?",
+    confirmText: "Deactivate User",
+    cancelText: "Cancel",
+    type: "danger",
+  };
 
   lockModalMessage: ConfirmationModalConfig = this.lockModalConfig;
+  activateModalMessage: ConfirmationModalConfig = this.activateModalConfig;
   columns = [
     { prop: "fullName", name: "Full Name" },
     { prop: "email", name: "Email" },
@@ -135,10 +158,6 @@ export class UsersComponent implements OnInit {
       label: "Deactivate",
       type: "warning",
     },
-    // {
-    //   label: "Delete",
-    //   type: "danger",
-    // },
   ];
 
   constructor(
@@ -150,7 +169,6 @@ export class UsersComponent implements OnInit {
 
   ngOnInit() {
     this.breadcrumbService.setBreadcrumbs([{ label: "Users", link: "/users" }]);
-
     this.loadUsers();
   }
 
@@ -160,7 +178,7 @@ export class UsersComponent implements OnInit {
       next: (userList) => {
         console.log({ userList });
         this.users = userList;
-        // this.isLoading = false;
+        this.isLoading = false;
       },
       error: (error) => {
         this.notificationService.addNotification({
@@ -173,14 +191,13 @@ export class UsersComponent implements OnInit {
           message: "Failed To Get Users, Please Try Again",
           type: "error",
         });
-        // this.isLoading = false;
+        this.isLoading = false;
       },
     });
   }
 
   // Method to determine actions based on user status
   getActionsForUser(user: any): TableAction[] {
-    console.log({ user });
     const actions: TableAction[] = [
       {
         label: "Edit",
@@ -215,29 +232,16 @@ export class UsersComponent implements OnInit {
     return actions;
   }
 
-  // onActionClick(event: { action: TableAction; row: userList }) {
-  //   switch (event.action.label) {
-  //     case "View Details":
-  //       break;
-  //     case "Edit":
-  //       this.editUser(event.row);
-  //       break;
-  //     case "Delete":
-  //       this.deleteUser(event.row.id.toString());
-  //       break;
-  //   }
-  // }
-
   onActionClick(event: { action: TableAction; row: userList }) {
     switch (event.action.label) {
       case "Edit":
         this.editUser(event.row);
         break;
       case "Deactivate":
-        // Implement deactivate logic
+        this.activateAction(event.row, "deactivate");
         break;
       case "Activate":
-        // Implement activate logic
+        this.activateAction(event.row, "activate");
         break;
       case "Lock":
         this.lockAction(event.row, "lock");
@@ -245,7 +249,6 @@ export class UsersComponent implements OnInit {
       case "Unlock":
         this.lockAction(event.row, "unlock");
         break;
-      // Add more cases as needed
       case "Delete":
         this.deleteUser(event.row.id.toString());
         break;
@@ -327,14 +330,94 @@ export class UsersComponent implements OnInit {
     else this.lockModalMessage = this.unlockModalConfig;
   };
 
+  activateAction = (userData: any, action: "activate" | "deactivate") => {
+    this.showActivateModal = true;
+    this.userToActivate = userData;
+    this.actAction = action;
+    if (action === "activate")
+      this.activateModalMessage = this.activateModalConfig;
+    else this.activateModalMessage = this.deactivateModalConfig;
+  };
+
   cancelLock() {
     this.showLockModal = false;
     this.userToLock = undefined;
   }
 
+  cancelActivate() {
+    this.showActivateModal = false;
+    this.userToActivate = undefined;
+    this.actAction = "";
+  }
+
   confirmLockUser = () => {
-    console.log(" we confirmed...");
     this.isLoading = true;
+    this.showLockModal = false;
     this.loadingMessage = "Performing Action...";
+
+    this.userService.unlockUser(this.userToLock).subscribe({
+      next: (response) => {
+        this.isLoading = false;
+        this.notificationService.addNotification({
+          title: "User Request",
+          message: `${response.errorMessage}`,
+          type: response.errorCode == "1" ? "error" : "success",
+        });
+        this.toastService.show({
+          title: "User Request",
+          message: `${response.errorMessage}`,
+          type: response.errorCode == "1" ? "error" : "success",
+        });
+      },
+      error: (error) => {
+        this.isLoading = false;
+        this.notificationService.addNotification({
+          title: "User Request",
+          message: `${error.errorMessage}`,
+          type: error.errorCode == "1" ? "error" : "success",
+        });
+        this.toastService.show({
+          title: "User Request",
+          message: `${error.errorMessage}`,
+          type: error.errorCode == "1" ? "error" : "success",
+        });
+      },
+    });
+  };
+  confirmActivateUser = () => {
+    this.isLoading = true;
+    this.showLockModal = false;
+    this.loadingMessage = "Performing Action...";
+
+    this.userService
+      .activateDeativateUser(this.userToActivate, this.actAction)
+      .subscribe({
+        next: (response) => {
+          this.isLoading = false;
+          this.notificationService.addNotification({
+            title: "User Request",
+            message: `${response.errorMessage}`,
+            type: response.errorCode == "1" ? "error" : "success",
+          });
+          this.toastService.show({
+            title: "User Request",
+            message: `${response.errorMessage}`,
+            type: response.errorCode == "1" ? "error" : "success",
+          });
+        },
+        error: (error) => {
+          this.isLoading = false;
+          this.notificationService.addNotification({
+            title: "User Request",
+            message: `${error.errorMessage}`,
+            type: error.errorCode == "1" ? "error" : "success",
+          });
+          this.toastService.show({
+            title: "User Request",
+            message: `${error.errorMessage}`,
+            type: error.errorCode == "1" ? "error" : "success",
+          });
+        },
+      });
   };
 }

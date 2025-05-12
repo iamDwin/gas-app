@@ -14,6 +14,7 @@ import { Organization } from "../../organizations/organization.model";
 import { NotificationService } from "../../../shared/services/notification.service";
 import { ToastService } from "../../../shared/services/toast.service";
 import { UserService } from "../user.service";
+// import { InstitutionDropdownComponent } from "../../../shared/components/institution-dropdown/institution-dropdown.component";
 
 @Component({
   selector: "app-user-form",
@@ -23,6 +24,7 @@ import { UserService } from "../user.service";
     ReactiveFormsModule,
     DrawerComponent,
     ButtonComponent,
+    // InstitutionDropdownComponent,
   ],
   template: `
     <app-drawer
@@ -102,6 +104,13 @@ import { UserService } from "../user.service";
               >
                 {{ institute.name }}
               </option>
+
+              <!-- <app-institution-dropdown
+              [institutions]="institutions"
+              [selectedInstitution]="selectedInstitution"
+              (institutionSelected)="onInstitutionSelected($event)"
+              placeholder="Select an institution"
+            ></app-institution-dropdown> -->
             </select>
           </div>
         </form>
@@ -132,7 +141,7 @@ export class UserFormComponent {
   userRoles: any;
 
   form: FormGroup;
-  institutions: any;
+  // institutions: any;
   constructor(
     private fb: FormBuilder,
     private organService: OrganizationService,
