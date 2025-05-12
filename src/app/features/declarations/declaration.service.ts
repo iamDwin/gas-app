@@ -2,8 +2,9 @@ import { Injectable } from "@angular/core";
 import { BehaviorSubject, Observable } from "rxjs";
 import {
   Declaration,
-  DeclarationApproval,
+  DailyQuantity,
   DeclarationStatus,
+  DeclarationApproval,
 } from "./declaration.model";
 import { AuthService } from "../../core/auth/auth.service";
 
@@ -14,8 +15,8 @@ export class DeclarationService {
   private declarations = new BehaviorSubject<Declaration[]>([
     {
       id: "1",
-      title: "Q1 2024 Environmental Report",
-      description: "Environmental impact assessment for Q1 2024",
+      title: "January 2024 Declaration",
+      description: "Monthly declaration for January 2024",
       status: "pending_org_approval",
       organizationId: "1",
       createdBy: "1",
@@ -24,71 +25,56 @@ export class DeclarationService {
       uploadedBy: "1",
       institutionCode: "ENV001",
       declaredQuantity: 1000,
-      startDate: new Date("2024-01-01").toISOString(),
-      endDate: new Date("2024-03-31").toISOString(),
+      startDate: "2024-01-01",
+      endDate: "2024-01-31",
+      dailyQuantities: this.generateDailyQuantities(
+        "2024-01-01",
+        "2024-01-31",
+        1000,
+        0.2
+      ),
     },
     {
       id: "2",
-      title: "Annual Safety Compliance",
-      description: "Annual safety standards compliance report",
+      title: "February 2024 Declaration",
+      description: "Monthly declaration for February 2024",
       status: "approved",
       organizationId: "2",
       createdBy: "2",
-      createdAt: new Date("2024-01-14"),
-      updatedAt: new Date("2024-01-16"),
+      createdAt: new Date("2024-02-01"),
+      updatedAt: new Date("2024-02-01"),
       uploadedBy: "2",
       institutionCode: "SAF001",
       declaredQuantity: 500,
-      startDate: new Date("2024-01-01").toISOString(),
-      endDate: new Date("2024-12-31").toISOString(),
+      startDate: "2024-02-01",
+      endDate: "2024-02-29",
+      dailyQuantities: this.generateDailyQuantities(
+        "2024-02-01",
+        "2024-02-29",
+        500,
+        0.15
+      ),
     },
     {
       id: "3",
-      title: "Waste Management Plan",
-      description: "Updated waste management procedures",
+      title: "March 2024 Declaration",
+      description: "Monthly declaration for March 2024",
       status: "draft",
       organizationId: "1",
       createdBy: "3",
-      createdAt: new Date("2024-01-13"),
-      updatedAt: new Date("2024-01-13"),
+      createdAt: new Date("2024-03-01"),
+      updatedAt: new Date("2024-03-01"),
       uploadedBy: "3",
       institutionCode: "WST001",
       declaredQuantity: 750,
-      startDate: new Date("2024-01-01").toISOString(),
-      endDate: new Date("2024-12-31").toISOString(),
-    },
-    {
-      id: "4",
-      title: "Carbon Emissions Report",
-      description: "Monthly carbon emissions tracking",
-      status: "pending_admin_approval",
-      organizationId: "3",
-      createdBy: "4",
-      createdAt: new Date("2024-01-12"),
-      updatedAt: new Date("2024-01-14"),
-      uploadedBy: "4",
-      institutionCode: "CRB001",
-      declaredQuantity: 2500,
-      startDate: new Date("2024-01-01").toISOString(),
-      endDate: new Date("2024-01-31").toISOString(),
-    },
-    {
-      id: "5",
-      title: "Resource Utilization Review",
-      description: "Quarterly resource usage analysis",
-      status: "rejected",
-      organizationId: "2",
-      createdBy: "2",
-      createdAt: new Date("2024-01-11"),
-      updatedAt: new Date("2024-01-15"),
-      rejectedBy: "1",
-      rejectedAt: new Date("2024-01-15"),
-      rejectionReason: "Incomplete data provided",
-      uploadedBy: "2",
-      institutionCode: "RES001",
-      declaredQuantity: 1200,
-      startDate: new Date("2024-01-01").toISOString(),
-      endDate: new Date("2024-03-31").toISOString(),
+      startDate: "2024-03-01",
+      endDate: "2024-03-31",
+      dailyQuantities: this.generateDailyQuantities(
+        "2024-03-01",
+        "2024-03-31",
+        750,
+        0.1
+      ),
     },
   ]);
 
@@ -96,8 +82,72 @@ export class DeclarationService {
 
   constructor(private authService: AuthService) {}
 
+  private generateDailyQuantities(
+    startDate: string,
+    endDate: string,
+    baseQuantity: number,
+    variationPercentage: number
+  ): DailyQuantity[] {
+    const start = new Date(startDate);
+    const end = new Date(endDate);
+    const dailyQuantities: DailyQuantity[] = [];
+    const maxVariation = baseQuantity * variationPercentage;
+
+    for (
+      let date = new Date(start);
+      date <= end;
+      date.setDate(date.getDate() + 1)
+    ) {
+      const variation = (Math.random() * 2 - 1) * maxVariation;
+      const quantity = Math.round(baseQuantity + variation);
+
+      dailyQuantities.push({
+        date: date.toISOString().split("T")[0],
+        quantity: Math.max(0, quantity),
+      });
+    }
+
+    return dailyQuantities;
+  }
+
   getDeclarations(): Observable<Declaration[]> {
     return this.declarations.asObservable();
+  }
+
+  getDeclaration(id: string): Observable<Declaration | undefined> {
+    return new Observable((subscriber) => {
+      const declaration = this.declarations.value.find((d) => d.id === id);
+      subscriber.next(declaration);
+      subscriber.complete();
+    });
+  }
+
+  updateDailyQuantity(
+    declarationId: string,
+    date: string,
+    quantity: number
+  ): void {
+    const updated = this.declarations.value.map((d) => {
+      if (d.id === declarationId) {
+        const updatedQuantities = d.dailyQuantities.map((dq) =>
+          dq.date === date ? { ...dq, quantity } : dq
+        );
+        return {
+          ...d,
+          dailyQuantities: updatedQuantities,
+          updatedAt: new Date(),
+        };
+      }
+      return d;
+    });
+    this.declarations.next(updated);
+  }
+
+  private getMonthEndDate(startDate: string): string {
+    const date = new Date(startDate);
+    date.setMonth(date.getMonth() + 1);
+    date.setDate(0);
+    return date.toISOString().split("T")[0];
   }
 
   getDeclarationsForOrganization(
@@ -139,12 +189,22 @@ export class DeclarationService {
     declaration: Omit<Declaration, "id" | "createdAt" | "updatedAt" | "status">
   ): void {
     const user = this.authService.getCurrentUser();
+
+    const endDate = this.getMonthEndDate(declaration.startDate);
+
     const newDeclaration: Declaration = {
       ...declaration,
-      id: Math.random().toString(36).substr(2, 9),
+      id: Math.random().toString(36).substring(2),
       status: "pending_org_approval" as DeclarationStatus,
       createdAt: new Date(),
       updatedAt: new Date(),
+      endDate,
+      dailyQuantities: this.generateDailyQuantities(
+        declaration.startDate,
+        endDate,
+        declaration.declaredQuantity,
+        0.2
+      ),
     };
     this.declarations.next([...this.declarations.value, newDeclaration]);
   }

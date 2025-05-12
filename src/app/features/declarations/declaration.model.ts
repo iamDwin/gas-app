@@ -5,10 +5,16 @@ export type DeclarationStatus =
   | "approved"
   | "rejected";
 
+export interface DailyQuantity {
+  date: string;
+  quantity: number;
+}
+
 export interface Declaration {
   id: string;
   title: string;
   description: string;
+  status: DeclarationStatus;
   organizationId: string;
   createdBy: string;
   uploadedBy: string;
@@ -16,7 +22,7 @@ export interface Declaration {
   declaredQuantity: number;
   startDate: string;
   endDate: string;
-  status: DeclarationStatus;
+  dailyQuantities: DailyQuantity[];
   createdAt: Date;
   updatedAt: Date;
   approvedBy?: string;

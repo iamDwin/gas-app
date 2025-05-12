@@ -1,5 +1,6 @@
 import { Component, OnInit } from "@angular/core";
 import { CommonModule } from "@angular/common";
+import { Router } from "@angular/router";
 import { Declaration } from "./declaration.model";
 import { DeclarationService } from "./declaration.service";
 import { DeclarationFormComponent } from "./declaration-form/declaration-form.component";
@@ -77,14 +78,19 @@ export class DeclarationsComponent implements OnInit {
   loadingMessage = "Loading declarations...";
 
   columns = [
-    { prop: "title", name: "Title" },
+    { prop: "institutionCode", name: "Institution" },
+    { prop: "declaredQuantity", name: "Quantity" },
+    { prop: "startDate", name: "Start Date" },
+    { prop: "endDate", name: "End Date" },
     { prop: "status", name: "Status" },
-    { prop: "createdAt", name: "Created" },
-    { prop: "updatedAt", name: "Updated" },
     { prop: "actions", name: "Actions", sortable: false },
   ];
 
   actions: TableAction[] = [
+    {
+      label: "View Details",
+      type: "primary",
+    },
     {
       label: "Edit",
       type: "primary",
@@ -95,23 +101,14 @@ export class DeclarationsComponent implements OnInit {
       type: "danger",
       isDisabled: (row: Declaration) => row.status !== "draft",
     },
-    {
-      label: "Approve",
-      type: "success",
-      isDisabled: (row: Declaration) => !this.canApprove(row),
-    },
-    {
-      label: "Reject",
-      type: "warning",
-      isDisabled: (row: Declaration) => !this.canReject(row),
-    },
   ];
 
   constructor(
     private declarationService: DeclarationService,
     private authService: AuthService,
     private breadcrumbService: BreadcrumbService,
-    private notificationService: NotificationService
+    private notificationService: NotificationService,
+    private router: Router
   ) {}
 
   ngOnInit() {
@@ -122,37 +119,19 @@ export class DeclarationsComponent implements OnInit {
     this.loadDeclarations();
   }
 
-  formatDate(date: Date): string {
-    const today = new Date();
-    const declarationDate = new Date(date);
-
-    if (declarationDate.toDateString() === today.toDateString()) {
-      return declarationDate.toLocaleTimeString("en-US", {
-        hour: "numeric",
-        minute: "2-digit",
-        hour12: true,
-      });
-    }
-
-    if (declarationDate.getFullYear() === today.getFullYear()) {
-      return declarationDate.toLocaleDateString("en-US", {
-        month: "short",
-        day: "numeric",
-      });
-    }
-
-    return declarationDate.toLocaleDateString("en-US", {
+  formatDate(date: string): string {
+    return new Date(date).toLocaleDateString("en-US", {
+      year: "numeric",
       month: "short",
       day: "numeric",
-      year: "numeric",
     });
   }
 
   formatDeclarations(declarations: Declaration[]) {
     this.formattedDeclarations = declarations.map((declaration) => ({
       ...declaration,
-      createdAt: this.formatDate(declaration.createdAt),
-      updatedAt: this.formatDate(declaration.updatedAt),
+      startDate: this.formatDate(declaration.startDate),
+      endDate: this.formatDate(declaration.endDate),
     }));
   }
 
@@ -167,33 +146,16 @@ export class DeclarationsComponent implements OnInit {
     }, 1000);
   }
 
-  canApprove(declaration: Declaration): boolean {
-    const isAdmin = this.authService.isAdmin();
-    const isOrgAdmin = this.authService.getCurrentUser()?.role === "org_admin";
-
-    return (
-      (isAdmin && declaration.status === "pending_admin_approval") ||
-      (isOrgAdmin && declaration.status === "pending_org_approval")
-    );
-  }
-
-  canReject(declaration: Declaration): boolean {
-    return this.canApprove(declaration);
-  }
-
   onActionClick(event: { action: TableAction; row: Declaration }) {
     switch (event.action.label) {
+      case "View Details":
+        this.router.navigate(["/declarations", event.row.id]);
+        break;
       case "Edit":
         this.editDeclaration(event.row);
         break;
       case "Delete":
         this.deleteDeclaration(event.row.id);
-        break;
-      case "Approve":
-        this.approveDeclaration(event.row);
-        break;
-      case "Reject":
-        this.rejectDeclaration(event.row);
         break;
     }
   }
@@ -211,39 +173,6 @@ export class DeclarationsComponent implements OnInit {
   editDeclaration(declaration: Declaration) {
     this.selectedDeclaration = declaration;
     this.isDrawerOpen = true;
-  }
-
-  approveDeclaration(declaration: Declaration) {
-    this.isLoading = true;
-    this.loadingMessage = "Approving declaration...";
-
-    setTimeout(() => {
-      this.declarationService.approveDeclaration(declaration.id);
-      this.notificationService.addNotification({
-        title: "Declaration Approved",
-        message: `Declaration "${declaration.title}" has been approved`,
-        type: "success",
-      });
-      this.loadDeclarations();
-    }, 1000);
-  }
-
-  rejectDeclaration(declaration: Declaration) {
-    const reason = prompt("Please provide a reason for rejection:");
-    if (reason) {
-      this.isLoading = true;
-      this.loadingMessage = "Rejecting declaration...";
-
-      setTimeout(() => {
-        this.declarationService.rejectDeclaration(declaration.id, reason);
-        this.notificationService.addNotification({
-          title: "Declaration Rejected",
-          message: `Declaration "${declaration.title}" has been rejected`,
-          type: "error",
-        });
-        this.loadDeclarations();
-      }, 1000);
-    }
   }
 
   saveDeclaration(declarationData: Partial<Declaration>) {
@@ -291,7 +220,7 @@ export class DeclarationsComponent implements OnInit {
 
       this.loadDeclarations();
       this.closeDrawer();
-    }, 1000);
+    }, 2000);
   }
 
   deleteDeclaration(id: string) {
@@ -307,7 +236,7 @@ export class DeclarationsComponent implements OnInit {
           type: "success",
         });
         this.loadDeclarations();
-      }, 1000);
+      }, 2000);
     }
   }
 }

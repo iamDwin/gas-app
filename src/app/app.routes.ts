@@ -57,29 +57,29 @@ export const routes: Routes = [
         path: "users",
         canActivate: [RoleGuard],
         data: { role: "admin" },
+        loadComponent: () =>
+          import("./features/users/users.component").then(
+            (m) => m.UsersComponent
+          ),
+      },
+      {
+        path: "declarations",
         children: [
           {
             path: "",
             loadComponent: () =>
-              import("./features/users/users.component").then(
-                (m) => m.UsersComponent
+              import("./features/declarations/declarations.component").then(
+                (m) => m.DeclarationsComponent
               ),
           },
           {
-            path: "pending",
+            path: ":id",
             loadComponent: () =>
               import(
-                "./features/users/pending-users/pending-users.component"
-              ).then((m) => m.PendingUsersComponent),
+                "./features/declarations/declaration-daily-view/declaration-daily-view.component"
+              ).then((m) => m.DeclarationDailyViewComponent),
           },
         ],
-      },
-      {
-        path: "declarations",
-        loadComponent: () =>
-          import("./features/declarations/declarations.component").then(
-            (m) => m.DeclarationsComponent
-          ),
       },
       {
         path: "contracts",
