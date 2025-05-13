@@ -64,8 +64,8 @@ export class AuthService {
     private toastService: ToastService
   ) {
     // Check for existing token and user on startup
-    const token = localStorage.getItem(this.tokenKey);
-    const userStr = localStorage.getItem(this.userKey);
+    const token = sessionStorage.getItem(this.tokenKey);
+    const userStr = sessionStorage.getItem(this.userKey);
 
     if (token && userStr) {
       try {
@@ -73,15 +73,15 @@ export class AuthService {
         this.currentUserSubject.next(user);
 
         // Get the return URL if it exists
-        const returnUrl = localStorage.getItem(this.returnUrlKey);
+        const returnUrl = sessionStorage.getItem(this.returnUrlKey);
         if (returnUrl) {
           // Clear the stored URL
-          localStorage.removeItem(this.returnUrlKey);
+          sessionStorage.removeItem(this.returnUrlKey);
           // Navigate to the stored URL
           this.router.navigateByUrl(returnUrl);
         }
       } catch (e) {
-        // Invalid user data in localStorage
+        // Invalid user data in sessionStorage
         this.logout();
       }
     }
@@ -115,8 +115,8 @@ export class AuthService {
               name: response.userName, // We'll need to get the actual name from the backend
             };
 
-            localStorage.setItem(this.tokenKey, response.token);
-            localStorage.setItem(this.userKey, JSON.stringify(user));
+            sessionStorage.setItem(this.tokenKey, response.token);
+            sessionStorage.setItem(this.userKey, JSON.stringify(user));
             this.currentUserSubject.next(user);
 
             this.toastService.show({
@@ -191,8 +191,8 @@ export class AuthService {
               name: response.userName, // We'll need to get the actual name from the backend
             };
 
-            localStorage.setItem(this.tokenKey, response.token);
-            localStorage.setItem(this.userKey, JSON.stringify(user));
+            sessionStorage.setItem(this.tokenKey, response.token);
+            sessionStorage.setItem(this.userKey, JSON.stringify(user));
             this.currentUserSubject.next(user);
 
             this.toastService.show({
@@ -254,9 +254,9 @@ export class AuthService {
 
   logout(): void {
     // Store the current URL before logging out
-    localStorage.setItem(this.returnUrlKey, this.router.url);
-    localStorage.removeItem(this.tokenKey);
-    localStorage.removeItem(this.userKey);
+    sessionStorage.setItem(this.returnUrlKey, this.router.url);
+    sessionStorage.removeItem(this.tokenKey);
+    sessionStorage.removeItem(this.userKey);
     this.currentUserSubject.next(null);
     this.router.navigate(["/login"]);
     this.toastService.show({
@@ -267,7 +267,7 @@ export class AuthService {
   }
 
   isAuthenticated(): boolean {
-    const token = localStorage.getItem(this.tokenKey);
+    const token = sessionStorage.getItem(this.tokenKey);
     const user = this.currentUserSubject.value;
     return !!user && !!token;
   }
@@ -286,6 +286,6 @@ export class AuthService {
   }
 
   getAuthToken(): string | null {
-    return localStorage.getItem(this.tokenKey);
+    return sessionStorage.getItem(this.tokenKey);
   }
 }

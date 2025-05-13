@@ -178,7 +178,7 @@ export class DeclarationFormComponent {
   onSubmit() {
     if (this.form.valid && this.selectedInstitution) {
       const formValue = this.form.value;
-      const user = JSON.parse(localStorage.getItem("auth_user") || "{}");
+      const user = JSON.parse(sessionStorage.getItem("auth_user") || "{}");
 
       this.save.emit({
         ...formValue,

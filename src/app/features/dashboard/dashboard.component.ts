@@ -21,7 +21,13 @@ import { DoughnutChartComponent } from "../../shared/components/charts/doughnut-
   ],
   template: `
     <div class="p-4">
-      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+      <div
+        class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4"
+        [ngClass]="{
+          'lg:grid-cols-4': userType === 'M',
+          'lg:grid-cols-3': userType !== 'M'
+        }"
+      >
         <!-- Organizations Card -->
         <div
           *ngIf="userType == 'M'"
@@ -157,6 +163,7 @@ import { DoughnutChartComponent } from "../../shared/components/charts/doughnut-
 
         <!-- Reports Card -->
         <div
+          *ngIf="userType == 'U' || userType == 'D'"
           (click)="navigate('/reports')"
           class="bg-white rounded-lg shadow p-6 cursor-pointer hover:shadow-lg transition-shadow duration-200"
         >
@@ -186,13 +193,23 @@ import { DoughnutChartComponent } from "../../shared/components/charts/doughnut-
           </div>
         </div>
         <!-- </div> -->
+      </div>
 
+      <div
+        *ngIf="userType == 'U' || userType == 'M'"
+        class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-4 mb-4"
+      >
         <!-- Weekly Declarations Bar Chart -->
         <div class="bg-white rounded-lg shadow p-6">
           <h3 class="text-lg font-semibold text-gray-900 mb-4">
-            Weekly Declarations
+            Monthly Declarations chart
           </h3>
-          <div class="h-80">
+          <div class="h-fit">
+            <h1
+              class="flex my-20 items-center justify-center text-[#079455] opacity-0.8 text-4xl font-bold"
+            >
+              Coming Soon!
+            </h1>
             <!-- <app-bar-chart
               [data]="weeklyDeclarations"
               [labels]="weekLabels"
@@ -204,9 +221,57 @@ import { DoughnutChartComponent } from "../../shared/components/charts/doughnut-
         <!-- Approval Status Distribution -->
         <div class="bg-white rounded-lg shadow p-6">
           <h3 class="text-lg font-semibold text-gray-900 mb-4">
-            Declaration Status
+            Declaration Status charts
           </h3>
-          <div class="h-80">
+          <div class="h-fit">
+            <h1
+              class="flex my-20 items-center justify-center text-[#079455] opacity-0.8 text-4xl font-bold"
+            >
+              Coming Soon!
+            </h1>
+            <!-- <app-doughnut-chart
+              [data]="statusData"
+              [labels]="statusLabels"
+              [backgroundColor]="['#079455', '#eab308', '#ef4444', '#3b82f6']"
+            ></app-doughnut-chart> -->
+          </div>
+        </div>
+      </div>
+
+      <div
+        *ngIf="userType == 'D' || userType == 'M'"
+        class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-4"
+      >
+        <!-- Weekly Nomination Bar Chart -->
+        <div class="bg-white rounded-lg shadow p-6">
+          <h3 class="text-lg font-semibold text-gray-900 mb-4">
+            Monthly Nomination chart
+          </h3>
+          <div class="h-fit">
+            <h1
+              class="flex my-20 items-center justify-center text-[#079455] opacity-0.8 text-4xl font-bold"
+            >
+              Coming Soon!
+            </h1>
+            <!-- <app-bar-chart
+              [data]="weeklyDeclarations"
+              [labels]="weekLabels"
+              label="Declarations"
+            ></app-bar-chart> -->
+          </div>
+        </div>
+
+        <!-- Approval Status Distribution -->
+        <div class="bg-white rounded-lg shadow p-6">
+          <h3 class="text-lg font-semibold text-gray-900 mb-4">
+            Nomination Status chart
+          </h3>
+          <div class="h-fit">
+            <h1
+              class="flex my-20 items-center justify-center text-[#079455] opacity-0.8 text-4xl font-bold"
+            >
+              Coming Soon!
+            </h1>
             <!-- <app-doughnut-chart
               [data]="statusData"
               [labels]="statusLabels"
