@@ -277,13 +277,18 @@ export class UsersComponent implements OnInit {
       : "Creating user...";
 
     if (this.selectedUser) {
-      console.log(" heree we goooo...", userData);
-      this.userService
-        .updateUser({
+      // Find the full user data from this.users using the id
+      const fullUserData = this.users.find(
+        (user: any) => user.id === this.selectedUser?.id
+      );
+
+      if (fullUserData) {
+        // Update the full user data with the fields from userData
+        const updatedUserData = {
+          ...fullUserData,
           ...userData,
-          id: this.selectedUser.id,
-        })
-        .subscribe({
+        };
+        this.userService.updateUser(updatedUserData).subscribe({
           next: (response) => {
             this.notificationService.addNotification({
               title: "User Action",
@@ -309,6 +314,19 @@ export class UsersComponent implements OnInit {
             });
           },
         });
+      } else {
+        // Handle the case where the user is not found
+        this.notificationService.addNotification({
+          title: "User Action",
+          message: "User not found.",
+          type: "error",
+        });
+        this.toastService.show({
+          title: "User Action",
+          message: "User not found.",
+          type: "error",
+        });
+      }
     } else {
       this.userService.addUser(userData).subscribe({
         next: (response: any) => {

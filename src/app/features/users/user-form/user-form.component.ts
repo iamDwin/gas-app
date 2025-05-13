@@ -24,7 +24,7 @@ import { InstitutionDropdownComponent } from "../../../shared/components/institu
     ReactiveFormsModule,
     DrawerComponent,
     ButtonComponent,
-    InstitutionDropdownComponent,
+    // InstitutionDropdownComponent,
   ],
   template: `
     <app-drawer
@@ -94,7 +94,7 @@ import { InstitutionDropdownComponent } from "../../../shared/components/institu
             <label class="block text-sm font-medium text-gray-700"
               >Institutions</label
             >
-            <!-- <select
+            <select
               formControlName="institutionId"
               class="mt-1 block w-full rounded-xl  border border-gray-200 focus:outline-none focus:ring-2 focus:ring-green-500"
             >
@@ -104,14 +104,7 @@ import { InstitutionDropdownComponent } from "../../../shared/components/institu
               >
                 {{ institute.name }}
               </option>
-            </select> -->
-
-            <app-institution-dropdown
-              [institutions]="organizations"
-              [selectedInstitution]="selectedInstitution"
-              (institutionSelected)="onInstitutionSelected($event)"
-              placeholder="Select an institution"
-            ></app-institution-dropdown>
+            </select>
           </div>
         </form>
       </div>

@@ -43,7 +43,18 @@ export class PendingUsersComponent implements OnInit {
     {
       prop: "type",
       name: "Type",
-      transform: (value: string) => (value === "U" ? "Upstream" : "Downstream"),
+      transform: (value: string) => {
+        switch (value) {
+          case "U":
+            return "Upstream";
+          case "D":
+            return "Downstream";
+          case "M":
+            return "Midstream";
+          default:
+            return value; // Return the original value if it doesn't match any case
+        }
+      },
     },
     { prop: "action", name: "Request" },
     { prop: "initiatedByName", name: "Initiated By" },
