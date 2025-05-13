@@ -100,7 +100,7 @@ import { InstitutionDropdownComponent } from "../../../shared/components/institu
             >
               <option
                 *ngFor="let institute of organizations"
-                [value]="institute.id"
+                [value]="institute.code"
               >
                 {{ institute.name }}
               </option>

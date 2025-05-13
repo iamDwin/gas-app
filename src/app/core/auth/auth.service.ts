@@ -13,6 +13,7 @@ export interface User {
   organizationId: string | null;
   organizationName: string | null;
   institutionType: string;
+  type: string;
   name: string;
 }
 
@@ -110,6 +111,7 @@ export class AuthService {
               organizationId: response.institutionId, // We'll need to get this from the backend
               organizationName: response.institutionName, // We'll need to get this from the backend
               institutionType: response.institutionType, // We'll need to get this from the backend
+              type: response.type, // We'll need to get this from the backend
               name: response.userName, // We'll need to get the actual name from the backend
             };
 
@@ -185,6 +187,7 @@ export class AuthService {
               organizationId: response.institutionId, // We'll need to get this from the backend
               organizationName: response.institutionName, // We'll need to get this from the backend
               institutionType: response.institutionType, // We'll need to get this from the backend
+              type: response.type, // We'll need to get this from the backend
               name: response.userName, // We'll need to get the actual name from the backend
             };
 

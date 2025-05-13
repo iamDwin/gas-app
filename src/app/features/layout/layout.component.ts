@@ -168,7 +168,7 @@ export class LayoutComponent implements OnInit {
       this.userName = user.name;
       this.userEmail = user.email;
       this.userInitial = user.name.charAt(0).toUpperCase();
-      this.institutionType = user.institutionType; // Store institutionType
+      this.institutionType = user.type; // Store institutionType
     }
 
     // Subscribe to user changes
@@ -177,7 +177,7 @@ export class LayoutComponent implements OnInit {
         this.userName = user.name;
         this.userEmail = user.email;
         this.userInitial = user.name.charAt(0).toUpperCase();
-        this.institutionType = user.institutionType; // Update institutionType
+        this.institutionType = user.type; // Update institutionType
       }
     });
   }
