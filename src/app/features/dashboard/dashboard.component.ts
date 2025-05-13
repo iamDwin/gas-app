@@ -5,6 +5,7 @@ import { OrganizationService } from "../organizations/organization.service";
 import { UserService } from "../users/user.service";
 import { BreadcrumbService } from "../../shared/services/breadcrumb.service";
 import { PendingItemsService } from "../../shared/services/pending-items.service";
+import { AuthService } from "../../core/auth/auth.service";
 
 @Component({
   selector: "app-dashboard",
@@ -15,6 +16,7 @@ import { PendingItemsService } from "../../shared/services/pending-items.service
       <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         <!-- Organizations Card -->
         <div
+          *ngIf="userType == 'M'"
           (click)="navigate('/organizations')"
           class="bg-white rounded-lg shadow p-6 cursor-pointer hover:shadow-lg transition-shadow duration-200"
         >
@@ -79,6 +81,7 @@ import { PendingItemsService } from "../../shared/services/pending-items.service
 
         <!-- Declarations Card -->
         <div
+          *ngIf="userType == 'U' || userType == 'M'"
           (click)="navigate('/declarations')"
           class="bg-white rounded-lg shadow p-6 cursor-pointer hover:shadow-lg transition-shadow duration-200"
         >
@@ -110,41 +113,9 @@ import { PendingItemsService } from "../../shared/services/pending-items.service
           </div>
         </div>
 
-        <!-- Allocations Card -->
-        <!-- <div
-          (click)="navigate('/allocations')"
-          class="bg-white rounded-lg shadow p-6 cursor-pointer hover:shadow-lg transition-shadow duration-200"
-        >
-          <div class="flex items-center mb-4">
-            <div
-              class="w-10 h-10 bg-primary/10 rounded-lg flex items-center justify-center mr-3"
-            >
-              <svg
-                class="w-6 h-6 text-primary"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-              >
-                <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  stroke-width="2"
-                  d="M8 7v8a2 2 0 002 2h6M8 7V5a2 2 0 012-2h4.586a1 1 0 01.707.293l4.414 4.414a1 1 0 01.293.707V15a2 2 0 01-2 2h-2M8 7H6a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2v-2"
-                />
-              </svg>
-            </div>
-            <h2 class="text-lg font-semibold text-gray-900">Allocations</h2>
-          </div>
-          <div class="flex items-baseline">
-            <p class="text-4xl font-bold text-primary">
-              {{ pendingAllocations }}
-            </p>
-            <p class="ml-2 text-gray-600">pending</p>
-          </div>
-        </div> -->
-
         <!-- Nominations Card -->
         <div
+          *ngIf="userType == 'D' || userType == 'M'"
           (click)="navigate('/nominations')"
           class="bg-white rounded-lg shadow p-6 cursor-pointer hover:shadow-lg transition-shadow duration-200"
         >
@@ -175,58 +146,6 @@ import { PendingItemsService } from "../../shared/services/pending-items.service
             <p class="ml-2 text-gray-600">pending</p>
           </div>
         </div>
-
-        <!-- Contracts Card -->
-        <!-- <div
-          (click)="navigate('/contracts')"
-          class="bg-white rounded-lg shadow p-6 cursor-pointer hover:shadow-lg transition-shadow duration-200"
-        >
-          <div class="flex items-center mb-4">
-            <div
-              class="w-10 h-10 bg-primary/10 rounded-lg flex items-center justify-center mr-3"
-            >
-              <svg
-                class="w-6 h-6 text-primary"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-              >
-                <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  stroke-width="2"
-                  d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
-                />
-              </svg>
-            </div>
-            <h2 class="text-lg font-semibold text-gray-900">Contracts</h2>
-          </div>
-          <div class="flex items-baseline">
-            <p class="text-4xl font-bold text-primary">
-              {{ pendingContracts }}
-            </p>
-            <p class="ml-2 text-gray-600">pending</p>
-          </div>
-        </div> -->
-
-        <!-- Pending Approvals Card -->
-        <!-- <div 
-          (click)="navigate('/pending-approvals')"
-          class="bg-white rounded-lg shadow p-6 cursor-pointer hover:shadow-lg transition-shadow duration-200"
-        >
-          <div class="flex items-center mb-4">
-            <div class="w-10 h-10 bg-primary/10 rounded-lg flex items-center justify-center mr-3">
-              <svg class="w-6 h-6 text-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
-              </svg>
-            </div>
-            <h2 class="text-lg font-semibold text-gray-900">Pending Approvals</h2>
-          </div>
-          <div class="flex items-baseline">
-            <p class="text-4xl font-bold text-primary">{{ totalPendingCount }}</p>
-            <p class="ml-2 text-gray-600">total</p>
-          </div>
-        </div> -->
 
         <!-- Reports Card -->
         <div
@@ -271,13 +190,15 @@ export class DashboardComponent implements OnInit {
   pendingNominations = 0;
   pendingContracts = 0;
   totalPendingCount = 0;
+  userType: string = "";
 
   constructor(
     private organizationService: OrganizationService,
     private userService: UserService,
     private breadcrumbService: BreadcrumbService,
     private pendingItemsService: PendingItemsService,
-    private router: Router
+    private router: Router,
+    private authService: AuthService
   ) {}
 
   ngOnInit() {
@@ -308,6 +229,9 @@ export class DashboardComponent implements OnInit {
     this.pendingItemsService.getTotalPendingCount().subscribe((count) => {
       this.totalPendingCount = count;
     });
+
+    const user = this.authService.getCurrentUser();
+    if (user) this.userType = user.type;
   }
 
   navigate(path: string) {

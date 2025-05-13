@@ -93,7 +93,6 @@ export class PendingUsersComponent implements OnInit {
     this.isLoading = true;
     this.userService.getPendingUsers().subscribe({
       next: (response) => {
-        console.log({ response });
         this.users = response;
         this.isLoading = false;
       },

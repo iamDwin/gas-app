@@ -176,7 +176,6 @@ export class UsersComponent implements OnInit {
     this.isLoading = true;
     this.userService.getUsers().subscribe({
       next: (userList) => {
-        console.log({ userList });
         this.users = userList;
         this.isLoading = false;
       },
