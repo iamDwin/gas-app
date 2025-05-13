@@ -119,7 +119,7 @@ export class PendingOrganizationsComponent implements OnInit {
       next: (response) => {
         this.notificationService.addNotification({
           title: "Organization Action",
-          message: `${org.name} has been approved successfully`,
+          message: `${response.errorMessage}`,
           type: response.errorCode == 0 ? "success" : "error",
         });
         this.toastService.show({
@@ -155,8 +155,8 @@ export class PendingOrganizationsComponent implements OnInit {
       next: (response) => {
         this.notificationService.addNotification({
           title: "Organization Action",
-          message: `${org.name} has been rejected`,
-          type: "success",
+          message: `${response.errorMessage}`,
+          type: response.errorCode == 0 ? "success" : "error",
         });
 
         this.toastService.show({
@@ -169,10 +169,9 @@ export class PendingOrganizationsComponent implements OnInit {
         this.loadPendingOrganizations();
       },
       error: (error) => {
-        console.error("Error rejecting organization:", error);
         this.notificationService.addNotification({
           title: "Error",
-          message: "Failed to reject organization",
+          message: "Failed to perform action on organization",
           type: "error",
         });
         this.loadingService.hide();
