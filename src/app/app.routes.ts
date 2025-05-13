@@ -94,26 +94,46 @@ export const routes: Routes = [
           },
         ],
       },
-      {
-        path: "contracts",
-        loadComponent: () =>
-          import("./features/contracts/contracts.component").then(
-            (m) => m.ContractsComponent
-          ),
-      },
-      {
-        path: "allocations",
-        loadComponent: () =>
-          import("./features/allocations/allocations.component").then(
-            (m) => m.AllocationsComponent
-          ),
-      },
+      // {
+      //   path: "contracts",
+      //   loadComponent: () =>
+      //     import("./features/contracts/contracts.component").then(
+      //       (m) => m.ContractsComponent
+      //     ),
+      // },
+      // {
+      //   path: "allocations",
+      //   loadComponent: () =>
+      //     import("./features/allocations/allocations.component").then(
+      //       (m) => m.AllocationsComponent
+      //     ),
+      // },
       {
         path: "nominations",
-        loadComponent: () =>
-          import("./features/nominations/nominations.component").then(
-            (m) => m.NominationsComponent
-          ),
+
+        children: [
+          {
+            path: "",
+            loadComponent: () =>
+              import("./features/nominations/nominations.component").then(
+                (m) => m.NominationsComponent
+              ),
+          },
+          {
+            path: "pending",
+            loadComponent: () =>
+              import(
+                "./features/nominations/pending-nominations/pending-nominations.component"
+              ).then((m) => m.PendingNominationsComponent),
+          },
+          {
+            path: ":id",
+            loadComponent: () =>
+              import(
+                "./features/nominations/nominations-daily-view/nominations-daily-view.component"
+              ).then((m) => m.NominationsDailyViewComponent),
+          },
+        ],
       },
       {
         path: "pending-approvals",

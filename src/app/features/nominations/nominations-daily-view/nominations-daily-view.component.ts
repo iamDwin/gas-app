@@ -2,8 +2,8 @@ import { Component, OnInit } from "@angular/core";
 import { CommonModule } from "@angular/common";
 import { FormsModule } from "@angular/forms";
 import { ActivatedRoute } from "@angular/router";
-import { Declaration, DailyQuantity } from "../declaration.model";
-import { DeclarationService } from "../declaration.service";
+import { Nomination, DailyQuantity } from "../nominations.model";
+import { NominationService } from "../nominations.service";
 import { BreadcrumbService } from "../../../shared/services/breadcrumb.service";
 import { NotificationService } from "../../../shared/services/notification.service";
 
@@ -13,9 +13,9 @@ import { NotificationService } from "../../../shared/services/notification.servi
   imports: [CommonModule, FormsModule],
   template: `
     <div class="p-4">
-      <!-- Declaration Details -->
+      <!-- Nomination Details -->
       <div class="bg-white rounded-lg shadow-sm p-6 mb-6">
-        <h2 class="text-xl font-semibold mb-4">Declaration Details</h2>
+        <h2 class="text-xl font-semibold mb-4">Nomination Details</h2>
         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div>
             <p class="text-sm text-gray-600">Institution Code</p>
@@ -161,8 +161,8 @@ import { NotificationService } from "../../../shared/services/notification.servi
     </div>
   `,
 })
-export class DeclarationDailyViewComponent implements OnInit {
-  declaration?: Declaration;
+export class NominationsDailyViewComponent implements OnInit {
+  declaration?: Nomination;
   editingDates = new Set<string>();
   originalQuantities = new Map<string, number>();
   selectedDate?: string;
@@ -177,7 +177,7 @@ export class DeclarationDailyViewComponent implements OnInit {
 
   constructor(
     private route: ActivatedRoute,
-    private declarationService: DeclarationService,
+    private declarationService: NominationService,
     private breadcrumbService: BreadcrumbService,
     private notificationService: NotificationService
   ) {}
