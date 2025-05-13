@@ -146,7 +146,7 @@ import { AuthService } from "../../../core/auth/auth.service";
           class="absolute inset-0 flex flex-col items-center justify-center p-8"
         >
           <div class="max-w-lg text-center text-white mb-8">
-            <h1 class="text-5xl font-bold mb-6">Welcome back</h1>
+            <h1 class="text-5xl font-bold mb-6">Welcome</h1>
             <p class="text-xl text-gray-300">
               Sign in to access your account and manage your declarations.
             </p>

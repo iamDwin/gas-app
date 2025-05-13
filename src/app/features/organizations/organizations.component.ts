@@ -127,10 +127,10 @@ export class OrganizationsComponent implements OnInit {
       label: "Edit",
       type: "primary",
     },
-    {
-      label: "Delete",
-      type: "danger",
-    },
+    // {
+    //   label: "Delete",
+    //   type: "danger",
+    // },
   ];
 
   constructor(

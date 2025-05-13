@@ -277,25 +277,48 @@ export class UsersComponent implements OnInit {
       : "Creating user...";
 
     if (this.selectedUser) {
-      this.userService.updateUser({
-        ...userData,
-        id: this.selectedUser.id,
-      });
-      this.notificationService.addNotification({
-        title: "User Updated",
-        message: `${userData.name} has been updated successfully`,
-        type: "success",
-      });
+      console.log(" heree we goooo...", userData);
+      this.userService
+        .updateUser({
+          ...userData,
+          id: this.selectedUser.id,
+        })
+        .subscribe({
+          next: (response) => {
+            this.notificationService.addNotification({
+              title: "User Action",
+              message: `${response.errorMessage}`,
+              type: response.errorCode == "1" ? "error" : "success",
+            });
+            this.toastService.show({
+              title: "User Action",
+              message: `${response.errorMessage}`,
+              type: response.errorCode == "1" ? "error" : "success",
+            });
+          },
+          error: (error) => {
+            this.notificationService.addNotification({
+              title: "User Action",
+              message: `${error.errorMessage}`,
+              type: error.errorCode == "1" ? "error" : "success",
+            });
+            this.toastService.show({
+              title: "User Action",
+              message: `${error.errorMessage}`,
+              type: error.errorCode == "1" ? "error" : "success",
+            });
+          },
+        });
     } else {
       this.userService.addUser(userData).subscribe({
         next: (response: any) => {
           this.notificationService.addNotification({
-            title: "User Request",
+            title: "User Action",
             message: `${response.errorMessage}`,
             type: response.errorCode == "1" ? "error" : "success",
           });
           this.toastService.show({
-            title: "User Request",
+            title: "User Action",
             message: `${response.errorMessage}`,
             type: response.errorCode == "1" ? "error" : "success",
           });
@@ -384,6 +407,7 @@ export class UsersComponent implements OnInit {
       },
     });
   };
+
   confirmActivateUser = () => {
     this.isLoading = true;
     this.showLockModal = false;

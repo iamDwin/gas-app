@@ -14,7 +14,7 @@ import { Organization } from "../../organizations/organization.model";
 import { NotificationService } from "../../../shared/services/notification.service";
 import { ToastService } from "../../../shared/services/toast.service";
 import { UserService } from "../user.service";
-// import { InstitutionDropdownComponent } from "../../../shared/components/institution-dropdown/institution-dropdown.component";
+import { InstitutionDropdownComponent } from "../../../shared/components/institution-dropdown/institution-dropdown.component";
 
 @Component({
   selector: "app-user-form",
@@ -24,7 +24,7 @@ import { UserService } from "../user.service";
     ReactiveFormsModule,
     DrawerComponent,
     ButtonComponent,
-    // InstitutionDropdownComponent,
+    InstitutionDropdownComponent,
   ],
   template: `
     <app-drawer
@@ -94,7 +94,7 @@ import { UserService } from "../user.service";
             <label class="block text-sm font-medium text-gray-700"
               >Institutions</label
             >
-            <select
+            <!-- <select
               formControlName="institutionId"
               class="mt-1 block w-full rounded-xl  border border-gray-200 focus:outline-none focus:ring-2 focus:ring-green-500"
             >
@@ -104,14 +104,14 @@ import { UserService } from "../user.service";
               >
                 {{ institute.name }}
               </option>
+            </select> -->
 
-              <!-- <app-institution-dropdown
-              [institutions]="institutions"
+            <app-institution-dropdown
+              [institutions]="organizations"
               [selectedInstitution]="selectedInstitution"
               (institutionSelected)="onInstitutionSelected($event)"
               placeholder="Select an institution"
-            ></app-institution-dropdown> -->
-            </select>
+            ></app-institution-dropdown>
           </div>
         </form>
       </div>
@@ -138,6 +138,7 @@ export class UserFormComponent {
   @Output() save = new EventEmitter<Omit<User, "id" | "createdAt">>();
   @Output() onCancel = new EventEmitter<void>();
   organizations: Organization[] = [];
+  selectedInstitution?: Organization;
   userRoles: any;
 
   form: FormGroup;
@@ -183,6 +184,11 @@ export class UserFormComponent {
         // this.isLoading = false;
       },
     });
+  }
+
+  onInstitutionSelected(institution: Organization) {
+    this.selectedInstitution = institution;
+    this.form.patchValue({ institutionId: institution.id });
   }
 
   getUserRole = () => {

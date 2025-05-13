@@ -105,7 +105,7 @@ export class PendingUsersComponent implements OnInit {
   onActionClick(event: { action: TableAction; row: User }) {
     switch (event.action.label) {
       case "Approve":
-        // this.approveOrganization(event.row);
+        this.approveUser(event.row);
         break;
       case "Reject":
         // this.rejectOrganization(event.row);
@@ -113,38 +113,38 @@ export class PendingUsersComponent implements OnInit {
     }
   }
 
-  // approveOrganization(org: Organization) {
-  //   this.loadingService.show("Approving organization...");
-  //   this.organizationService.approveOrganization(org.id).subscribe({
-  //     next: (response) => {
-  //       this.notificationService.addNotification({
-  //         title: "Organization Action",
-  //         message: `${org.name} has been approved successfully`,
-  //         type: response.errorCode == 0 ? "success" : "error",
-  //       });
-  //       this.toastService.show({
-  //         title: "Organization Action",
-  //         message: `${response.errorMessage}`,
-  //         type: response.errorCode == 0 ? "success" : "error",
-  //       });
-  //       this.loadingService.hide();
-  //       this.loadPendingOrganizations();
-  //     },
-  //     error: (error) => {
-  //       this.notificationService.addNotification({
-  //         title: "Error",
-  //         message: "Failed to perform action on organization",
-  //         type: "error",
-  //       });
-  //       this.toastService.show({
-  //         title: "Error",
-  //         message: "Failed to perform action on organization",
-  //         type: "error",
-  //       });
-  //       this.loadingService.hide();
-  //     },
-  //   });
-  // }
+  approveUser(user: User) {
+    this.loadingService.show("Approving User...");
+    this.userService.approveUser(user.id).subscribe({
+      next: (response: any) => {
+        this.notificationService.addNotification({
+          title: "User Action",
+          message: `${response.errorMessage}`,
+          type: response.errorCode == 0 ? "success" : "error",
+        });
+        this.toastService.show({
+          title: "Organization Action",
+          message: `${response.errorMessage}`,
+          type: response.errorCode == 0 ? "success" : "error",
+        });
+        this.loadingService.hide();
+        this.loadPendingUsers();
+      },
+      error: (error) => {
+        this.notificationService.addNotification({
+          title: "Error",
+          message: "Failed to perform action on user",
+          type: "error",
+        });
+        this.toastService.show({
+          title: "Error",
+          message: "Failed to perform action on user",
+          type: "error",
+        });
+        this.loadingService.hide();
+      },
+    });
+  }
 
   // rejectOrganization(org: Organization) {
   //   // const reason = prompt("Please provide a reason for rejection:");

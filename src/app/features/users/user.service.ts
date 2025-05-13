@@ -84,18 +84,16 @@ export class UserService {
     );
   }
 
-  updateUser(userData: any): Observable<UserResponse[]> {
+  updateUser(userData: any): Observable<any> {
     if (!this.user) {
       return new Observable((subscriber) => subscriber.next([]));
     }
 
-    return this.http
-      .post<UsersResponse>(
-        `${this.apiUrl}/admin/user/api/v1/get_all_users/${this.user.name}`,
-        { ...userData },
-        { headers: this.getHeaders() }
-      )
-      .pipe(map((response) => response.users || []));
+    return this.http.patch<UsersResponse>(
+      `${this.apiUrl}/admin/user/api/v1/init_update_user`,
+      { ...userData },
+      { headers: this.getHeaders() }
+    );
   }
 
   getPendingUsers(): Observable<any[]> {
@@ -109,6 +107,20 @@ export class UserService {
         { headers: this.getHeaders() }
       )
       .pipe(map((response) => response.users || []));
+  }
+
+  approveUser(id: string): Observable<any> {
+    let request = {
+      id: id,
+      authorizedBy: this.user?.name,
+      authorizedComment: null,
+      authStatus: 1,
+    };
+    return this.http.post<any>(
+      `${this.apiUrl}/admin/user/api/v1/authorize_request`,
+      { ...request },
+      { headers: this.getHeaders() }
+    );
   }
 
   // addUser(user: Omit<User, "id">): void {
