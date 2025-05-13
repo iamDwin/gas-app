@@ -78,7 +78,7 @@ export class NominationsComponent implements OnInit {
   isDrawerOpen = false;
   selectedDeclaration?: Nomination;
   isLoading = false;
-  loadingMessage = "Loading declarations...";
+  loadingMessage = "Loading Nominations...";
 
   columns = [
     { prop: "institutionCode", name: "Institution" },
@@ -116,7 +116,7 @@ export class NominationsComponent implements OnInit {
 
   ngOnInit() {
     this.breadcrumbService.setBreadcrumbs([
-      { label: "Declarations", link: "/declarations" },
+      { label: "Nominations", link: "/nominations" },
     ]);
 
     this.loadDeclarations();
@@ -181,8 +181,8 @@ export class NominationsComponent implements OnInit {
   saveDeclaration(declarationData: Partial<Nomination>) {
     this.isLoading = true;
     this.loadingMessage = this.selectedDeclaration
-      ? "Updating declaration..."
-      : "Creating declaration...";
+      ? "Updating nominations..."
+      : "Creating nominations...";
 
     setTimeout(() => {
       const currentUser = this.authService.getCurrentUser();
@@ -197,8 +197,8 @@ export class NominationsComponent implements OnInit {
 
         this.nominationService.updateDeclaration(updatedDeclaration);
         this.notificationService.addNotification({
-          title: "Declaration Updated",
-          message: `Declaration "${updatedDeclaration.title}" has been updated`,
+          title: "Nominations Updated",
+          message: `Nominations "${updatedDeclaration.title}" has been updated`,
           type: "success",
         });
       } else {
@@ -215,8 +215,8 @@ export class NominationsComponent implements OnInit {
 
         this.nominationService.addDeclaration(newDeclaration);
         this.notificationService.addNotification({
-          title: "Declaration Created",
-          message: `Declaration "${newDeclaration.title}" has been created`,
+          title: "Nominations Created",
+          message: `Nominations "${newDeclaration.title}" has been created`,
           type: "success",
         });
       }
@@ -229,13 +229,13 @@ export class NominationsComponent implements OnInit {
   deleteDeclaration(id: string) {
     if (confirm("Are you sure you want to delete this declaration?")) {
       this.isLoading = true;
-      this.loadingMessage = "Deleting declaration...";
+      this.loadingMessage = "Deleting Nominations...";
 
       setTimeout(() => {
         this.nominationService.deleteDeclaration(id);
         this.notificationService.addNotification({
-          title: "Declaration Deleted",
-          message: "The declaration has been deleted successfully",
+          title: "Nominations Deleted",
+          message: "The Nominations has been deleted successfully",
           type: "success",
         });
         this.loadDeclarations();
