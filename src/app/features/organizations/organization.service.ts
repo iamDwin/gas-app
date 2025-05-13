@@ -15,7 +15,7 @@ import { AuthService } from "../../core/auth/auth.service";
 })
 export class OrganizationService {
   private apiUrl = environment.apiUrl;
-  user = this.authService.getCurrentUser();
+  // user = this.authService.getCurrentUser();
   constructor(private http: HttpClient, private authService: AuthService) {}
 
   private getHeaders(): HttpHeaders {
@@ -42,13 +42,14 @@ export class OrganizationService {
   }
 
   getPendingOrganizations(): Observable<Organization[]> {
-    if (!this.user) {
+    let user = this.authService.getCurrentUser();
+    if (!user) {
       return new Observable((subscriber) => subscriber.next([]));
     }
 
     return this.http
       .get<any>(
-        `${this.apiUrl}/admin/institution/api/v1/get_pending_auths/${this.user.name}`,
+        `${this.apiUrl}/admin/institution/api/v1/get_pending_auths/${user.name}`,
         { headers: this.getHeaders() }
       )
       .pipe(
@@ -89,9 +90,10 @@ export class OrganizationService {
   }
 
   approveOrganization(id: string): Observable<any> {
+    let user = this.authService.getCurrentUser();
     let request = {
       id: id,
-      authorizedBy: this.user?.name,
+      authorizedBy: user?.name,
       authorizedComment: null,
       authStatus: 1,
     };
@@ -103,9 +105,10 @@ export class OrganizationService {
   }
 
   rejectOrganization(id: string, reason?: string): Observable<any> {
+    let user = this.authService.getCurrentUser();
     let request = {
       id: id, //id of request
-      authorizedBy: this.user?.name,
+      authorizedBy: user?.name,
       authorizedComment: null,
       authStatus: 0,
     };

@@ -10,7 +10,7 @@ import { HttpClient, HttpHeaders } from "@angular/common/http";
 })
 export class UserService {
   private apiUrl = environment.apiUrl;
-  user = this.authService.getCurrentUser();
+  // user = this.authService.getCurrentUser();
 
   constructor(private http: HttpClient, private authService: AuthService) {}
 
@@ -24,31 +24,34 @@ export class UserService {
   }
 
   getUsers(): Observable<UserResponse[]> {
-    if (!this.user) {
+    let user = this.authService.getCurrentUser();
+    if (!user) {
       return new Observable((subscriber) => subscriber.next([]));
     }
 
     return this.http
       .get<UsersResponse>(
-        `${this.apiUrl}/admin/user/api/v1/get_all_users/${this.user.name}`,
+        `${this.apiUrl}/admin/user/api/v1/get_all_users/${user.name}`,
         { headers: this.getHeaders() }
       )
       .pipe(map((response) => response.users || []));
   }
 
   getUserRoles(): Observable<any[]> {
-    if (!this.user) {
+    let user = this.authService.getCurrentUser();
+    if (!user) {
       return new Observable((subscriber) => subscriber.next([]));
     }
 
     return this.http.get<any>(
-      `${this.apiUrl}/admin/role/api/v1/get_role_list/${this.user.name}`,
+      `${this.apiUrl}/admin/role/api/v1/get_role_list/${user.name}`,
       { headers: this.getHeaders() }
     );
   }
 
   unlockUser(userData: any): Observable<any> {
-    if (!this.user) {
+    let user = this.authService.getCurrentUser();
+    if (!user) {
       return new Observable((subscriber) => subscriber.next([]));
     }
 
@@ -60,7 +63,8 @@ export class UserService {
   }
 
   activateDeativateUser(userData: any, action: string): Observable<any> {
-    if (!this.user) {
+    let user = this.authService.getCurrentUser();
+    if (!user) {
       return new Observable((subscriber) => subscriber.next([]));
     }
 
@@ -72,20 +76,22 @@ export class UserService {
     );
   }
 
-  addUser(userData: any): Observable<any[]> {
-    if (!this.user) {
+  addUser(userData: any): Observable<any> {
+    let user = this.authService.getCurrentUser();
+    if (!user) {
       return new Observable((subscriber) => subscriber.next([]));
     }
 
     return this.http.post<any>(
       `${this.apiUrl}/admin/user/api/v1/init_create_user`,
-      { ...userData, createdBy: this.user.name },
+      { ...userData, createdBy: user.name },
       { headers: this.getHeaders() }
     );
   }
 
   updateUser(userData: any): Observable<any> {
-    if (!this.user) {
+    let user = this.authService.getCurrentUser();
+    if (!user) {
       return new Observable((subscriber) => subscriber.next([]));
     }
 
@@ -97,22 +103,24 @@ export class UserService {
   }
 
   getPendingUsers(): Observable<any[]> {
-    if (!this.user) {
+    let user = this.authService.getCurrentUser();
+    if (!user) {
       return new Observable((subscriber) => subscriber.next([]));
     }
 
     return this.http
       .get<any>(
-        `${this.apiUrl}/admin/user/api/v1/get_pending_auths/${this.user.name}`,
+        `${this.apiUrl}/admin/user/api/v1/get_pending_auths/${user.name}`,
         { headers: this.getHeaders() }
       )
       .pipe(map((response) => response.users || []));
   }
 
   approveUser(id: string): Observable<any> {
+    let user = this.authService.getCurrentUser();
     let request = {
       id: id,
-      authorizedBy: this.user?.name,
+      authorizedBy: user?.name,
       authorizedComment: null,
       authStatus: 1,
     };
