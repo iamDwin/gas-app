@@ -97,14 +97,14 @@ export class LayoutComponent implements OnInit {
       </svg>`,
       count: 0,
     },
-    {
-      path: "/pending-approvals",
-      label: "Pending Approvals",
-      icon: `<svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
-      </svg>`,
-      count: 0,
-    },
+    // {
+    //   path: "/pending-approvals",
+    //   label: "Pending Approvals",
+    //   icon: `<svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+    //     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+    //   </svg>`,
+    //   count: 0,
+    // },
     {
       path: "/reports",
       label: "Reports",
@@ -147,13 +147,13 @@ export class LayoutComponent implements OnInit {
       this.updateMenuItemCount("nominations", count);
     });
 
-    this.pendingItemsService.pendingContracts$.subscribe((count) => {
-      this.updateMenuItemCount("contracts", count);
-    });
+    // this.pendingItemsService.pendingContracts$.subscribe((count) => {
+    //   this.updateMenuItemCount("contracts", count);
+    // });
 
-    this.pendingItemsService.getTotalPendingCount().subscribe((count) => {
-      this.updateMenuItemCount("pending-approvals", count);
-    });
+    // this.pendingItemsService.getTotalPendingCount().subscribe((count) => {
+    //   this.updateMenuItemCount("pending-approvals", count);
+    // });
 
     // Update pending organizations count
     this.organizationService
