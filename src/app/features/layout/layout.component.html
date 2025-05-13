@@ -1,0 +1,260 @@
+<div class="min-h-screen bg-gray-50 flex">
+  <!-- Sidebar -->
+  <div
+    class="fixed inset-y-0 left-0 z-[30] transform lg:transform-none lg:opacity-100 duration-200 ease-in-out"
+    [class.translate-x-0]="isMobileMenuOpen"
+    [class.opacity-100]="isMobileMenuOpen"
+    [class.-translate-x-full]="!isMobileMenuOpen"
+    [class.opacity-0]="!isMobileMenuOpen"
+  >
+    <div
+      class="bg-white border-r border-gray-200 h-full flex flex-col transition-all duration-300"
+      [class.w-64]="!isSidebarCollapsed"
+      [class.w-20]="isSidebarCollapsed"
+    >
+      <div
+        class="h-16 flex items-center px-6 border-b border-gray-200 justify-between"
+      >
+        <h1
+          class="text-xl font-semibold text-gray-800 transition-opacity duration-300"
+          [class.opacity-0]="isSidebarCollapsed"
+          [class.w-0]="isSidebarCollapsed"
+          [class.overflow-hidden]="isSidebarCollapsed"
+        >
+          Dashboard
+        </h1>
+        <button
+          (click)="toggleSidebar()"
+          class="hover:bg-gradient-to-b hover:from-[#DCFAE6] hover:to-[#ABEFC6] rounded-lg p-2 hover:border-[#71d8a1] hover:border"
+        >
+          <svg
+            class="h-5 w-5 transform transition-transform duration-300"
+            [class.rotate-180]="isSidebarCollapsed"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M13 5l7 7-7 7M5 5l7 7-7 7"
+            />
+          </svg>
+        </button>
+      </div>
+
+      <!-- User Profile -->
+      <div class="px-6 py-3 border-b border-gray-200">
+        <div
+          class="flex items-center"
+          [class.justify-center]="isSidebarCollapsed"
+        >
+          <div
+            class="w-8 h-8 rounded-full bg-primary flex items-center justify-center text-white font-medium"
+          >
+            {{ userInitial }}
+          </div>
+          <div
+            class="ml-3 transition-opacity duration-300"
+            *ngIf="!isSidebarCollapsed"
+          >
+            <p class="text-sm font-medium text-gray-900">{{ userName }}</p>
+            <p class="text-xs text-gray-500">{{ userEmail }}</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Navigation -->
+      <nav class="flex-1 px-4 py-4 space-y-2 overflow-y-auto">
+        <ng-container *ngFor="let item of getFilteredMenuItems()">
+          <ng-container *ngIf="item.children; else singleItem">
+            <div class="relative">
+              <button
+                (click)="toggleMenu(item.path)"
+                class="w-full flex items-center px-3 py-3 text-sm font-medium text-gray-900 rounded-md hover:bg-primary/10 hover:text-primary text-left group border-l-2 border-transparent"
+                [class.justify-center]="isSidebarCollapsed"
+                [class.bg-primary-10]="isMenuOpen(item.path)"
+                [class.text-primary]="isMenuOpen(item.path)"
+                [class.border-primary]="isMenuOpen(item.path)"
+              >
+                <span
+                  [innerHTML]="sanitizer.bypassSecurityTrustHtml(item.icon)"
+                  class="flex-shrink-0"
+                ></span>
+                <span
+                  class="ml-3 transition-opacity duration-300 flex-1"
+                  [class.opacity-0]="isSidebarCollapsed"
+                  [class.w-0]="isSidebarCollapsed"
+                  [class.overflow-hidden]="isSidebarCollapsed"
+                >
+                  {{ item.label }}
+                </span>
+                <svg
+                  class="w-5 h-5 transition-transform duration-200"
+                  [class.rotate-180]="isMenuOpen(item.path)"
+                  [class.opacity-0]="isSidebarCollapsed"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M19 9l-7 7-7-7"
+                  />
+                </svg>
+              </button>
+
+              <!-- Dropdown Menu -->
+              <div
+                *ngIf="isMenuOpen(item.path) && !isSidebarCollapsed"
+                class="mt-1 ml-8 space-y-1"
+              >
+                <a
+                  *ngFor="let child of item.children"
+                  [routerLink]="child.path"
+                  routerLinkActive="bg-primary/10 text-primary"
+                  [routerLinkActiveOptions]="{ exact: true }"
+                  class="flex items-center px-3 py-2 text-sm font-medium text-gray-900 rounded-md hover:bg-primary/10 hover:text-primary group"
+                >
+                  {{ child.label }}
+                </a>
+              </div>
+            </div>
+          </ng-container>
+          <ng-template #singleItem>
+            <a
+              [routerLink]="item.path"
+              routerLinkActive="bg-primary/10 text-primary border-primary"
+              [routerLinkActiveOptions]="{ exact: !!item.exact }"
+              class="flex items-center px-3 py-2 text-sm font-medium text-gray-900 rounded-md hover:bg-primary/10 hover:text-primary group border-l-2 border-transparent relative"
+              [class.justify-center]="isSidebarCollapsed"
+            >
+              <span
+                [innerHTML]="sanitizer.bypassSecurityTrustHtml(item.icon)"
+                class="flex-shrink-0"
+              ></span>
+              <span
+                class="ml-3 transition-opacity duration-300"
+                [class.opacity-0]="isSidebarCollapsed"
+                [class.w-0]="isSidebarCollapsed"
+                [class.overflow-hidden]="isSidebarCollapsed"
+              >
+                {{ item.label }}
+              </span>
+              <span
+                *ngIf="item.count && item.count > 0"
+                class="bg-red-500 text-white text-xs font-medium px-2 py-0.5 rounded-full"
+                [class.ml-auto]="!isSidebarCollapsed"
+                [class.absolute]="isSidebarCollapsed"
+                [class.top-0]="isSidebarCollapsed"
+                [class.right-0]="isSidebarCollapsed"
+                [class.-mr-1]="isSidebarCollapsed"
+                [class.-mt-1]="isSidebarCollapsed"
+              >
+                {{ item.count }}
+              </span>
+            </a>
+          </ng-template>
+        </ng-container>
+
+        <button
+          (click)="showLogoutConfirmation()"
+          class="flex items-center w-full px-3 py-2 text-sm font-medium text-gray-900 rounded-md hover:bg-red-50 hover:text-red-600 group mt-auto"
+          [class.justify-center]="isSidebarCollapsed"
+        >
+          <svg
+            class="w-5 h-5"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"
+            />
+          </svg>
+          <span
+            class="ml-3 transition-opacity duration-300"
+            [class.opacity-0]="isSidebarCollapsed"
+            [class.w-0]="isSidebarCollapsed"
+            [class.overflow-hidden]="isSidebarCollapsed"
+          >
+            Sign out
+          </span>
+        </button>
+      </nav>
+    </div>
+  </div>
+
+  <!-- Mobile menu button -->
+  <div
+    class="lg:hidden fixed top-0 left-0 p-4 z-[31]"
+    *ngIf="!isMobileMenuOpen"
+  >
+    <button
+      (click)="toggleMobileMenu()"
+      class="text-gray-500 hover:text-gray-600 focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 rounded-md"
+    >
+      <span class="sr-only">Open sidebar</span>
+      <svg
+        class="h-6 w-6"
+        fill="none"
+        viewBox="0 0 24 24"
+        stroke="currentColor"
+      >
+        <path
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          strokeWidth="2"
+          d="M4 6h16M4 12h16M4 18h16"
+        />
+      </svg>
+    </button>
+  </div>
+
+  <!-- Overlay -->
+  <div
+    *ngIf="isMobileMenuOpen"
+    class="fixed inset-0 bg-gray-600 bg-opacity-75 z-[29] lg:hidden"
+    (click)="toggleMobileMenu()"
+  ></div>
+
+  <!-- Main Content -->
+  <div
+    class="flex-1 flex flex-col transition-all duration-300"
+    [class.lg:ml-64]="!isSidebarCollapsed"
+    [class.lg:ml-20]="isSidebarCollapsed"
+  >
+    <!-- Top Navigation -->
+    <header
+      class="bg-white shadow-sm border-b border-gray-200 h-16 flex items-center fixed top-0 right-0 left-0 z-20 transition-all duration-300"
+      [class.lg:left-64]="!isSidebarCollapsed"
+      [class.lg:left-20]="isSidebarCollapsed"
+    >
+      <div class="px-4 flex-1 flex items-center justify-between">
+        <div class="flex items-center">
+          <div class="w-16 lg:hidden"></div>
+          <app-breadcrumb [items]="breadcrumbs"></app-breadcrumb>
+        </div>
+        <app-notifications></app-notifications>
+      </div>
+    </header>
+
+    <main class="flex-1 mt-16">
+      <router-outlet></router-outlet>
+    </main>
+  </div>
+</div>
+
+<!-- Confirmation Modal -->
+<app-confirmation-modal
+  [show]="showLogoutModal"
+  [config]="logoutModalConfig"
+  (onConfirm)="confirmLogout()"
+  (onCancel)="cancelLogout()"
+></app-confirmation-modal>

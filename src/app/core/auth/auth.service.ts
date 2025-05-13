@@ -12,7 +12,7 @@ export interface User {
   role: "admin" | "org_admin" | "org_user" | "viewer";
   organizationId: string | null;
   organizationName: string | null;
-  organizationType: string | null;
+  institutionType: string;
   name: string;
 }
 
@@ -109,7 +109,7 @@ export class AuthService {
               role: this.mapRoleFromBackend(response.roleName),
               organizationId: response.institutionId, // We'll need to get this from the backend
               organizationName: response.institutionName, // We'll need to get this from the backend
-              organizationType: response.institutionType, // We'll need to get this from the backend
+              institutionType: response.institutionType, // We'll need to get this from the backend
               name: response.userName, // We'll need to get the actual name from the backend
             };
 
@@ -184,7 +184,7 @@ export class AuthService {
               role: this.mapRoleFromBackend(response.roleName),
               organizationId: response.institutionId, // We'll need to get this from the backend
               organizationName: response.institutionName, // We'll need to get this from the backend
-              organizationType: response.institutionType, // We'll need to get this from the backend
+              institutionType: response.institutionType, // We'll need to get this from the backend
               name: response.userName, // We'll need to get the actual name from the backend
             };
 
