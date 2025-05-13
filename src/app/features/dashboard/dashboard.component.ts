@@ -111,7 +111,7 @@ import { PendingItemsService } from "../../shared/services/pending-items.service
         </div>
 
         <!-- Allocations Card -->
-        <div
+        <!-- <div
           (click)="navigate('/allocations')"
           class="bg-white rounded-lg shadow p-6 cursor-pointer hover:shadow-lg transition-shadow duration-200"
         >
@@ -141,7 +141,7 @@ import { PendingItemsService } from "../../shared/services/pending-items.service
             </p>
             <p class="ml-2 text-gray-600">pending</p>
           </div>
-        </div>
+        </div> -->
 
         <!-- Nominations Card -->
         <div
