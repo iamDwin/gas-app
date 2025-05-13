@@ -59,8 +59,11 @@
             class="ml-3 transition-opacity duration-300"
             *ngIf="!isSidebarCollapsed"
           >
-            <p class="text-sm font-medium text-gray-900">{{ userName }}</p>
+            <p class="text-sm font-medium text-gray-900">{{ fullName }}</p>
             <p class="text-xs text-gray-500">{{ userEmail }}</p>
+            <p class="text-xs text-gray-500">
+              {{ institutionName }} - {{ this.institutionType }}
+            </p>
           </div>
         </div>
       </div>

@@ -41,8 +41,10 @@ export class LayoutComponent implements OnInit {
   showLogoutModal = false;
   pendingOrganizations = 0;
   userName = "";
+  fullName = "";
   userEmail = "";
   userInitial = "";
+  institutionName = "";
   institutionType: string = "";
   openMenus: { [key: string]: boolean } = {};
 
@@ -166,18 +168,22 @@ export class LayoutComponent implements OnInit {
     const user = this.authService.getCurrentUser();
     if (user) {
       this.userName = user.name;
+      this.fullName = user.fullName;
       this.userEmail = user.email;
       this.userInitial = user.name.charAt(0).toUpperCase();
-      this.institutionType = user.type; // Store institutionType
+      this.institutionType = user.type;
+      this.institutionName = user.organizationName;
     }
 
     // Subscribe to user changes
     this.authService.currentUser$.subscribe((user) => {
       if (user) {
         this.userName = user.name;
+        this.fullName = user.fullName;
         this.userEmail = user.email;
         this.userInitial = user.name.charAt(0).toUpperCase();
-        this.institutionType = user.type; // Update institutionType
+        this.institutionType = user.type;
+        this.institutionName = user.organizationName;
       }
     });
   }

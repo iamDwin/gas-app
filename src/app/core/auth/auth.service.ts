@@ -11,10 +11,11 @@ export interface User {
   email: string;
   role: "admin" | "org_admin" | "org_user" | "viewer";
   organizationId: string | null;
-  organizationName: string | null;
+  organizationName: string;
   institutionType: string;
   type: string;
   name: string;
+  fullName: string;
 }
 
 export interface AuthResponse {
@@ -113,6 +114,7 @@ export class AuthService {
               institutionType: response.institutionType, // We'll need to get this from the backend
               type: response.type, // We'll need to get this from the backend
               name: response.userName, // We'll need to get the actual name from the backend
+              fullName: response.fullName, // We'll need to get the actual name from the backend
             };
 
             sessionStorage.setItem(this.tokenKey, response.token);
@@ -189,6 +191,7 @@ export class AuthService {
               institutionType: response.institutionType, // We'll need to get this from the backend
               type: response.type, // We'll need to get this from the backend
               name: response.userName, // We'll need to get the actual name from the backend
+              fullName: response.fullName, // We'll need to get the actual name from the backend
             };
 
             sessionStorage.setItem(this.tokenKey, response.token);
