@@ -84,6 +84,7 @@ export class AuthService {
         this.logout();
       }
     }
+  
   }
 
   getCurrentUser(): User | null {
@@ -104,13 +105,13 @@ export class AuthService {
           if (response.errorCode === "0" && response.token) {
             // Successful login
             const user: User = {
-              id: response.id.toString(), // We'll need to get this from the backend
+              id: response.id.toString(),
               email: response.email,
               role: this.mapRoleFromBackend(response.roleName),
-              organizationId: response.institutionId, // We'll need to get this from the backend
-              organizationName: response.institutionName, // We'll need to get this from the backend
-              organizationType: response.institutionType, // We'll need to get this from the backend
-              name: response.userName, // We'll need to get the actual name from the backend
+              organizationId: response.institutionId,
+              organizationName: response.institutionName,
+              organizationType: response.type,
+              name: response.userName,
             };
 
             localStorage.setItem(this.tokenKey, response.token);
@@ -179,13 +180,13 @@ export class AuthService {
           if (response.errorCode === "0" && response.token) {
             // Successful login
             const user: User = {
-              id: response.id.toString(), // We'll need to get this from the backend
+              id: response.id.toString(),
               email: response.email,
               role: this.mapRoleFromBackend(response.roleName),
-              organizationId: response.institutionId, // We'll need to get this from the backend
-              organizationName: response.institutionName, // We'll need to get this from the backend
-              organizationType: response.institutionType, // We'll need to get this from the backend
-              name: response.userName, // We'll need to get the actual name from the backend
+              organizationId: response.institutionId,
+              organizationName: response.institutionName,
+              organizationType: response.type,
+              name: response.userName,
             };
 
             localStorage.setItem(this.tokenKey, response.token);

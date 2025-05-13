@@ -1,4 +1,4 @@
-import { Component, OnInit } from "@angular/core";
+import { Component, OnInit, HostListener } from "@angular/core";
 import { CommonModule } from "@angular/common";
 import { RouterOutlet, RouterLink, RouterLinkActive } from "@angular/router";
 import { AuthService } from "../../core/auth/auth.service";
@@ -15,6 +15,15 @@ import {
 import { PendingItemsService } from "../../shared/services/pending-items.service";
 import { DomSanitizer } from "@angular/platform-browser";
 import { OrganizationService } from "../../features/organizations/organization.service";
+
+interface MenuItem {
+  path: string;
+  label: string;
+  icon: string;
+  count?: number;
+  exact?: boolean;
+  allowedTypes?: string[];
+}
 
 @Component({
   selector: "app-layout",
@@ -113,353 +122,13 @@ import { OrganizationService } from "../../features/organizations/organization.s
 
           <!-- Navigation -->
           <nav class="flex-1 px-4 py-4 space-y-2 overflow-y-auto">
-            <!-- Dashboard -->
-            <a
-              routerLink="/dashboard"
-              routerLinkActive="bg-primary/10 text-primary border-primary"
-              [routerLinkActiveOptions]="{ exact: true }"
-              class="flex items-center px-3 py-3 text-sm font-medium text-gray-900 rounded-md hover:bg-primary/10 hover:text-primary group border-l-2 border-transparent"
-              [class.justify-center]="isSidebarCollapsed"
-            >
-              <span
-                [innerHTML]="
-                  sanitizer.bypassSecurityTrustHtml(menuItems[0].icon)
-                "
-                class="flex-shrink-0"
-              ></span>
-              <span
-                class="ml-3 transition-opacity duration-300"
-                [class.opacity-0]="isSidebarCollapsed"
-                [class.w-0]="isSidebarCollapsed"
-                [class.overflow-hidden]="isSidebarCollapsed"
-              >
-                Dashboard
-              </span>
-            </a>
-
-            <!-- Organizations Dropdown -->
-            <div class="relative">
-              <button
-                (click)="toggleOrganizationsMenu()"
-                class="w-full flex items-center px-3 py-3 text-sm font-medium text-gray-900 rounded-md hover:bg-primary/10 hover:text-primary text-left group border-l-2 border-transparent"
-                [class.justify-center]="isSidebarCollapsed"
-                [class.bg-primary-10]="isOrganizationsMenuOpen"
-                [class.text-primary]="isOrganizationsMenuOpen"
-                [class.border-primary]="isOrganizationsMenuOpen"
-              >
-                <span
-                  [innerHTML]="
-                    sanitizer.bypassSecurityTrustHtml(menuItems[1].icon)
-                  "
-                  class="flex-shrink-0"
-                ></span>
-                <span
-                  class="ml-3 transition-opacity duration-300 flex-1"
-                  [class.opacity-0]="isSidebarCollapsed"
-                  [class.w-0]="isSidebarCollapsed"
-                  [class.overflow-hidden]="isSidebarCollapsed"
-                >
-                  Organizations
-                </span>
-                <svg
-                  class="w-5 h-5 transition-transform duration-200"
-                  [class.rotate-180]="isOrganizationsMenuOpen"
-                  [class.opacity-0]="isSidebarCollapsed"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                >
-                  <path
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    stroke-width="2"
-                    d="M19 9l-7 7-7-7"
-                  />
-                </svg>
-              </button>
-
-              <!-- Dropdown Menu -->
-              <div
-                *ngIf="isOrganizationsMenuOpen && !isSidebarCollapsed"
-                class="mt-1 ml-8 space-y-1"
-              >
-                <a
-                  routerLink="/organizations"
-                  routerLinkActive="bg-primary/10 text-primary"
-                  [routerLinkActiveOptions]="{ exact: true }"
-                  class="flex items-center px-3 py-2 text-sm font-medium text-gray-900 rounded-md hover:bg-primary/10 hover:text-primary group"
-                >
-                  All Organizations
-                </a>
-                <a
-                  routerLink="/organizations/pending"
-                  routerLinkActive="bg-primary/10 text-primary"
-                  class="flex items-center px-3 py-2 text-sm font-medium text-gray-900 rounded-md hover:bg-primary/10 hover:text-primary group"
-                >
-                  <span>Pending Approvals</span>
-                  <span
-                    *ngIf="pendingOrganizations > 0"
-                    class="ml-auto bg-red-500 text-white text-xs font-medium px-2 py-0.5 rounded-full"
-                  >
-                    {{ pendingOrganizations }}
-                  </span>
-                </a>
-              </div>
-            </div>
-
-            <!-- Users Dropdown -->
-            <div class="relative">
-              <button
-                (click)="toggleUsersMenu()"
-                class="w-full flex items-center px-3 py-3 text-sm font-medium text-gray-900 rounded-md hover:bg-primary/10 hover:text-primary text-left group border-l-2 border-transparent"
-                [class.justify-center]="isSidebarCollapsed"
-                [class.bg-primary-10]="isUsersMenuOpen"
-                [class.text-primary]="isUsersMenuOpen"
-                [class.border-primary]="isUsersMenuOpen"
-              >
-                <span
-                  [innerHTML]="
-                    sanitizer.bypassSecurityTrustHtml(menuItems[2].icon)
-                  "
-                  class="flex-shrink-0"
-                ></span>
-                <span
-                  class="ml-3 transition-opacity duration-300 flex-1"
-                  [class.opacity-0]="isSidebarCollapsed"
-                  [class.w-0]="isSidebarCollapsed"
-                  [class.overflow-hidden]="isSidebarCollapsed"
-                >
-                  Users
-                </span>
-                <svg
-                  class="w-5 h-5 transition-transform duration-200"
-                  [class.rotate-180]="isUsersMenuOpen"
-                  [class.opacity-0]="isSidebarCollapsed"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                >
-                  <path
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    stroke-width="2"
-                    d="M19 9l-7 7-7-7"
-                  />
-                </svg>
-              </button>
-
-              <!-- Dropdown Menu -->
-              <div
-                *ngIf="isUsersMenuOpen && !isSidebarCollapsed"
-                class="mt-1 ml-8 space-y-1"
-              >
-                <a
-                  routerLink="/users"
-                  routerLinkActive="bg-primary/10 text-primary"
-                  [routerLinkActiveOptions]="{ exact: true }"
-                  class="flex items-center px-3 py-2 text-sm font-medium text-gray-900 rounded-md hover:bg-primary/10 hover:text-primary group"
-                >
-                  All Users
-                </a>
-                <a
-                  routerLink="/users/pending"
-                  routerLinkActive="bg-primary/10 text-primary"
-                  class="flex items-center px-3 py-2 text-sm font-medium text-gray-900 rounded-md hover:bg-primary/10 hover:text-primary group"
-                >
-                  <span>Pending Approvals</span>
-                  <!-- <span
-                    *ngIf="pendingOrganizations > 0"
-                    class="ml-auto bg-red-500 text-white text-xs font-medium px-2 py-0.5 rounded-full"
-                  >
-                    {{ pendingOrganizations }}
-                  </span> -->
-                </a>
-              </div>
-            </div>
-
-            <!-- Declarations Dropdown -->
-            <div class="relative">
-              <button
-                (click)="toggleDeclarationsMenu()"
-                class="w-full flex items-center px-3 py-3 text-sm font-medium text-gray-900 rounded-md hover:bg-primary/10 hover:text-primary text-left group border-l-2 border-transparent"
-                [class.justify-center]="isSidebarCollapsed"
-                [class.bg-primary-10]="isDeclarationsMenuOpen"
-                [class.text-primary]="isDeclarationsMenuOpen"
-                [class.border-primary]="isDeclarationsMenuOpen"
-              >
-                <span
-                  [innerHTML]="
-                    sanitizer.bypassSecurityTrustHtml(menuItems[3].icon)
-                  "
-                  class="flex-shrink-0"
-                ></span>
-                <span
-                  class="ml-3 transition-opacity duration-300 flex-1"
-                  [class.opacity-0]="isSidebarCollapsed"
-                  [class.w-0]="isSidebarCollapsed"
-                  [class.overflow-hidden]="isSidebarCollapsed"
-                >
-                  Declarations
-                </span>
-                <svg
-                  class="w-5 h-5 transition-transform duration-200"
-                  [class.rotate-180]="isDeclarationsMenuOpen"
-                  [class.opacity-0]="isSidebarCollapsed"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                >
-                  <path
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    stroke-width="2"
-                    d="M19 9l-7 7-7-7"
-                  />
-                </svg>
-              </button>
-
-              <!-- Dropdown Menu -->
-              <div
-                *ngIf="isDeclarationsMenuOpen && !isSidebarCollapsed"
-                class="mt-1 ml-8 space-y-1"
-              >
-                <a
-                  routerLink="/declarations"
-                  routerLinkActive="bg-primary/10 text-primary"
-                  [routerLinkActiveOptions]="{ exact: true }"
-                  class="flex items-center px-3 py-2 text-sm font-medium text-gray-900 rounded-md hover:bg-primary/10 hover:text-primary group"
-                >
-                  All Declarations
-                </a>
-                <!-- Add more links as needed -->
-              </div>
-            </div>
-
-            <!-- Allocations Dropdown -->
-            <div class="relative">
-              <button
-                (click)="toggleAllocationsMenu()"
-                class="w-full flex items-center px-3 py-3 text-sm font-medium text-gray-900 rounded-md hover:bg-primary/10 hover:text-primary text-left group border-l-2 border-transparent"
-                [class.justify-center]="isSidebarCollapsed"
-                [class.bg-primary-10]="isAllocationsMenuOpen"
-                [class.text-primary]="isAllocationsMenuOpen"
-                [class.border-primary]="isAllocationsMenuOpen"
-              >
-                <span
-                  [innerHTML]="
-                    sanitizer.bypassSecurityTrustHtml(menuItems[4].icon)
-                  "
-                  class="flex-shrink-0"
-                ></span>
-                <span
-                  class="ml-3 transition-opacity duration-300 flex-1"
-                  [class.opacity-0]="isSidebarCollapsed"
-                  [class.w-0]="isSidebarCollapsed"
-                  [class.overflow-hidden]="isSidebarCollapsed"
-                >
-                  Allocations
-                </span>
-                <svg
-                  class="w-5 h-5 transition-transform duration-200"
-                  [class.rotate-180]="isAllocationsMenuOpen"
-                  [class.opacity-0]="isSidebarCollapsed"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                >
-                  <path
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    stroke-width="2"
-                    d="M19 9l-7 7-7-7"
-                  />
-                </svg>
-              </button>
-
-              <!-- Dropdown Menu -->
-              <div
-                *ngIf="isAllocationsMenuOpen && !isSidebarCollapsed"
-                class="mt-1 ml-8 space-y-1"
-              >
-                <a
-                  routerLink="/allocations"
-                  routerLinkActive="bg-primary/10 text-primary"
-                  [routerLinkActiveOptions]="{ exact: true }"
-                  class="flex items-center px-3 py-2 text-sm font-medium text-gray-900 rounded-md hover:bg-primary/10 hover:text-primary group"
-                >
-                  All Allocations
-                </a>
-                <!-- Add more links as needed -->
-              </div>
-            </div>
-
-            <!-- Nominations Dropdown -->
-            <div class="relative">
-              <button
-                (click)="toggleNominationsMenu()"
-                class="w-full flex items-center px-3 py-3 text-sm font-medium text-gray-900 rounded-md hover:bg-primary/10 hover:text-primary text-left group border-l-2 border-transparent"
-                [class.justify-center]="isSidebarCollapsed"
-                [class.bg-primary-10]="isNominationsMenuOpen"
-                [class.text-primary]="isNominationsMenuOpen"
-                [class.border-primary]="isNominationsMenuOpen"
-              >
-                <span
-                  [innerHTML]="
-                    sanitizer.bypassSecurityTrustHtml(menuItems[5].icon)
-                  "
-                  class="flex-shrink-0"
-                ></span>
-                <span
-                  class="ml-3 transition-opacity duration-300 flex-1"
-                  [class.opacity-0]="isSidebarCollapsed"
-                  [class.w-0]="isSidebarCollapsed"
-                  [class.overflow-hidden]="isSidebarCollapsed"
-                >
-                  Nominations
-                </span>
-                <svg
-                  class="w-5 h-5 transition-transform duration-200"
-                  [class.rotate-180]="isNominationsMenuOpen"
-                  [class.opacity-0]="isSidebarCollapsed"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                >
-                  <path
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    stroke-width="2"
-                    d="M19 9l-7 7-7-7"
-                  />
-                </svg>
-              </button>
-
-              <!-- Dropdown Menu -->
-              <div
-                *ngIf="isNominationsMenuOpen && !isSidebarCollapsed"
-                class="mt-1 ml-8 space-y-1"
-              >
-                <a
-                  routerLink="/nominations"
-                  routerLinkActive="bg-primary/10 text-primary"
-                  [routerLinkActiveOptions]="{ exact: true }"
-                  class="flex items-center px-3 py-2 text-sm font-medium text-gray-900 rounded-md hover:bg-primary/10 hover:text-primary group"
-                >
-                  All Nominations
-                </a>
-                <!-- Add more links as needed -->
-              </div>
-            </div>
-
-            <!-- Repeat similar structure for Declarations, Allocations, and Nominations -->
-
-            <!-- Other Menu Items -->
-            <ng-container *ngFor="let item of menuItems.slice(7)">
+            <!-- Filtered Menu Items -->
+            <ng-container *ngFor="let item of filteredMenuItems">
               <a
                 [routerLink]="item.path"
                 routerLinkActive="bg-primary/10 text-primary border-primary"
-                [routerLinkActiveOptions]="{ exact: !!item.exact }"
-                class="flex items-center px-3 py-2 text-sm font-medium text-gray-900 rounded-md hover:bg-primary/10 hover:text-primary group border-l-2 border-transparent relative"
+                [routerLinkActiveOptions]="{ exact: item.exact }"
+                class="flex items-center px-3 py-3 text-sm font-medium text-gray-900 rounded-md hover:bg-primary/10 hover:text-primary group border-l-2 border-transparent"
                 [class.justify-center]="isSidebarCollapsed"
               >
                 <span
@@ -476,13 +145,8 @@ import { OrganizationService } from "../../features/organizations/organization.s
                 </span>
                 <span
                   *ngIf="item.count && item.count > 0"
-                  class="bg-red-500 text-white text-xs font-medium px-2 py-0.5 rounded-full"
-                  [class.ml-auto]="!isSidebarCollapsed"
-                  [class.absolute]="isSidebarCollapsed"
-                  [class.top-0]="isSidebarCollapsed"
-                  [class.right-0]="isSidebarCollapsed"
-                  [class.-mr-1]="isSidebarCollapsed"
-                  [class.-mt-1]="isSidebarCollapsed"
+                  class="ml-auto bg-red-500 text-white text-xs font-medium px-2 py-0.5 rounded-full"
+                  [class.opacity-0]="isSidebarCollapsed"
                 >
                   {{ item.count }}
                 </span>
@@ -610,19 +274,14 @@ import { OrganizationService } from "../../features/organizations/organization.s
 export class LayoutComponent implements OnInit {
   isMobileMenuOpen = false;
   isSidebarCollapsed = false;
-  isOrganizationsMenuOpen = false;
-  isUsersMenuOpen = false;
-  isDeclarationsMenuOpen = false;
-  isAllocationsMenuOpen = false;
-  isNominationsMenuOpen = false;
   breadcrumbs: Breadcrumb[] = [{ label: "Dashboard", link: "/dashboard" }];
   showLogoutModal = false;
-  pendingOrganizations = 0;
   userName = "";
   userEmail = "";
   userInitial = "";
+  userType = "";
 
-  menuItems = [
+  menuItems: MenuItem[] = [
     {
       path: "/dashboard",
       label: "Dashboard",
@@ -630,6 +289,7 @@ export class LayoutComponent implements OnInit {
         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/>
       </svg>`,
       exact: true,
+      allowedTypes: ["M", "U", "D"],
     },
     {
       path: "/organizations",
@@ -637,7 +297,7 @@ export class LayoutComponent implements OnInit {
       icon: `<svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/>
       </svg>`,
-      // routerLinkActiveOptions: { exact: false },
+      allowedTypes: ["M"],
     },
     {
       path: "/users",
@@ -645,7 +305,7 @@ export class LayoutComponent implements OnInit {
       icon: `<svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"/>
       </svg>`,
-      // routerLinkActiveOptions: { exact: false },
+      allowedTypes: ["M", "U", "D"],
     },
     {
       path: "/declarations",
@@ -653,15 +313,7 @@ export class LayoutComponent implements OnInit {
       icon: `<svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
       </svg>`,
-      count: 0,
-    },
-    {
-      path: "/allocations",
-      label: "Allocations",
-      icon: `<svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7v8a2 2 0 002 2h6M8 7V5a2 2 0 012-2h4.586a1 1 0 01.707.293l4.414 4.414a1 1 0 01.293.707V15a2 2 0 01-2 2h-2M8 7H6a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2v-2"/>
-      </svg>`,
-      count: 0,
+      allowedTypes: ["M", "U"],
     },
     {
       path: "/nominations",
@@ -669,30 +321,15 @@ export class LayoutComponent implements OnInit {
       icon: `<svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/>
       </svg>`,
-      count: 0,
+      allowedTypes: ["M", "D"],
     },
-    {
-      path: "/pending-approvals",
-      label: "Pending Approvals",
-      icon: `<svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
-      </svg>`,
-      count: 0,
-    },
-    // {
-    //   path: "/contracts",
-    //   label: "Contracts",
-    //   icon: `<svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-    //     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
-    //   </svg>`,
-    //   count: 0,
-    // },
     {
       path: "/reports",
       label: "Reports",
       icon: `<svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
       </svg>`,
+      allowedTypes: ["M", "U", "D"],
     },
   ];
 
@@ -725,28 +362,9 @@ export class LayoutComponent implements OnInit {
       this.updateMenuItemCount("declarations", count);
     });
 
-    this.pendingItemsService.pendingAllocations$.subscribe((count) => {
-      this.updateMenuItemCount("allocations", count);
-    });
-
     this.pendingItemsService.pendingNominations$.subscribe((count) => {
       this.updateMenuItemCount("nominations", count);
     });
-
-    this.pendingItemsService.pendingContracts$.subscribe((count) => {
-      this.updateMenuItemCount("contracts", count);
-    });
-
-    this.pendingItemsService.getTotalPendingCount().subscribe((count) => {
-      this.updateMenuItemCount("pending-approvals", count);
-    });
-
-    // Update pending organizations count
-    this.organizationService
-      .getPendingOrganizations()
-      .subscribe((organizations) => {
-        this.pendingOrganizations = organizations.length;
-      });
 
     // Update user info
     const user = this.authService.getCurrentUser();
@@ -754,6 +372,7 @@ export class LayoutComponent implements OnInit {
       this.userName = user.name;
       this.userEmail = user.email;
       this.userInitial = user.name.charAt(0).toUpperCase();
+      this.userType = user.organizationType || "M"; // Default to M if not set
     }
 
     // Subscribe to user changes
@@ -762,8 +381,15 @@ export class LayoutComponent implements OnInit {
         this.userName = user.name;
         this.userEmail = user.email;
         this.userInitial = user.name.charAt(0).toUpperCase();
+        this.userType = user.organizationType || "M";
       }
     });
+  }
+
+  get filteredMenuItems(): MenuItem[] {
+    return this.menuItems.filter(
+      (item) => item.allowedTypes?.includes(this.userType)
+    );
   }
 
   updateMenuItemCount(path: string, count: number) {
@@ -779,39 +405,6 @@ export class LayoutComponent implements OnInit {
 
   toggleSidebar() {
     this.isSidebarCollapsed = !this.isSidebarCollapsed;
-    if (this.isSidebarCollapsed) {
-      this.isOrganizationsMenuOpen = false;
-    }
-  }
-
-  toggleOrganizationsMenu() {
-    if (!this.isSidebarCollapsed) {
-      this.isOrganizationsMenuOpen = !this.isOrganizationsMenuOpen;
-    }
-  }
-
-  toggleUsersMenu() {
-    if (!this.isSidebarCollapsed) {
-      this.isUsersMenuOpen = !this.isUsersMenuOpen;
-    }
-  }
-
-  toggleDeclarationsMenu() {
-    if (!this.isSidebarCollapsed) {
-      this.isDeclarationsMenuOpen = !this.isDeclarationsMenuOpen;
-    }
-  }
-
-  toggleAllocationsMenu() {
-    if (!this.isSidebarCollapsed) {
-      this.isAllocationsMenuOpen = !this.isAllocationsMenuOpen;
-    }
-  }
-
-  toggleNominationsMenu() {
-    if (!this.isSidebarCollapsed) {
-      this.isNominationsMenuOpen = !this.isNominationsMenuOpen;
-    }
   }
 
   showLogoutConfirmation() {
