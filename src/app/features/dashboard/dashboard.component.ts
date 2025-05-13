@@ -6,14 +6,22 @@ import { UserService } from "../users/user.service";
 import { BreadcrumbService } from "../../shared/services/breadcrumb.service";
 import { PendingItemsService } from "../../shared/services/pending-items.service";
 import { AuthService } from "../../core/auth/auth.service";
+import { LineChartComponent } from "../../shared/components/charts/line-chart/line-chart.component";
+import { BarChartComponent } from "../../shared/components/charts/bar-chart/bar-chart.component";
+import { DoughnutChartComponent } from "../../shared/components/charts/doughnut-chart/doughnut-chart.component";
 
 @Component({
   selector: "app-dashboard",
   standalone: true,
-  imports: [CommonModule],
+  imports: [
+    CommonModule,
+    // LineChartComponent,
+    // BarChartComponent,
+    // DoughnutChartComponent,
+  ],
   template: `
     <div class="p-4">
-      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
         <!-- Organizations Card -->
         <div
           *ngIf="userType == 'M'"
@@ -178,6 +186,34 @@ import { AuthService } from "../../core/auth/auth.service";
           </div>
         </div>
         <!-- </div> -->
+
+        <!-- Weekly Declarations Bar Chart -->
+        <div class="bg-white rounded-lg shadow p-6">
+          <h3 class="text-lg font-semibold text-gray-900 mb-4">
+            Weekly Declarations
+          </h3>
+          <div class="h-80">
+            <!-- <app-bar-chart
+              [data]="weeklyDeclarations"
+              [labels]="weekLabels"
+              label="Declarations"
+            ></app-bar-chart> -->
+          </div>
+        </div>
+
+        <!-- Approval Status Distribution -->
+        <div class="bg-white rounded-lg shadow p-6">
+          <h3 class="text-lg font-semibold text-gray-900 mb-4">
+            Declaration Status
+          </h3>
+          <div class="h-80">
+            <!-- <app-doughnut-chart
+              [data]="statusData"
+              [labels]="statusLabels"
+              [backgroundColor]="['#079455', '#eab308', '#ef4444', '#3b82f6']"
+            ></app-doughnut-chart> -->
+          </div>
+        </div>
       </div>
     </div>
   `,
@@ -191,6 +227,35 @@ export class DashboardComponent implements OnInit {
   pendingContracts = 0;
   totalPendingCount = 0;
   userType: string = "";
+
+  // Monthly Declarations Data
+  monthlyDeclarations = [65, 59, 80, 81, 56, 55, 40, 45, 60, 75, 85, 90];
+  monthLabels = [
+    "Jan",
+    "Feb",
+    "Mar",
+    "Apr",
+    "May",
+    "Jun",
+    "Jul",
+    "Aug",
+    "Sep",
+    "Oct",
+    "Nov",
+    "Dec",
+  ];
+
+  // Weekly Declarations Data
+  weeklyDeclarations = [28, 35, 42, 30, 25, 38, 40];
+  weekLabels = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
+
+  // Organization Types Data
+  orgTypeData = [45, 55];
+  orgTypeLabels = ["Upstream", "Downstream"];
+
+  // Declaration Status Data
+  statusData = [35, 15, 10, 40];
+  statusLabels = ["Approved", "Pending", "Rejected", "Draft"];
 
   constructor(
     private organizationService: OrganizationService,
