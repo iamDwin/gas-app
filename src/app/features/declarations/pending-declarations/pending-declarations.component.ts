@@ -10,8 +10,8 @@ import { DataTableComponent } from "../../../shared/components/data-table/data-t
   imports: [
     CommonModule,
     // DeclarationFormComponent,
-    DataTableComponent,
-    ButtonComponent,
+    // DataTableComponent,
+    // ButtonComponent,
   ],
   template: `
     <div class="p-4">
