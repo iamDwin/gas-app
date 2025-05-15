@@ -6,21 +6,122 @@ import { UserService } from "../users/user.service";
 import { BreadcrumbService } from "../../shared/services/breadcrumb.service";
 import { PendingItemsService } from "../../shared/services/pending-items.service";
 import { AuthService } from "../../core/auth/auth.service";
-import { LineChartComponent } from "../../shared/components/charts/line-chart/line-chart.component";
-import { BarChartComponent } from "../../shared/components/charts/bar-chart/bar-chart.component";
-import { DoughnutChartComponent } from "../../shared/components/charts/doughnut-chart/doughnut-chart.component";
+// import { LineChartComponent } from "../../shared/components/charts/line-chart/line-chart.component";
+// import { BarChartComponent } from "../../shared/components/charts/bar-chart/bar-chart.component";
+// import { DoughnutChartComponent } from "../../shared/components/charts/doughnut-chart/doughnut-chart.component";
 
 @Component({
   selector: "app-dashboard",
   standalone: true,
-  imports: [
-    CommonModule,
-    // LineChartComponent,
-    // BarChartComponent,
-    // DoughnutChartComponent,
-  ],
+  imports: [CommonModule],
   template: `
     <div class="p-4">
+      <!-- System Status Bar -->
+      <div class="bg-primary rounded-lg shadow-lg mb-6">
+        <div class="grid grid-cols-4 divide-x-2 divide-white/100">
+          <!-- System Health -->
+          <div class="p-4 flex items-center">
+            <div
+              class="w-12 h-12 rounded-full bg-white/10 flex items-center justify-center mr-3"
+            >
+              <svg
+                class="w-6 h-6 text-white"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"
+                />
+              </svg>
+            </div>
+            <div>
+              <p class="text-white/70 text-sm">System Health</p>
+              <p class="text-white text-lg font-semibold">Excellent</p>
+            </div>
+          </div>
+
+          <!-- Database Health -->
+          <div class="p-4 flex items-center">
+            <div
+              class="w-12 h-12 rounded-full bg-white/10 flex items-center justify-center mr-3"
+            >
+              <svg
+                class="w-6 h-6 text-white"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M4 7v10c0 2.21 3.582 4 8 4s8-1.79 8-4V7M4 7c0 2.21 3.582 4 8 4s8-1.79 8-4M4 7c0-2.21 3.582-4 8-4s8 1.79 8 4"
+                />
+              </svg>
+            </div>
+            <div>
+              <p class="text-white/70 text-sm">Database Status</p>
+              <p class="text-white text-lg font-semibold">Healthy</p>
+            </div>
+          </div>
+
+          <!-- API Status -->
+          <div class="p-4 flex items-center">
+            <div
+              class="w-12 h-12 rounded-full bg-white/10 flex items-center justify-center mr-3"
+            >
+              <svg
+                class="w-6 h-6 text-white"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"
+                />
+              </svg>
+            </div>
+            <div>
+              <p class="text-white/70 text-sm">API Status</p>
+              <p class="text-white text-lg font-semibold">Operational</p>
+            </div>
+          </div>
+
+          <!-- System Load -->
+          <div class="p-4 flex items-center">
+            <div
+              class="w-12 h-12 rounded-full bg-white/10 flex items-center justify-center mr-3"
+            >
+              <svg
+                class="w-6 h-6 text-white"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M13 10V3L4 14h7v7l9-11h-7z"
+                />
+              </svg>
+            </div>
+            <div>
+              <p class="text-white/70 text-sm">System Load</p>
+              <p class="text-white text-lg font-semibold">32%</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Stats Cards -->
       <div
         class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4"
         [ngClass]="{
@@ -34,12 +135,36 @@ import { DoughnutChartComponent } from "../../shared/components/charts/doughnut-
           (click)="navigate('/organizations')"
           class="bg-white rounded-lg shadow p-6 cursor-pointer hover:shadow-lg transition-shadow duration-200"
         >
-          <div class="flex items-center mb-4">
-            <div
-              class="w-10 h-10 bg-primary/10 rounded-lg flex items-center justify-center mr-3"
-            >
+          <div class="flex items-center justify-between mb-4">
+            <div class="flex items-center">
+              <div
+                class="w-12 h-12 rounded-full bg-emerald-100 flex items-center justify-center"
+              >
+                <svg
+                  class="w-6 h-6 text-emerald-600"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"
+                  />
+                </svg>
+              </div>
+              <div class="ml-4">
+                <h2 class="text-sm font-medium text-gray-600">Organizations</h2>
+                <p class="text-2xl font-bold text-gray-900">
+                  {{ organizationsCount }}
+                </p>
+              </div>
+            </div>
+            <div class="flex items-center text-emerald-600">
+              <span class="text-sm font-medium">+12.5%</span>
               <svg
-                class="w-6 h-6 text-primary"
+                class="w-4 h-4 ml-1"
                 fill="none"
                 viewBox="0 0 24 24"
                 stroke="currentColor"
@@ -48,18 +173,12 @@ import { DoughnutChartComponent } from "../../shared/components/charts/doughnut-
                   stroke-linecap="round"
                   stroke-linejoin="round"
                   stroke-width="2"
-                  d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"
+                  d="M5 10l7-7m0 0l7 7m-7-7v18"
                 />
               </svg>
             </div>
-            <h2 class="text-lg font-semibold text-gray-900">Organizations</h2>
           </div>
-          <div class="flex items-baseline">
-            <p class="text-4xl font-bold text-primary">
-              {{ organizationsCount }}
-            </p>
-            <p class="ml-2 text-gray-600">total</p>
-          </div>
+          <p class="text-sm text-gray-500">Last 30 days</p>
         </div>
 
         <!-- Users Card -->
@@ -67,12 +186,34 @@ import { DoughnutChartComponent } from "../../shared/components/charts/doughnut-
           (click)="navigate('/users')"
           class="bg-white rounded-lg shadow p-6 cursor-pointer hover:shadow-lg transition-shadow duration-200"
         >
-          <div class="flex items-center mb-4">
-            <div
-              class="w-10 h-10 bg-primary/10 rounded-lg flex items-center justify-center mr-3"
-            >
+          <div class="flex items-center justify-between mb-4">
+            <div class="flex items-center">
+              <div
+                class="w-12 h-12 rounded-full bg-blue-100 flex items-center justify-center"
+              >
+                <svg
+                  class="w-6 h-6 text-blue-600"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"
+                  />
+                </svg>
+              </div>
+              <div class="ml-4">
+                <h2 class="text-sm font-medium text-gray-600">Users</h2>
+                <p class="text-2xl font-bold text-gray-900">{{ usersCount }}</p>
+              </div>
+            </div>
+            <div class="flex items-center text-red-600">
+              <span class="text-sm font-medium">-1.5%</span>
               <svg
-                class="w-6 h-6 text-primary"
+                class="w-4 h-4 ml-1"
                 fill="none"
                 viewBox="0 0 24 24"
                 stroke="currentColor"
@@ -81,16 +222,12 @@ import { DoughnutChartComponent } from "../../shared/components/charts/doughnut-
                   stroke-linecap="round"
                   stroke-linejoin="round"
                   stroke-width="2"
-                  d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"
+                  d="M19 14l-7 7m0 0l-7-7m7 7V3"
                 />
               </svg>
             </div>
-            <h2 class="text-lg font-semibold text-gray-900">Users</h2>
           </div>
-          <div class="flex items-baseline">
-            <p class="text-4xl font-bold text-primary">{{ usersCount }}</p>
-            <p class="ml-2 text-gray-600">total</p>
-          </div>
+          <p class="text-sm text-gray-500">Last 30 days</p>
         </div>
 
         <!-- Declarations Card -->
@@ -99,12 +236,36 @@ import { DoughnutChartComponent } from "../../shared/components/charts/doughnut-
           (click)="navigate('/declarations')"
           class="bg-white rounded-lg shadow p-6 cursor-pointer hover:shadow-lg transition-shadow duration-200"
         >
-          <div class="flex items-center mb-4">
-            <div
-              class="w-10 h-10 bg-primary/10 rounded-lg flex items-center justify-center mr-3"
-            >
+          <div class="flex items-center justify-between mb-4">
+            <div class="flex items-center">
+              <div
+                class="w-12 h-12 rounded-full bg-purple-100 flex items-center justify-center"
+              >
+                <svg
+                  class="w-6 h-6 text-purple-600"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
+                  />
+                </svg>
+              </div>
+              <div class="ml-4">
+                <h2 class="text-sm font-medium text-gray-600">Declarations</h2>
+                <p class="text-2xl font-bold text-gray-900">
+                  {{ pendingDeclarations }}
+                </p>
+              </div>
+            </div>
+            <div class="flex items-center text-emerald-600">
+              <span class="text-sm font-medium">+4.5%</span>
               <svg
-                class="w-6 h-6 text-primary"
+                class="w-4 h-4 ml-1"
                 fill="none"
                 viewBox="0 0 24 24"
                 stroke="currentColor"
@@ -113,18 +274,12 @@ import { DoughnutChartComponent } from "../../shared/components/charts/doughnut-
                   stroke-linecap="round"
                   stroke-linejoin="round"
                   stroke-width="2"
-                  d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
+                  d="M5 10l7-7m0 0l7 7m-7-7v18"
                 />
               </svg>
             </div>
-            <h2 class="text-lg font-semibold text-gray-900">Declarations</h2>
           </div>
-          <div class="flex items-baseline">
-            <p class="text-4xl font-bold text-primary">
-              {{ pendingDeclarations }}
-            </p>
-            <p class="ml-2 text-gray-600">pending</p>
-          </div>
+          <p class="text-sm text-gray-500">Last 30 days</p>
         </div>
 
         <!-- Nominations Card -->
@@ -133,12 +288,36 @@ import { DoughnutChartComponent } from "../../shared/components/charts/doughnut-
           (click)="navigate('/nominations')"
           class="bg-white rounded-lg shadow p-6 cursor-pointer hover:shadow-lg transition-shadow duration-200"
         >
-          <div class="flex items-center mb-4">
-            <div
-              class="w-10 h-10 bg-primary/10 rounded-lg flex items-center justify-center mr-3"
-            >
+          <div class="flex items-center justify-between mb-4">
+            <div class="flex items-center">
+              <div
+                class="w-12 h-12 rounded-full bg-amber-100 flex items-center justify-center"
+              >
+                <svg
+                  class="w-6 h-6 text-amber-600"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"
+                  />
+                </svg>
+              </div>
+              <div class="ml-4">
+                <h2 class="text-sm font-medium text-gray-600">Nominations</h2>
+                <p class="text-2xl font-bold text-gray-900">
+                  {{ pendingNominations }}
+                </p>
+              </div>
+            </div>
+            <div class="flex items-center text-emerald-600">
+              <span class="text-sm font-medium">+8.3%</span>
               <svg
-                class="w-6 h-6 text-primary"
+                class="w-4 h-4 ml-1"
                 fill="none"
                 viewBox="0 0 24 24"
                 stroke="currentColor"
@@ -147,18 +326,12 @@ import { DoughnutChartComponent } from "../../shared/components/charts/doughnut-
                   stroke-linecap="round"
                   stroke-linejoin="round"
                   stroke-width="2"
-                  d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"
+                  d="M5 10l7-7m0 0l7 7m-7-7v18"
                 />
               </svg>
             </div>
-            <h2 class="text-lg font-semibold text-gray-900">Nominations</h2>
           </div>
-          <div class="flex items-baseline">
-            <p class="text-4xl font-bold text-primary">
-              {{ pendingNominations }}
-            </p>
-            <p class="ml-2 text-gray-600">pending</p>
-          </div>
+          <p class="text-sm text-gray-500">Last 30 days</p>
         </div>
 
         <!-- Reports Card -->
@@ -167,12 +340,36 @@ import { DoughnutChartComponent } from "../../shared/components/charts/doughnut-
           (click)="navigate('/reports')"
           class="bg-white rounded-lg shadow p-6 cursor-pointer hover:shadow-lg transition-shadow duration-200"
         >
-          <div class="flex items-center mb-4">
-            <div
-              class="w-10 h-10 bg-primary/10 rounded-lg flex items-center justify-center mr-3"
-            >
+          <div class="flex items-center justify-between mb-4">
+            <div class="flex items-center">
+              <div
+                class="w-12 h-12 rounded-full bg-amber-100 flex items-center justify-center"
+              >
+                <svg
+                  class="w-6 h-6 text-amber-600"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"
+                  />
+                </svg>
+              </div>
+              <div class="ml-4">
+                <h2 class="text-sm font-medium text-gray-600">Nominations</h2>
+                <p class="text-2xl font-bold text-gray-900">
+                  {{ pendingNominations }}
+                </p>
+              </div>
+            </div>
+            <div class="flex items-center text-emerald-600">
+              <span class="text-sm font-medium">+8.3%</span>
               <svg
-                class="w-6 h-6 text-primary"
+                class="w-4 h-4 ml-1"
                 fill="none"
                 viewBox="0 0 24 24"
                 stroke="currentColor"
@@ -181,18 +378,13 @@ import { DoughnutChartComponent } from "../../shared/components/charts/doughnut-
                   stroke-linecap="round"
                   stroke-linejoin="round"
                   stroke-width="2"
-                  d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
+                  d="M5 10l7-7m0 0l7 7m-7-7v18"
                 />
               </svg>
             </div>
-            <h2 class="text-lg font-semibold text-gray-900">Reports</h2>
           </div>
-          <div class="flex items-baseline">
-            <!-- <p class="text-4xl font-bold text-primary">0</p> -->
-            <p class="ml-2 text-gray-600">total</p>
-          </div>
+          <p class="text-sm text-gray-500">Last 30 days</p>
         </div>
-        <!-- </div> -->
       </div>
 
       <div
@@ -211,10 +403,10 @@ import { DoughnutChartComponent } from "../../shared/components/charts/doughnut-
               Coming Soon!
             </h1>
             <!-- <app-bar-chart
-              [data]="weeklyDeclarations"
-              [labels]="weekLabels"
-              label="Declarations"
-            ></app-bar-chart> -->
+               [data]="weeklyDeclarations"
+               [labels]="weekLabels"
+               label="Declarations"
+             ></app-bar-chart> -->
           </div>
         </div>
 
@@ -230,17 +422,17 @@ import { DoughnutChartComponent } from "../../shared/components/charts/doughnut-
               Coming Soon!
             </h1>
             <!-- <app-doughnut-chart
-              [data]="statusData"
-              [labels]="statusLabels"
-              [backgroundColor]="['#079455', '#eab308', '#ef4444', '#3b82f6']"
-            ></app-doughnut-chart> -->
+               [data]="statusData"
+               [labels]="statusLabels"
+               [backgroundColor]="['#079455', '#eab308', '#ef4444', '#3b82f6']"
+             ></app-doughnut-chart> -->
           </div>
         </div>
       </div>
 
       <div
         *ngIf="userType == 'D' || userType == 'M'"
-        class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-4"
+        class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-4 mb-4"
       >
         <!-- Weekly Nomination Bar Chart -->
         <div class="bg-white rounded-lg shadow p-6">
@@ -254,10 +446,10 @@ import { DoughnutChartComponent } from "../../shared/components/charts/doughnut-
               Coming Soon!
             </h1>
             <!-- <app-bar-chart
-              [data]="weeklyDeclarations"
-              [labels]="weekLabels"
-              label="Declarations"
-            ></app-bar-chart> -->
+               [data]="weeklyDeclarations"
+               [labels]="weekLabels"
+               label="Declarations"
+             ></app-bar-chart> -->
           </div>
         </div>
 
@@ -273,10 +465,123 @@ import { DoughnutChartComponent } from "../../shared/components/charts/doughnut-
               Coming Soon!
             </h1>
             <!-- <app-doughnut-chart
-              [data]="statusData"
-              [labels]="statusLabels"
-              [backgroundColor]="['#079455', '#eab308', '#ef4444', '#3b82f6']"
-            ></app-doughnut-chart> -->
+               [data]="statusData"
+               [labels]="statusLabels"
+               [backgroundColor]="['#079455', '#eab308', '#ef4444', '#3b82f6']"
+             ></app-doughnut-chart> -->
+          </div>
+        </div>
+      </div>
+
+      <!-- Statistics Grid -->
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <!-- Monthly Statistics -->
+        <div class="bg-white rounded-lg shadow p-6">
+          <h3 class="text-lg font-semibold text-gray-900 mb-4">
+            Monthly Statistics
+          </h3>
+          <div class="space-y-4">
+            <div class="flex justify-between items-center">
+              <span class="text-gray-600">Total Declarations</span>
+              <span class="font-medium">245</span>
+            </div>
+            <div class="flex justify-between items-center">
+              <span class="text-gray-600">Approved</span>
+              <span class="font-medium text-green-600">180</span>
+            </div>
+            <div class="flex justify-between items-center">
+              <span class="text-gray-600">Pending</span>
+              <span class="font-medium text-yellow-600">45</span>
+            </div>
+            <div class="flex justify-between items-center">
+              <span class="text-gray-600">Rejected</span>
+              <span class="font-medium text-red-600">20</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Organization Overview -->
+        <div class="bg-white rounded-lg shadow p-6">
+          <h3 class="text-lg font-semibold text-gray-900 mb-4">
+            Organization Overview
+          </h3>
+          <div class="space-y-4">
+            <div class="flex justify-between items-center">
+              <span class="text-gray-600">Total Organizations</span>
+              <span class="font-medium">{{ organizationsCount }}</span>
+            </div>
+            <div class="flex justify-between items-center">
+              <span class="text-gray-600">Upstream</span>
+              <span class="font-medium">12</span>
+            </div>
+            <div class="flex justify-between items-center">
+              <span class="text-gray-600">Downstream</span>
+              <span class="font-medium">8</span>
+            </div>
+            <div class="flex justify-between items-center">
+              <span class="text-gray-600">Pending Approval</span>
+              <span class="font-medium text-yellow-600">3</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Recent Activity -->
+        <div class="bg-white rounded-lg shadow p-6">
+          <h3 class="text-lg font-semibold text-gray-900 mb-4">
+            Recent Activity
+          </h3>
+          <div class="space-y-4">
+            <div class="flex items-center">
+              <div class="w-2 h-2 bg-green-500 rounded-full mr-2"></div>
+              <span class="text-gray-600"
+                >New declaration submitted by Acme Corp</span
+              >
+            </div>
+            <div class="flex items-center">
+              <div class="w-2 h-2 bg-blue-500 rounded-full mr-2"></div>
+              <span class="text-gray-600"
+                >User account created for John Doe</span
+              >
+            </div>
+            <div class="flex items-center">
+              <div class="w-2 h-2 bg-yellow-500 rounded-full mr-2"></div>
+              <span class="text-gray-600">Declaration pending approval</span>
+            </div>
+            <div class="flex items-center">
+              <div class="w-2 h-2 bg-red-500 rounded-full mr-2"></div>
+              <span class="text-gray-600">Declaration rejected</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- System Status -->
+        <div class="bg-white rounded-lg shadow p-6">
+          <h3 class="text-lg font-semibold text-gray-900 mb-4">
+            System Status
+          </h3>
+          <div class="space-y-4">
+            <div class="flex justify-between items-center">
+              <span class="text-gray-600">API Status</span>
+              <span
+                class="px-2 py-1 bg-green-100 text-green-800 rounded-full text-sm"
+                >Operational</span
+              >
+            </div>
+            <div class="flex justify-between items-center">
+              <span class="text-gray-600">Database</span>
+              <span
+                class="px-2 py-1 bg-green-100 text-green-800 rounded-full text-sm"
+                >Healthy</span
+              >
+            </div>
+            <div class="flex justify-between items-center">
+              <span class="text-gray-600">Last Backup</span>
+              <span class="text-sm text-gray-600">2 hours ago</span>
+            </div>
+            <div class="flex justify-between items-center">
+              <span class="text-gray-600">System Load</span>
+              <span class="text-sm text-gray-600">32%</span>
+            </div>
           </div>
         </div>
       </div>
@@ -293,7 +598,7 @@ export class DashboardComponent implements OnInit {
   totalPendingCount = 0;
   userType: string = "";
 
-  // Monthly Declarations Data
+  //  Monthly Declarations Data
   monthlyDeclarations = [65, 59, 80, 81, 56, 55, 40, 45, 60, 75, 85, 90];
   monthLabels = [
     "Jan",
@@ -310,15 +615,15 @@ export class DashboardComponent implements OnInit {
     "Dec",
   ];
 
-  // Weekly Declarations Data
+  //  Weekly Declarations Data
   weeklyDeclarations = [28, 35, 42, 30, 25, 38, 40];
   weekLabels = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
 
-  // Organization Types Data
+  //  Organization Types Data
   orgTypeData = [45, 55];
   orgTypeLabels = ["Upstream", "Downstream"];
 
-  // Declaration Status Data
+  //  Declaration Status Data
   statusData = [35, 15, 10, 40];
   statusLabels = ["Approved", "Pending", "Rejected", "Draft"];
 
