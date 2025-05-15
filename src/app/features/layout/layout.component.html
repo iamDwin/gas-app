@@ -1,4 +1,4 @@
-<div class="min-h-screen bg-gray-50 flex">
+<div class="min-h-screen bg-white flex">
   <!-- Sidebar -->
   <div
     class="fixed inset-y-0 left-0 z-[30] transform lg:transform-none lg:opacity-100 duration-200 ease-in-out"
@@ -132,7 +132,7 @@
               [routerLink]="item.path"
               routerLinkActive="bg-primary/10 text-primary border-primary"
               [routerLinkActiveOptions]="{ exact: !!item.exact }"
-              class="flex items-center px-3 py-2 text-sm font-medium text-gray-900 rounded-md hover:bg-primary/10 hover:text-primary group border-l-2 border-transparent relative"
+              class="flex items-center px-3 py-3 text-sm font-medium text-gray-900 rounded-md hover:bg-primary/10 hover:text-primary group border-l-2 border-transparent relative"
               [class.justify-center]="isSidebarCollapsed"
             >
               <span
@@ -248,7 +248,7 @@
       </div>
     </header>
 
-    <main class="flex-1 mt-16">
+    <main class="flex-1 mt-16 bg-gray-100">
       <router-outlet></router-outlet>
     </main>
   </div>

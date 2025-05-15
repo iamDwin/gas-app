@@ -17,7 +17,7 @@ import { AuthService } from "../../core/auth/auth.service";
   template: `
     <div class="p-4">
       <!-- System Status Bar -->
-      <div class="bg-primary rounded-lg shadow-lg mb-6">
+      <div class="bg-primary rounded-xl shadow border-primary-dark mb-4">
         <div class="grid grid-cols-4 divide-x-2 divide-white/100">
           <!-- System Health -->
           <div class="p-4 flex items-center">
@@ -39,7 +39,7 @@ import { AuthService } from "../../core/auth/auth.service";
               </svg>
             </div>
             <div>
-              <p class="text-white/70 text-sm">System Health</p>
+              <p class="text-white/80 text-sm">System Health</p>
               <p class="text-white text-lg font-semibold">Excellent</p>
             </div>
           </div>
@@ -64,7 +64,7 @@ import { AuthService } from "../../core/auth/auth.service";
               </svg>
             </div>
             <div>
-              <p class="text-white/70 text-sm">Database Status</p>
+              <p class="text-white/80 text-sm">Database Status</p>
               <p class="text-white text-lg font-semibold">Healthy</p>
             </div>
           </div>
@@ -89,7 +89,7 @@ import { AuthService } from "../../core/auth/auth.service";
               </svg>
             </div>
             <div>
-              <p class="text-white/70 text-sm">API Status</p>
+              <p class="text-white/80 text-sm">API Status</p>
               <p class="text-white text-lg font-semibold">Operational</p>
             </div>
           </div>
@@ -114,8 +114,8 @@ import { AuthService } from "../../core/auth/auth.service";
               </svg>
             </div>
             <div>
-              <p class="text-white/70 text-sm">System Load</p>
-              <p class="text-white text-lg font-semibold">32%</p>
+              <p class="text-white/80 text-sm">System Load</p>
+              <p class="text-white text-lg font-semibold">10%</p>
             </div>
           </div>
         </div>
@@ -133,7 +133,7 @@ import { AuthService } from "../../core/auth/auth.service";
         <div
           *ngIf="userType == 'M'"
           (click)="navigate('/organizations')"
-          class="bg-white rounded-lg shadow p-6 cursor-pointer hover:shadow-lg transition-shadow duration-200"
+          class="bg-white rounded-xl shadow p-6 cursor-pointer"
         >
           <div class="flex items-center justify-between mb-4">
             <div class="flex items-center">
@@ -178,13 +178,13 @@ import { AuthService } from "../../core/auth/auth.service";
               </svg>
             </div>
           </div>
-          <p class="text-sm text-gray-500">Last 30 days</p>
+          <p class="text-sm text-gray-500">Overall Total</p>
         </div>
 
         <!-- Users Card -->
         <div
           (click)="navigate('/users')"
-          class="bg-white rounded-lg shadow p-6 cursor-pointer hover:shadow-lg transition-shadow duration-200"
+          class="bg-white rounded-xl shadow p-6 cursor-pointer"
         >
           <div class="flex items-center justify-between mb-4">
             <div class="flex items-center">
@@ -227,14 +227,14 @@ import { AuthService } from "../../core/auth/auth.service";
               </svg>
             </div>
           </div>
-          <p class="text-sm text-gray-500">Last 30 days</p>
+          <p class="text-sm text-gray-500">Overall Total</p>
         </div>
 
         <!-- Declarations Card -->
         <div
           *ngIf="userType == 'U' || userType == 'M'"
           (click)="navigate('/declarations')"
-          class="bg-white rounded-lg shadow p-6 cursor-pointer hover:shadow-lg transition-shadow duration-200"
+          class="bg-white rounded-xl shadow p-6 cursor-pointer"
         >
           <div class="flex items-center justify-between mb-4">
             <div class="flex items-center">
@@ -279,14 +279,14 @@ import { AuthService } from "../../core/auth/auth.service";
               </svg>
             </div>
           </div>
-          <p class="text-sm text-gray-500">Last 30 days</p>
+          <p class="text-sm text-gray-500">Overall Total</p>
         </div>
 
         <!-- Nominations Card -->
         <div
           *ngIf="userType == 'D' || userType == 'M'"
           (click)="navigate('/nominations')"
-          class="bg-white rounded-lg shadow p-6 cursor-pointer hover:shadow-lg transition-shadow duration-200"
+          class="bg-white rounded-xl shadow p-6 cursor-pointer"
         >
           <div class="flex items-center justify-between mb-4">
             <div class="flex items-center">
@@ -331,14 +331,14 @@ import { AuthService } from "../../core/auth/auth.service";
               </svg>
             </div>
           </div>
-          <p class="text-sm text-gray-500">Last 30 days</p>
+          <p class="text-sm text-gray-500">Overall Total</p>
         </div>
 
         <!-- Reports Card -->
         <div
           *ngIf="userType == 'U' || userType == 'D'"
           (click)="navigate('/reports')"
-          class="bg-white rounded-lg shadow p-6 cursor-pointer hover:shadow-lg transition-shadow duration-200"
+          class="bg-white rounded-xl shadow p-6 cursor-pointer"
         >
           <div class="flex items-center justify-between mb-4">
             <div class="flex items-center">
@@ -383,7 +383,111 @@ import { AuthService } from "../../core/auth/auth.service";
               </svg>
             </div>
           </div>
-          <p class="text-sm text-gray-500">Last 30 days</p>
+          <p class="text-sm text-gray-500">Overall Total</p>
+        </div>
+      </div>
+
+      <!-- Monthly Statistics Bar -->
+      <div class="bg-white rounded-xl shadow mb-4">
+        <div class="p-4 border-b-2 border-primary-dark">
+          <h2 class="text-lg font-semibold text-primary">Monthly Statistics</h2>
+        </div>
+        <div class="grid grid-cols-4 divide-x-2 divide-primary-dark">
+          <div class="p-4 flex items-center">
+            <div
+              class="w-12 h-12 rounded-full bg-primary flex items-center justify-center mr-3"
+            >
+              <svg
+                class="w-6 h-6 text-primary"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="white"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"
+                />
+              </svg>
+            </div>
+            <div>
+              <p class="text-primary/70 text-sm">Total</p>
+              <p class="text-primary text-lg font-semibold">245</p>
+            </div>
+          </div>
+
+          <div class="p-4 flex items-center">
+            <div
+              class="w-12 h-12 rounded-full bg-primary flex items-center justify-center mr-3"
+            >
+              <svg
+                class="w-6 h-6 text-primary"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="white"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
+                />
+              </svg>
+            </div>
+            <div>
+              <p class="text-primary/70 text-sm">Approved</p>
+              <p class="text-primary text-lg font-semibold">180</p>
+            </div>
+          </div>
+
+          <div class="p-4 flex items-center">
+            <div
+              class="w-12 h-12 rounded-full bg-primary flex items-center justify-center mr-3"
+            >
+              <svg
+                class="w-6 h-6 text-primary"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="white"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
+                />
+              </svg>
+            </div>
+            <div>
+              <p class="text-primary/70 text-sm">Pending</p>
+              <p class="text-primary text-lg font-semibold">45</p>
+            </div>
+          </div>
+
+          <div class="p-4 flex items-center">
+            <div
+              class="w-12 h-12 rounded-full bg-primary flex items-center justify-center mr-3"
+            >
+              <svg
+                class="w-6 h-6 text-primary"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="white"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z"
+                />
+              </svg>
+            </div>
+            <div>
+              <p class="text-primary/70 text-sm">Rejected</p>
+              <p class="text-primary text-lg font-semibold">20</p>
+            </div>
+          </div>
         </div>
       </div>
 
@@ -469,119 +573,6 @@ import { AuthService } from "../../core/auth/auth.service";
                [labels]="statusLabels"
                [backgroundColor]="['#079455', '#eab308', '#ef4444', '#3b82f6']"
              ></app-doughnut-chart> -->
-          </div>
-        </div>
-      </div>
-
-      <!-- Statistics Grid -->
-      <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <!-- Monthly Statistics -->
-        <div class="bg-white rounded-lg shadow p-6">
-          <h3 class="text-lg font-semibold text-gray-900 mb-4">
-            Monthly Statistics
-          </h3>
-          <div class="space-y-4">
-            <div class="flex justify-between items-center">
-              <span class="text-gray-600">Total Declarations</span>
-              <span class="font-medium">245</span>
-            </div>
-            <div class="flex justify-between items-center">
-              <span class="text-gray-600">Approved</span>
-              <span class="font-medium text-green-600">180</span>
-            </div>
-            <div class="flex justify-between items-center">
-              <span class="text-gray-600">Pending</span>
-              <span class="font-medium text-yellow-600">45</span>
-            </div>
-            <div class="flex justify-between items-center">
-              <span class="text-gray-600">Rejected</span>
-              <span class="font-medium text-red-600">20</span>
-            </div>
-          </div>
-        </div>
-
-        <!-- Organization Overview -->
-        <div class="bg-white rounded-lg shadow p-6">
-          <h3 class="text-lg font-semibold text-gray-900 mb-4">
-            Organization Overview
-          </h3>
-          <div class="space-y-4">
-            <div class="flex justify-between items-center">
-              <span class="text-gray-600">Total Organizations</span>
-              <span class="font-medium">{{ organizationsCount }}</span>
-            </div>
-            <div class="flex justify-between items-center">
-              <span class="text-gray-600">Upstream</span>
-              <span class="font-medium">12</span>
-            </div>
-            <div class="flex justify-between items-center">
-              <span class="text-gray-600">Downstream</span>
-              <span class="font-medium">8</span>
-            </div>
-            <div class="flex justify-between items-center">
-              <span class="text-gray-600">Pending Approval</span>
-              <span class="font-medium text-yellow-600">3</span>
-            </div>
-          </div>
-        </div>
-
-        <!-- Recent Activity -->
-        <div class="bg-white rounded-lg shadow p-6">
-          <h3 class="text-lg font-semibold text-gray-900 mb-4">
-            Recent Activity
-          </h3>
-          <div class="space-y-4">
-            <div class="flex items-center">
-              <div class="w-2 h-2 bg-green-500 rounded-full mr-2"></div>
-              <span class="text-gray-600"
-                >New declaration submitted by Acme Corp</span
-              >
-            </div>
-            <div class="flex items-center">
-              <div class="w-2 h-2 bg-blue-500 rounded-full mr-2"></div>
-              <span class="text-gray-600"
-                >User account created for John Doe</span
-              >
-            </div>
-            <div class="flex items-center">
-              <div class="w-2 h-2 bg-yellow-500 rounded-full mr-2"></div>
-              <span class="text-gray-600">Declaration pending approval</span>
-            </div>
-            <div class="flex items-center">
-              <div class="w-2 h-2 bg-red-500 rounded-full mr-2"></div>
-              <span class="text-gray-600">Declaration rejected</span>
-            </div>
-          </div>
-        </div>
-
-        <!-- System Status -->
-        <div class="bg-white rounded-lg shadow p-6">
-          <h3 class="text-lg font-semibold text-gray-900 mb-4">
-            System Status
-          </h3>
-          <div class="space-y-4">
-            <div class="flex justify-between items-center">
-              <span class="text-gray-600">API Status</span>
-              <span
-                class="px-2 py-1 bg-green-100 text-green-800 rounded-full text-sm"
-                >Operational</span
-              >
-            </div>
-            <div class="flex justify-between items-center">
-              <span class="text-gray-600">Database</span>
-              <span
-                class="px-2 py-1 bg-green-100 text-green-800 rounded-full text-sm"
-                >Healthy</span
-              >
-            </div>
-            <div class="flex justify-between items-center">
-              <span class="text-gray-600">Last Backup</span>
-              <span class="text-sm text-gray-600">2 hours ago</span>
-            </div>
-            <div class="flex justify-between items-center">
-              <span class="text-gray-600">System Load</span>
-              <span class="text-sm text-gray-600">32%</span>
-            </div>
           </div>
         </div>
       </div>
