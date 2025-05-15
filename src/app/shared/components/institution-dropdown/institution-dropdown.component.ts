@@ -91,6 +91,9 @@ export interface Institution {
               <div class="font-medium">{{ institution.name }}</div>
               <div class="text-xs text-gray-500">{{ institution.code }}</div>
               <div class="text-xs text-gray-500">
+                DCV - {{ institution.dcv }}
+              </div>
+              <div class="text-xs text-gray-500">
                 {{
                   institution.type === "U"
                     ? "UPSTREAM"

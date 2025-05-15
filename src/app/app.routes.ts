@@ -86,6 +86,13 @@ export const routes: Routes = [
               ),
           },
           {
+            path: "pending",
+            loadComponent: () =>
+              import(
+                "./features/declarations/pending-declarations/pending-declarations.component"
+              ).then((m) => m.PendingDeclarationsComponent),
+          },
+          {
             path: ":id",
             loadComponent: () =>
               import(
@@ -94,20 +101,6 @@ export const routes: Routes = [
           },
         ],
       },
-      // {
-      //   path: "contracts",
-      //   loadComponent: () =>
-      //     import("./features/contracts/contracts.component").then(
-      //       (m) => m.ContractsComponent
-      //     ),
-      // },
-      // {
-      //   path: "allocations",
-      //   loadComponent: () =>
-      //     import("./features/allocations/allocations.component").then(
-      //       (m) => m.AllocationsComponent
-      //     ),
-      // },
       {
         path: "nominations",
 
