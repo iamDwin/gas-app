@@ -370,110 +370,6 @@
     </div>
   </div>
 
-  <!-- Monthly Statistics Bar -->
-  <div class="bg-white rounded-xl shadow mb-4">
-    <div class="p-4 border-b-2 border-primary-dark">
-      <h2 class="text-lg font-semibold text-primary">Monthly Statistics</h2>
-    </div>
-    <div class="grid grid-cols-4 divide-x-2 divide-primary-dark">
-      <div class="p-4 flex items-center">
-        <div
-          class="w-12 h-12 rounded-full bg-primary flex items-center justify-center mr-3"
-        >
-          <svg
-            class="w-6 h-6 text-primary"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="white"
-          >
-            <path
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              stroke-width="2"
-              d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"
-            />
-          </svg>
-        </div>
-        <div>
-          <p class="text-black/60 text-sm">Total Declarations</p>
-          <p class="text-black text-lg font-semibold">245</p>
-        </div>
-      </div>
-
-      <div class="p-4 flex items-center">
-        <div
-          class="w-12 h-12 rounded-full bg-primary flex items-center justify-center mr-3"
-        >
-          <svg
-            class="w-6 h-6 text-primary"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="white"
-          >
-            <path
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              stroke-width="2"
-              d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
-            />
-          </svg>
-        </div>
-        <div>
-          <p class="text-black/60 text-sm">Total Nominations</p>
-          <p class="text-black text-lg font-semibold">180</p>
-        </div>
-      </div>
-
-      <div class="p-4 flex items-center">
-        <div
-          class="w-12 h-12 rounded-full bg-primary flex items-center justify-center mr-3"
-        >
-          <svg
-            class="w-6 h-6 text-primary"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="white"
-          >
-            <path
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              stroke-width="2"
-              d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
-            />
-          </svg>
-        </div>
-        <div>
-          <p class="text-black/60 text-sm">Approved Declarations</p>
-          <p class="text-black text-lg font-semibold">45</p>
-        </div>
-      </div>
-
-      <div class="p-4 flex items-center">
-        <div
-          class="w-12 h-12 rounded-full bg-primary flex items-center justify-center mr-3"
-        >
-          <svg
-            class="w-6 h-6 text-primary"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="white"
-          >
-            <path
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              stroke-width="2"
-              d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z"
-            />
-          </svg>
-        </div>
-        <div>
-          <p class="text-black/60 text-sm">Approved Nominations</p>
-          <p class="text-black text-lg font-semibold">20</p>
-        </div>
-      </div>
-    </div>
-  </div>
-
   <!-- GRAPH AND CHARTS -->
   <div
     *ngIf="userType == 'U' || userType == 'M'"
@@ -485,16 +381,7 @@
         Monthly Declarations chart
       </h3>
       <div class="h-fit">
-        <h1
-          class="flex my-20 items-center justify-center text-[#079455] opacity-0.8 text-4xl font-bold"
-        >
-          Coming Soon!
-        </h1>
-        <!-- <app-bar-chart
-             [data]="weeklyDeclarations"
-             [labels]="weekLabels"
-             label="Declarations"
-           ></app-bar-chart> -->
+        <app-line-chart></app-line-chart>
       </div>
     </div>
 
@@ -504,16 +391,7 @@
         Declaration Status charts
       </h3>
       <div class="h-fit">
-        <h1
-          class="flex my-20 items-center justify-center text-[#079455] opacity-0.8 text-4xl font-bold"
-        >
-          Coming Soon!
-        </h1>
-        <!-- <app-doughnut-chart
-             [data]="statusData"
-             [labels]="statusLabels"
-             [backgroundColor]="['#079455', '#eab308', '#ef4444', '#3b82f6']"
-           ></app-doughnut-chart> -->
+        <app-area-chart></app-area-chart>
       </div>
     </div>
   </div>
@@ -528,16 +406,7 @@
         Monthly Nomination chart
       </h3>
       <div class="h-fit">
-        <h1
-          class="flex my-20 items-center justify-center text-[#079455] opacity-0.8 text-4xl font-bold"
-        >
-          Coming Soon!
-        </h1>
-        <!-- <app-bar-chart
-             [data]="weeklyDeclarations"
-             [labels]="weekLabels"
-             label="Declarations"
-           ></app-bar-chart> -->
+        <app-bar-chart></app-bar-chart>
       </div>
     </div>
 
@@ -547,16 +416,7 @@
         Nomination Status chart
       </h3>
       <div class="h-fit">
-        <h1
-          class="flex my-20 items-center justify-center text-[#079455] opacity-0.8 text-4xl font-bold"
-        >
-          Coming Soon!
-        </h1>
-        <!-- <app-doughnut-chart
-             [data]="statusData"
-             [labels]="statusLabels"
-             [backgroundColor]="['#079455', '#eab308', '#ef4444', '#3b82f6']"
-           ></app-doughnut-chart> -->
+        <app-doughnut-chart></app-doughnut-chart>
       </div>
     </div>
   </div>

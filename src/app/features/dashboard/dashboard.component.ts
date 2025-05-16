@@ -6,14 +6,21 @@ import { UserService } from "../users/user.service";
 import { BreadcrumbService } from "../../shared/services/breadcrumb.service";
 import { PendingItemsService } from "../../shared/services/pending-items.service";
 import { AuthService } from "../../core/auth/auth.service";
-// import { LineChartComponent } from "../../shared/components/charts/line-chart/line-chart.component";
-// import { BarChartComponent } from "../../shared/components/charts/bar-chart/bar-chart.component";
-// import { DoughnutChartComponent } from "../../shared/components/charts/doughnut-chart/doughnut-chart.component";
+import { LineChartComponent } from "../../shared/components/charts/line-chart/line-chart.component";
+import { AreaChartComponent } from "./../../shared/components/charts/area-chart/area-chart.component";
+import { BarChartComponent } from "../../shared/components/charts/bar-chart/bar-chart.component";
+import { DoughnutChartComponent } from "../../shared/components/charts/doughnut-chart/doughnut-chart.component";
 
 @Component({
   selector: "app-dashboard",
   standalone: true,
-  imports: [CommonModule],
+  imports: [
+    CommonModule,
+    LineChartComponent,
+    AreaChartComponent,
+    BarChartComponent,
+    DoughnutChartComponent,
+  ],
   templateUrl: "./dashboard.component.html",
 })
 export class DashboardComponent implements OnInit {

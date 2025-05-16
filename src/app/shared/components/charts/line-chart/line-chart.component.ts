@@ -23,6 +23,7 @@ export class LineChartComponent implements OnInit {
       chart: {
         type: "line",
         height: 350,
+        stacked: true,
         dropShadow: {
           enabled: true,
           color: "#000",
@@ -33,6 +34,11 @@ export class LineChartComponent implements OnInit {
         },
         toolbar: {
           show: false,
+        },
+        zoom: {
+          type: "x",
+          enabled: false,
+          autoScaleYaxis: true,
         },
       },
       dataLabels: {
@@ -50,7 +56,7 @@ export class LineChartComponent implements OnInit {
         {
           name: "Nominations",
           data: [12, 11, 14, 18, 17, 13, 13],
-          color: "#079455", // Green
+          color: "#117F63s", // Green
         },
       ],
       xaxis: {

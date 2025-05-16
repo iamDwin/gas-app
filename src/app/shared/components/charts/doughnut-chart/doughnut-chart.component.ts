@@ -1,84 +1,54 @@
-import { Component, Input, OnInit, ElementRef, ViewChild } from "@angular/core";
-import { CommonModule } from "@angular/common";
-import { Chart, ChartConfiguration } from "chart.js/auto";
+import { Component, OnInit, ElementRef, ViewChild } from "@angular/core";
+import ApexCharts from "apexcharts";
 
 @Component({
   selector: "app-doughnut-chart",
   standalone: true,
-  imports: [CommonModule],
   template: `
     <div class="relative">
-      <canvas #chartCanvas></canvas>
+      <div #chartContainer></div>
     </div>
   `,
+  imports: [],
 })
 export class DoughnutChartComponent implements OnInit {
-  @ViewChild("chartCanvas") chartCanvas!: ElementRef;
-  @Input() data: number[] = [];
-  @Input() labels: string[] = [];
-  @Input() backgroundColor: string[] = [
-    "#079455",
-    "#34d399",
-    "#6ee7b7",
-    "#a7f3d0",
-  ];
+  @ViewChild("chartContainer", { static: true }) chartContainer!: ElementRef;
 
-  private chart?: Chart;
-
-  ngOnInit() {}
-
-  ngAfterViewInit() {
+  ngOnInit() {
     this.createChart();
   }
 
-  ngOnChanges() {
-    if (this.chart) {
-      this.chart.destroy();
-    }
-    this.createChart();
-  }
-
-  // ... existing code ...
   private createChart() {
-    if (!this.chartCanvas) return;
-
-    const ctx = this.chartCanvas.nativeElement.getContext("2d");
-
-    const config: ChartConfiguration = {
-      type: "doughnut",
-      data: {
-        labels: this.labels,
-        datasets: [
-          {
-            data: this.data,
-            backgroundColor: this.backgroundColor,
-            borderWidth: 0,
-          },
-        ],
+    const options = {
+      series: [44, 15, 12],
+      chart: {
+        width: "70%",
+        type: "donut",
       },
-      options: {
-        responsive: true,
-        maintainAspectRatio: false,
-        plugins: {
-          legend: {
-            position: "bottom",
-            labels: {
-              padding: 20,
+      labels: ["Approved", "Pending", "Declined"],
+      colors: ["#34d399", "#a7f3d0", "#CC3359"],
+
+      // theme: {
+      //   monochrome: {
+      //     enabled: true,
+      //   },
+      // },
+      responsive: [
+        {
+          breakpoint: 480,
+          options: {
+            chart: {
+              width: 200,
+            },
+            legend: {
+              position: "bottom",
             },
           },
         },
-        // Use type assertion to bypass TypeScript type checking
-        // cutout: "50%" as any,
-      },
+      ],
     };
 
-    this.chart = new Chart(ctx, config);
-  }
-  // ... existing code ...
-
-  ngOnDestroy() {
-    if (this.chart) {
-      this.chart.destroy();
-    }
+    const chart = new ApexCharts(this.chartContainer.nativeElement, options);
+    chart.render();
   }
 }
