@@ -44,17 +44,17 @@ export class AreaChartComponent implements OnInit {
       series: [
         {
           name: "Approved",
-          data: [28, 29, 33, 36, 32, 32, 33, 16, 20, 22, 23, 20],
+          data: [28, 29, 33, 36, 32, 32, 33],
           color: "#5CD97F", // Red
         },
         {
           name: "Pending",
-          data: [18, 13, 16, 20, 22, 23, 20, 33, 36, 32, 32, 33],
+          data: [18, 13, 16, 20, 22, 23, 20],
           color: "#3359CC", // Green
         },
         {
-          name: "Decline",
-          data: [12, 11, 14, 18, 17, 13, 13, 22, 23, 20, 33, 36],
+          name: "Declined",
+          data: [12, 11, 14, 18, 17, 13, 13],
           color: "#CC3359", // Green
         },
       ],
@@ -67,11 +67,11 @@ export class AreaChartComponent implements OnInit {
           "May",
           "Jun",
           "Jul",
-          "Aug",
-          "Sep",
-          "Oct",
-          "Nov",
-          "Dec",
+          // "Aug",
+          // "Sep",
+          // "Oct",
+          // "Nov",
+          // "Dec",
         ],
       },
     };
