@@ -19,6 +19,14 @@ import { AuthService } from "../../../core/auth/auth.service";
       <div class="w-full lg:w-1/3 flex items-center justify-center bg-white">
         <div class="w-full max-w-sm px-8 py-20 rounded-xl bg-white">
           <div class="mb-8">
+            <h2
+              class="flex gap-1 align-center text-xl font-bold text-primary mb-3"
+            >
+              <img
+                src="https://ui-avatars.com/api/?name=Rig+Suite&background=117F63&color=ffffff&rounded=true&format=svg&size=30"
+              />
+              RigSuite
+            </h2>
             <h2 class="text-2xl font-bold text-gray-900">
               Sign in to your Account
             </h2>
