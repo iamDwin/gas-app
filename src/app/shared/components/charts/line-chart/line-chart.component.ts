@@ -44,12 +44,12 @@ export class LineChartComponent implements OnInit {
       series: [
         {
           name: "Declarations",
-          data: [12, 25, 18, 30, 22, 35, 28, 40, 33, 45, 38, 50],
+          data: [28, 29, 33, 36, 32, 32, 33],
           color: "#FF0000", // Red
         },
         {
           name: "Nominations",
-          data: [20, 15, 25, 18, 28, 22, 32, 27, 37, 30, 40, 35],
+          data: [12, 11, 14, 18, 17, 13, 13],
           color: "#079455", // Green
         },
       ],
