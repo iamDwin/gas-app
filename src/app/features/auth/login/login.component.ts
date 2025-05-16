@@ -47,7 +47,8 @@ import { AuthService } from "../../../core/auth/auth.service";
                 id="username"
                 type="text"
                 formControlName="username"
-                class="mt-1 block w-full min-h-[44px] rounded-md border-gray-300 shadow-sm focus:border-primary focus:ring-primary sm:text-sm border border-[#E9EAEB] shadow-[0px_1px_2px_0px_rgba(10,13,18,0.05)]"
+                placeholder="Username"
+                class="mt-1 block w-full min-h-[44px] rounded-xl border-gray-300 shadow-sm focus:border-primary focus:ring-primary sm:text-sm border border-[#E9EAEB] shadow-[0px_1px_2px_0px_rgba(10,13,18,0.05)]"
                 [class.border-red-500]="
                   loginForm.get('username')?.invalid &&
                   loginForm.get('username')?.touched
@@ -66,7 +67,8 @@ import { AuthService } from "../../../core/auth/auth.service";
                   id="password"
                   [type]="showPassword ? 'text' : 'password'"
                   formControlName="password"
-                  class="mt-1 block w-full min-h-[44px] rounded-md border-gray-300 shadow-sm focus:border-primary focus:ring-primary sm:text-sm pr-10 border border-[#E9EAEB] shadow-[0px_1px_2px_0px_rgba(10,13,18,0.05)]"
+                  placeholder="Password"
+                  class="mt-1 block w-full min-h-[44px] rounded-xl border-gray-300 shadow-sm focus:border-primary focus:ring-primary sm:text-sm pr-10 border border-[#E9EAEB] shadow-[0px_1px_2px_0px_rgba(10,13,18,0.05)]"
                   [class.border-red-500]="
                     loginForm.get('password')?.invalid &&
                     loginForm.get('password')?.touched
@@ -137,7 +139,7 @@ import { AuthService } from "../../../core/auth/auth.service";
               <button
                 type="submit"
                 [disabled]="!loginForm.valid || isLoading"
-                class="w-full flex justify-center items-center h-11 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-primary hover:bg-primary/90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary disabled:opacity-50"
+                class="w-full flex justify-center items-center h-11 px-4 border border-transparent rounded-xl shadow-sm text-sm font-medium text-white bg-primary hover:bg-primary/90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary disabled:opacity-50"
               >
                 {{ isLoading ? "Signing in..." : "Sign in" }}
               </button>
