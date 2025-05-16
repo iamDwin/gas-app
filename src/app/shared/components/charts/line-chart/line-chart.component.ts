@@ -56,7 +56,7 @@ export class LineChartComponent implements OnInit {
         {
           name: "Nominations",
           data: [12, 11, 14, 18, 17, 13, 13],
-          color: "#117F63s", // Green
+          color: "#117F63", // Green
         },
       ],
       xaxis: {
