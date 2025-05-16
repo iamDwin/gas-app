@@ -9,6 +9,10 @@
 
 body {
   @apply bg-gray-100;
+  font-family: "Public Sans", sans-serif;
+  font-optical-sizing: auto;
+  font-weight: 300;
+  font-style: normal;
 }
 
 /* Form Controls */

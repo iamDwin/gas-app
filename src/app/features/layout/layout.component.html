@@ -75,7 +75,7 @@
             <div class="relative">
               <button
                 (click)="toggleMenu(item.path)"
-                class="w-full flex items-center px-3 py-3 text-sm font-medium text-gray-900 rounded-md hover:bg-primary/10 hover:text-primary text-left group border-l-2 border-transparent"
+                class="w-full flex items-center px-3 py-3 text-md font-medium text-gray-900 rounded-md hover:bg-primary/10 hover:text-primary text-left group border-l-2 border-transparent"
                 [class.justify-center]="isSidebarCollapsed"
                 [class.bg-primary-10]="isMenuOpen(item.path)"
                 [class.text-primary]="isMenuOpen(item.path)"
@@ -132,7 +132,7 @@
               [routerLink]="item.path"
               routerLinkActive="bg-primary/10 text-primary border-primary"
               [routerLinkActiveOptions]="{ exact: !!item.exact }"
-              class="flex items-center px-3 py-3 text-sm font-medium text-gray-900 rounded-md hover:bg-primary/10 hover:text-primary group border-l-2 border-transparent relative"
+              class="flex items-center px-3 py-3 text-md font-medium text-gray-900 rounded-md hover:bg-primary/10 hover:text-primary group border-l-2 border-transparent relative"
               [class.justify-center]="isSidebarCollapsed"
             >
               <span
@@ -165,7 +165,7 @@
 
         <button
           (click)="showLogoutConfirmation()"
-          class="flex items-center w-full px-3 py-2 text-sm font-medium text-gray-900 rounded-md hover:bg-red-50 hover:text-red-600 group mt-auto"
+          class="flex items-center w-full px-3 py-2 text-md font-medium text-gray-900 rounded-md hover:bg-red-50 hover:text-red-600 group mt-auto"
           [class.justify-center]="isSidebarCollapsed"
         >
           <svg
