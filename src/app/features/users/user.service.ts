@@ -25,15 +25,19 @@ export class UserService {
 
   getUsers(): Observable<UserResponse[]> {
     let user = this.authService.getCurrentUser();
+    let path = "";
     if (!user) {
       return new Observable((subscriber) => subscriber.next([]));
     }
 
+    if (user.type == "M") path = `get_all_users/${user.name}`;
+    else
+      path = `get_users_by_institution_id/${user.organizationId}/${user.name}`;
+
     return this.http
-      .get<UsersResponse>(
-        `${this.apiUrl}/admin/user/api/v1/get_all_users/${user.name}`,
-        { headers: this.getHeaders() }
-      )
+      .get<UsersResponse>(`${this.apiUrl}/admin/user/api/v1/${path}`, {
+        headers: this.getHeaders(),
+      })
       .pipe(map((response) => response.users || []));
   }
 
@@ -104,15 +108,19 @@ export class UserService {
 
   getPendingUsers(): Observable<any[]> {
     let user = this.authService.getCurrentUser();
+    let path = "";
     if (!user) {
       return new Observable((subscriber) => subscriber.next([]));
     }
 
+    if (user.type == "M") path = `get_pending_auths/${user.name}`;
+    else
+      path = `get_pending_auths_by_institution/${user.organizationId}/${user.name}`;
+
     return this.http
-      .get<any>(
-        `${this.apiUrl}/admin/user/api/v1/get_pending_auths/${user.name}`,
-        { headers: this.getHeaders() }
-      )
+      .get<any>(`${this.apiUrl}/admin/user/api/v1/${path}`, {
+        headers: this.getHeaders(),
+      })
       .pipe(map((response) => response.users || []));
   }
 
