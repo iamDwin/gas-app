@@ -39,7 +39,7 @@ import { ToastService } from "../../shared/services/toast.service";
       >
         <div tableActions>
           <app-button
-            variant="semiFilled"
+            variant="filled"
             (click)="openDrawer()"
             [iconLeft]="
               '<svg class=&quot;w-5 h-5&quot; fill=&quot;none&quot; viewBox=&quot;0 0 24 24&quot; stroke=&quot;currentColor&quot;><path stroke-linecap=&quot;round&quot; stroke-linejoin=&quot;round&quot; stroke-width=&quot;2&quot; d=&quot;M12 6v6m0 0v6m0-6h6m-6 0H6&quot;/></svg>'

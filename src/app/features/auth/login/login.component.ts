@@ -16,14 +16,12 @@ import { AuthService } from "../../../core/auth/auth.service";
   template: `
     <div class="min-h-screen flex">
       <!-- Left side - Login form -->
-      <div
-        class="w-full lg:w-1/3 flex items-center justify-center bg-[#FAFAFA] "
-      >
-        <div
-          class="w-full max-w-sm px-8 py-20 rounded-xl border border-[#E9EAEB] bg-[#FAFAFA] shadow-[0px_1px_2px_0px_rgba(10,13,18,0.05)]"
-        >
+      <div class="w-full lg:w-1/3 flex items-center justify-center bg-white">
+        <div class="w-full max-w-sm px-8 py-20 rounded-xl bg-white">
           <div class="mb-8">
-            <h2 class="text-2xl font-bold text-gray-900">Sign In</h2>
+            <h2 class="text-2xl font-bold text-gray-900">
+              Sign in to your Account
+            </h2>
           </div>
 
           <form
@@ -41,7 +39,7 @@ import { AuthService } from "../../../core/auth/auth.service";
                 id="username"
                 type="text"
                 formControlName="username"
-                class="mt-1 block w-full min-h-[44px] rounded-md border-gray-300 shadow-sm focus:border-primary focus:ring-primary sm:text-sm"
+                class="mt-1 block w-full min-h-[44px] rounded-md border-gray-300 shadow-sm focus:border-primary focus:ring-primary sm:text-sm border border-[#E9EAEB] shadow-[0px_1px_2px_0px_rgba(10,13,18,0.05)]"
                 [class.border-red-500]="
                   loginForm.get('username')?.invalid &&
                   loginForm.get('username')?.touched
@@ -60,7 +58,7 @@ import { AuthService } from "../../../core/auth/auth.service";
                   id="password"
                   [type]="showPassword ? 'text' : 'password'"
                   formControlName="password"
-                  class="mt-1 block w-full min-h-[44px] rounded-md border-gray-300 shadow-sm focus:border-primary focus:ring-primary sm:text-sm pr-10"
+                  class="mt-1 block w-full min-h-[44px] rounded-md border-gray-300 shadow-sm focus:border-primary focus:ring-primary sm:text-sm pr-10 border border-[#E9EAEB] shadow-[0px_1px_2px_0px_rgba(10,13,18,0.05)]"
                   [class.border-red-500]="
                     loginForm.get('password')?.invalid &&
                     loginForm.get('password')?.touched
@@ -112,7 +110,7 @@ import { AuthService } from "../../../core/auth/auth.service";
                 />
                 <label
                   for="remember-me"
-                  class="ml-2 block text-md text-gray-900"
+                  class="ml-2 block text-sm text-gray-900"
                   >Remember me</label
                 >
               </div>
@@ -157,7 +155,7 @@ import { AuthService } from "../../../core/auth/auth.service";
               alt="Gas Pipeline"
               class="w-full h-full object-cover"
             />
-            <div class="absolute inset-0 bg-[#1a2234] opacity-50"></div>
+            <div class="absolute inset-0 bg-[#1a2234] opacity-30"></div>
           </div>
         </div>
       </div>
