@@ -82,6 +82,18 @@ export class LayoutComponent implements OnInit {
       ],
     },
     {
+      path: "/scheduling",
+      label: "scheduling",
+      icon: `<svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/>
+      </svg>`,
+      count: 0,
+      children: [
+        { path: "/scheduling", label: "Schedules" },
+        // { path: "/nominations/pending", label: "Pending Nominations" },
+      ],
+    },
+    {
       path: "/organizations",
       label: "Institutions",
       icon: `<svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -196,8 +208,18 @@ export class LayoutComponent implements OnInit {
   getFilteredMenuItems() {
     // Filter menu items based on institutionType
     switch (this.institutionType) {
-      case "M":
+      case "G":
         return this.menuItems; // Show all items except allocations, which are already removed
+      case "M":
+        return this.menuItems.filter((item) =>
+          [
+            "/dashboard",
+            "/users",
+            "/declarations",
+            "/nominations",
+            "/reports",
+          ].includes(item.path)
+        );
       case "U":
         return this.menuItems.filter((item) =>
           ["/dashboard", "/users", "/declarations", "/reports"].includes(

@@ -32,6 +32,37 @@ import { AuthService } from "../../../core/auth/auth.service";
             </h2>
           </div>
 
+          <!-- Login Tabs -->
+          <div class="mb-6">
+            <div class="flex rounded-lg bg-gray-100 p-1 relative">
+              <!-- Sliding background -->
+              <div
+                class="absolute top-1 bottom-1 w-[calc(50%-4px)] rounded-md bg-primary transition-transform duration-300 ease-out"
+                [style.transform]="
+                  'translateX(' + (activeTab === 'admin' ? '0' : '100%') + ')'
+                "
+              ></div>
+
+              <!-- Tab buttons -->
+              <button
+                (click)="switchTab('admin')"
+                class="flex-1 text-sm font-medium py-2 px-4 rounded-md transition-colors duration-200 relative z-10"
+                [class.text-white]="activeTab === 'admin'"
+                [class.text-gray-600]="activeTab !== 'admin'"
+              >
+                Administrators
+              </button>
+              <button
+                (click)="switchTab('institution')"
+                class="flex-1 text-sm font-medium py-2 px-4 rounded-md transition-colors duration-200 relative z-10"
+                [class.text-white]="activeTab === 'institution'"
+                [class.text-gray-600]="activeTab !== 'institution'"
+              >
+                Institutions
+              </button>
+            </div>
+          </div>
+
           <form
             [formGroup]="loginForm"
             (ngSubmit)="onSubmit()"
@@ -177,6 +208,7 @@ export class LoginComponent {
   isLoading = false;
   error: string | null = null;
   showPassword = false;
+  activeTab: "admin" | "institution" = "admin";
 
   constructor(
     private fb: FormBuilder,
@@ -187,6 +219,10 @@ export class LoginComponent {
       username: ["", Validators.required],
       password: ["", Validators.required],
     });
+  }
+
+  switchTab(tab: "admin" | "institution") {
+    this.activeTab = tab;
   }
 
   togglePasswordVisibility() {
@@ -200,7 +236,12 @@ export class LoginComponent {
 
       const { username, password } = this.loginForm.value;
 
-      this.authService.login(username, password).subscribe({
+      const loginMethod =
+        this.activeTab === "admin"
+          ? this.authService.loginAsOrganization(username, password)
+          : this.authService.login(username, password);
+
+      loginMethod.subscribe({
         next: () => {
           this.router.navigate(["/"]);
         },

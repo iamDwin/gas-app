@@ -12,6 +12,7 @@ import { AuthService } from "../../core/auth/auth.service";
 import { BreadcrumbService } from "../../shared/services/breadcrumb.service";
 import { NotificationService } from "../../shared/services/notification.service";
 import { ButtonComponent } from "../../shared/components/button/button.component";
+import { ToastService } from "../../shared/services/toast.service";
 
 @Component({
   selector: "app-declarations",
@@ -41,7 +42,7 @@ import { ButtonComponent } from "../../shared/components/button/button.component
               '<svg class=&quot;w-5 h-5&quot; fill=&quot;none&quot; viewBox=&quot;0 0 24 24&quot; stroke=&quot;currentColor&quot;><path stroke-linecap=&quot;round&quot; stroke-linejoin=&quot;round&quot; stroke-width=&quot;2&quot; d=&quot;M12 6v6m0 0v6m0-6h6m-6 0H6&quot;/></svg>'
             "
           >
-            Create Declaration
+            New Declaration
           </app-button>
         </div>
       </app-data-table>
@@ -75,13 +76,16 @@ export class DeclarationsComponent implements OnInit {
   isDrawerOpen = false;
   selectedDeclaration?: Declaration;
   isLoading = false;
-  loadingMessage = "Loading declarations...";
+  loadingMessage = "Loading Declarations...";
 
   columns = [
-    { prop: "institutionCode", name: "Institution" },
-    { prop: "declaredQuantity", name: "Quantity" },
-    { prop: "startDate", name: "Start Date" },
-    { prop: "endDate", name: "End Date" },
+    { prop: "id", name: "#" },
+    { prop: "institutionCode", name: "# Code" },
+    { prop: "institutionName", name: "Institution" },
+    { prop: "declaredQuantity", name: "DCV (MMscf)" },
+    { prop: "currentAgreedDcv", name: "Agreed DCV (MMscf)" },
+    { prop: "periodStartDate", name: "From" },
+    { prop: "periodEndDate", name: "To" },
     { prop: "status", name: "Status" },
     { prop: "actions", name: "Actions", sortable: false },
   ];
@@ -108,7 +112,8 @@ export class DeclarationsComponent implements OnInit {
     private authService: AuthService,
     private breadcrumbService: BreadcrumbService,
     private notificationService: NotificationService,
-    private router: Router
+    private router: Router,
+    private toaster: ToastService
   ) {}
 
   ngOnInit() {
@@ -137,13 +142,29 @@ export class DeclarationsComponent implements OnInit {
 
   loadDeclarations() {
     this.isLoading = true;
-    setTimeout(() => {
-      this.declarationService.getDeclarations().subscribe((declarations) => {
-        this.declarations = declarations;
-        this.formatDeclarations(declarations);
+    this.declarationService.getDeclarations().subscribe({
+      next: (response: any) => {
+        if (response.errorCode == "0") {
+          this.formattedDeclarations = response;
+        } else {
+          this.toaster.show({
+            title: "Declaration Request",
+            message: "Failed To Get Declarations, Please Try Again",
+            type: "error",
+          });
+        }
         this.isLoading = false;
-      });
-    }, 1000);
+      },
+      error: (error) => {
+        this.isLoading = false;
+        console.log({ error });
+        this.toaster.show({
+          title: "Declaration Request",
+          message: "Failed To Get Declarations, Please Try Again",
+          type: "error",
+        });
+      },
+    });
   }
 
   onActionClick(event: { action: TableAction; row: Declaration }) {
@@ -192,7 +213,7 @@ export class DeclarationsComponent implements OnInit {
           updatedAt: new Date(),
         };
 
-        this.declarationService.updateDeclaration(updatedDeclaration);
+        // this.declarationService.updateDeclaration(updatedDeclaration);
         this.notificationService.addNotification({
           title: "Declaration Updated",
           message: `Declaration "${updatedDeclaration.title}" has been updated`,
@@ -210,7 +231,7 @@ export class DeclarationsComponent implements OnInit {
           status: "draft",
         } as Omit<Declaration, "id" | "createdAt" | "updatedAt">;
 
-        this.declarationService.addDeclaration(newDeclaration);
+        // this.declarationService.addDeclaration(newDeclaration);
         this.notificationService.addNotification({
           title: "Declaration Created",
           message: `Declaration "${newDeclaration.title}" has been created`,
@@ -229,7 +250,7 @@ export class DeclarationsComponent implements OnInit {
       this.loadingMessage = "Deleting declaration...";
 
       setTimeout(() => {
-        this.declarationService.deleteDeclaration(id);
+        // this.declarationService.deleteDeclaration(id);
         this.notificationService.addNotification({
           title: "Declaration Deleted",
           message: "The declaration has been deleted successfully",

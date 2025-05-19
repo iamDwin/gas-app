@@ -301,11 +301,11 @@ export class DeclarationDailyViewComponent implements OnInit {
         (dq) => dq.date === date
       )?.quantity;
       if (quantity !== undefined) {
-        this.declarationService.updateDailyQuantity(
-          this.declaration.id,
-          date,
-          quantity
-        );
+        // this.declarationService.updateDailyQuantity(
+        //   this.declaration.id,
+        //   date,
+        //   quantity
+        // );
         this.notificationService.addNotification({
           title: "Quantity Updated",
           message: `Quantity for ${this.formatDate(date)} has been updated`,

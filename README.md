@@ -208,3 +208,7 @@ The application is configured for deployment to Netlify. The `netlify.toml` file
 ## License
 
 This project is licensed under the MIT License - see the LICENSE file for details.
+
+## charts plugin
+
+https://github.com/valor-software/ng2-charts

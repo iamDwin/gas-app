@@ -153,26 +153,13 @@ export class AuthService {
       );
   }
 
-  private mapRoleFromBackend(roleName: string | null): User["role"] {
-    switch (roleName?.toLowerCase()) {
-      case "admin":
-        return "admin";
-      case "organization admin":
-        return "org_admin";
-      case "organization user":
-        return "org_user";
-      default:
-        return "viewer";
-    }
-  }
-
   loginAsOrganization(
     username: string,
     password: string
   ): Observable<AuthResponse> {
     return this.http
       .post<AuthResponse>(
-        `${environment.apiUrl}/organization/user/api/v1/authenticate_user`,
+        `${environment.apiUrl}/admin/user_admin/api/v1/authenticate_user`,
         {
           username,
           password,
@@ -189,7 +176,7 @@ export class AuthService {
               organizationId: response.institutionId, // We'll need to get this from the backend
               organizationName: response.institutionName, // We'll need to get this from the backend
               institutionType: response.institutionType, // We'll need to get this from the backend
-              type: response.type, // We'll need to get this from the backend
+              type: "G", // We'll need to get this from the backend
               name: response.userName, // We'll need to get the actual name from the backend
               fullName: response.fullName, // We'll need to get the actual name from the backend
             };
@@ -228,6 +215,19 @@ export class AuthService {
           return throwError(() => new Error(errorMessage));
         })
       );
+  }
+
+  private mapRoleFromBackend(roleName: string | null): User["role"] {
+    switch (roleName?.toLowerCase()) {
+      case "admin":
+        return "admin";
+      case "organization admin":
+        return "org_admin";
+      case "organization user":
+        return "org_user";
+      default:
+        return "viewer";
+    }
   }
 
   forgotPassword(email: string): Observable<void> {

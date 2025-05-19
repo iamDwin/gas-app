@@ -108,13 +108,13 @@
   <div
     class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4"
     [ngClass]="{
-      'lg:grid-cols-4': userType === 'M',
-      'lg:grid-cols-3': userType !== 'M'
+      'lg:grid-cols-4': userType === 'M' || userType === 'G',
+      'lg:grid-cols-3': userType !== 'M' && userType !== 'G'
     }"
   >
     <!-- Organizations Card -->
     <div
-      *ngIf="userType == 'M'"
+      *ngIf="userType == 'G'"
       (click)="navigate('/organizations')"
       class="bg-white rounded-xl shadow p-6 cursor-pointer"
     >
@@ -138,7 +138,7 @@
             </svg>
           </div>
           <div class="ml-4">
-            <h2 class="text-sm font-medium text-gray-600">Organizations</h2>
+            <h2 class="text-sm font-medium text-gray-600">Institutions</h2>
             <p class="text-2xl font-bold text-gray-900">
               {{ organizationsCount }}
             </p>
@@ -215,7 +215,7 @@
 
     <!-- Declarations Card -->
     <div
-      *ngIf="userType == 'U' || userType == 'M'"
+      *ngIf="userType == 'U' || userType == 'M' || userType == 'G'"
       (click)="navigate('/declarations')"
       class="bg-white rounded-xl shadow p-6 cursor-pointer"
     >
@@ -267,7 +267,7 @@
 
     <!-- Nominations Card -->
     <div
-      *ngIf="userType == 'D' || userType == 'M'"
+      *ngIf="userType == 'D' || userType == 'M' || userType == 'G'"
       (click)="navigate('/nominations')"
       class="bg-white rounded-xl shadow p-6 cursor-pointer"
     >
@@ -372,7 +372,7 @@
 
   <!-- GRAPH AND CHARTS -->
   <div
-    *ngIf="userType == 'U' || userType == 'M'"
+    *ngIf="userType == 'U' || userType == 'M' || userType == 'G'"
     class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-4 mb-4"
   >
     <!-- Weekly Declarations Bar Chart -->
@@ -397,7 +397,7 @@
   </div>
 
   <div
-    *ngIf="userType == 'D' || userType == 'M'"
+    *ngIf="userType == 'D' || userType == 'M' || userType == 'G'"
     class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-4 mb-4"
   >
     <!-- Weekly Nomination Bar Chart -->
