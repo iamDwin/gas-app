@@ -16,32 +16,67 @@ import { AuthService } from "../../../core/auth/auth.service";
   template: `
     <div class="min-h-screen flex">
       <!-- Left side - Form -->
-      <div
-        class="w-full lg:w-1/3 flex items-center justify-center p-8  bg-[#FAFAFA]"
-      >
-        <div
-          class="w-full max-w-sm  px-8 py-20 rounded-xl border border-[#E9EAEB] bg-[#FAFAFA] shadow-[0px_1px_2px_0px_rgba(10,13,18,0.05)]"
-        >
+      <div class="w-full lg:w-1/3 flex items-center justify-center bg-white">
+        <div class="w-full max-w-sm px-8 py-20 rounded-xl bg-white">
           <div class="mb-8">
-            <h2 class="text-2xl font-bold text-gray-900">Reset password</h2>
-            <p class="mt-2 text-sm text-gray-600">
-              Enter your email address and we'll send you a link to reset your
-              password.
-            </p>
+            <h2
+              class="flex gap-1 align-center text-xl font-bold text-primary mb-3"
+            >
+              <img
+                src="https://ui-avatars.com/api/?name=Rig+Suite&background=117F63&color=ffffff&rounded=true&format=svg&size=30"
+              />
+              RigSuite
+            </h2>
+            <h2 class="text-2xl font-bold text-gray-900">
+              Reset your password
+            </h2>
+          </div>
+
+          <!-- Login Tabs -->
+          <div class="mb-6">
+            <div class="flex rounded-lg bg-gray-100 p-1 relative">
+              <!-- Sliding background -->
+              <div
+                class="absolute top-1 bottom-1 w-[calc(50%-4px)] rounded-md bg-primary transition-transform duration-300 ease-out"
+                [style.transform]="
+                  'translateX(' + (activeTab === 'admin' ? '0' : '100%') + ')'
+                "
+              ></div>
+
+              <!-- Tab buttons -->
+              <button
+                (click)="switchTab('admin')"
+                class="flex-1 text-sm font-medium py-2 px-4 rounded-md transition-colors duration-200 relative z-10"
+                [class.text-white]="activeTab === 'admin'"
+                [class.text-gray-600]="activeTab !== 'admin'"
+              >
+                Administrators
+              </button>
+              <button
+                (click)="switchTab('institution')"
+                class="flex-1 text-sm font-medium py-2 px-4 rounded-md transition-colors duration-200 relative z-10"
+                [class.text-white]="activeTab === 'institution'"
+                [class.text-gray-600]="activeTab !== 'institution'"
+              >
+                Institutions
+              </button>
+            </div>
           </div>
 
           <form [formGroup]="form" (ngSubmit)="onSubmit()" class="space-y-6">
             <div>
-              <label for="email" class="block text-sm font-medium text-gray-700"
-                >Email address</label
+              <label
+                for="username"
+                class="block text-sm font-medium text-gray-700"
+                >Username</label
               >
               <input
-                id="email"
-                type="email"
-                formControlName="email"
-                class="mt-1 block w-full min-h-[44px] rounded-md border-gray-300 shadow-sm focus:border-primary focus:ring-primary sm:text-sm"
+                id="username"
+                type="text"
+                formControlName="username"
+                class="mt-1 block w-full min-h-[44px] rounded-xl border-gray-300 shadow-sm focus:border-primary focus:ring-primary sm:text-sm border border-[#E9EAEB] shadow-[0px_1px_2px_0px_rgba(10,13,18,0.05)]"
                 [class.border-red-500]="
-                  form.get('email')?.invalid && form.get('email')?.touched
+                  form.get('username')?.invalid && form.get('username')?.touched
                 "
               />
             </div>
@@ -50,9 +85,9 @@ import { AuthService } from "../../../core/auth/auth.service";
               <button
                 type="submit"
                 [disabled]="!form.valid || isLoading"
-                class="w-full flex justify-center items-center h-11 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-primary hover:bg-primary/90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary disabled:opacity-50"
+                class="w-full flex justify-center items-center h-11 px-4 border border-transparent rounded-xl shadow-sm text-sm font-medium text-white bg-primary hover:bg-primary/90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary disabled:opacity-50"
               >
-                {{ isLoading ? "Sending..." : "Send reset link" }}
+                {{ isLoading ? "Resetting..." : "Reset Password" }}
               </button>
             </div>
 
@@ -63,12 +98,12 @@ import { AuthService } from "../../../core/auth/auth.service";
               {{ success }}
             </div>
 
-            <div class="text-sm text-center">
+            <div class="text-center">
               <a
                 routerLink="/login"
                 class="font-medium text-primary hover:text-primary/90"
               >
-                Back to login
+                Back to Sign In
               </a>
             </div>
           </form>
@@ -82,7 +117,7 @@ import { AuthService } from "../../../core/auth/auth.service";
         >
           <div class="max-w-lg text-center text-white mb-8">
             <h1 class="text-5xl font-bold mb-6">Reset your password</h1>
-            <p class="text-xl text-gray-300">
+            <p class="text-lg text-gray-300">
               We'll help you get back to your account securely.
             </p>
           </div>
@@ -92,7 +127,7 @@ import { AuthService } from "../../../core/auth/auth.service";
               alt="Gas Pipeline"
               class="w-full h-full object-cover"
             />
-            <div class="absolute inset-0 bg-[#1a2234] opacity-50"></div>
+            <div class="absolute inset-0 bg-[#1a2234] opacity-30"></div>
           </div>
         </div>
       </div>
@@ -104,6 +139,7 @@ export class ForgotPasswordComponent {
   isLoading = false;
   error: string | null = null;
   success: string | null = null;
+  activeTab: "admin" | "institution" = "admin";
 
   constructor(
     private fb: FormBuilder,
@@ -111,8 +147,12 @@ export class ForgotPasswordComponent {
     private router: Router
   ) {
     this.form = this.fb.group({
-      email: ["", [Validators.required, Validators.email]],
+      username: ["", Validators.required],
     });
+  }
+
+  switchTab(tab: "admin" | "institution") {
+    this.activeTab = tab;
   }
 
   onSubmit() {
@@ -121,15 +161,21 @@ export class ForgotPasswordComponent {
       this.error = null;
       this.success = null;
 
-      const { email } = this.form.value;
+      const { username } = this.form.value;
 
-      this.authService.forgotPassword(email).subscribe({
-        next: () => {
-          this.success = "Password reset link has been sent to your email";
+      const forgotPasswordMethod =
+        this.activeTab === "admin"
+          ? this.authService.forgotPasswordAsOrganization(username)
+          : this.authService.forgotPassword(username);
+
+      forgotPasswordMethod.subscribe({
+        next: (response) => {
+          console.log({ response });
+          // this.success = "Password reset link has been sent";
           this.isLoading = false;
         },
         error: (err: any) => {
-          this.error = "Failed to send reset link. Please try again.";
+          // this.error = "Failed to send reset link. Please try again.";
           this.isLoading = false;
         },
       });

@@ -159,7 +159,7 @@ export class AuthService {
   ): Observable<AuthResponse> {
     return this.http
       .post<AuthResponse>(
-        `${environment.apiUrl}/admin/user_admin/api/v1/authenticate_user`,
+        `${environment.apiUrl}/admin/useradmin/api/v1/authenticate_user`,
         {
           username,
           password,
@@ -230,9 +230,40 @@ export class AuthService {
     }
   }
 
-  forgotPassword(email: string): Observable<void> {
+  forgotPassword(username: string): Observable<void> {
     return this.http
-      .post<void>(`${environment.apiUrl}/auth/forgot-password`, { email })
+      .post<void>(
+        `${environment.apiUrl}/admin/user/api/v1/forgot_password/${username}`,
+        { username }
+      )
+      .pipe(
+        tap(() => {
+          this.toastService.show({
+            title: "Password Reset Email Sent",
+            message: "Please check your email for instructions",
+            type: "success",
+          });
+        }),
+        catchError((error) => {
+          console.error("Forgot password error:", error);
+          this.toastService.show({
+            title: "Password Reset Failed",
+            message: "Failed to process forgot password request",
+            type: "error",
+          });
+          return throwError(
+            () => new Error("Failed to process forgot password request")
+          );
+        })
+      );
+  }
+
+  forgotPasswordAsOrganization(username: string): Observable<void> {
+    return this.http
+      .post<void>(
+        `${environment.apiUrl}/admin/useradmin/api/v1/forgot_password/${username}`,
+        { username }
+      )
       .pipe(
         tap(() => {
           this.toastService.show({
