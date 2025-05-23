@@ -30,12 +30,15 @@ export class UserService {
       return new Observable((subscriber) => subscriber.next([]));
     }
 
-    if (user.type == "M") path = `get_all_users/${user.name}`;
+    if (user.type == "M")
+      path = `/admin/user/api/v1/get_all_users/${user.name}`;
+    else if (user.type == "G")
+      path = `/admin/useradmin/api/v1/get_all_users/${user.name}`;
     else
-      path = `get_users_by_institution_id/${user.organizationId}/${user.name}`;
+      path = `/admin/user/api/v1/get_users_by_institution_id/${user.organizationId}/${user.name}`;
 
     return this.http
-      .get<UsersResponse>(`${this.apiUrl}/admin/user/api/v1/${path}`, {
+      .get<UsersResponse>(`${this.apiUrl}${path}`, {
         headers: this.getHeaders(),
       })
       .pipe(map((response) => response.users || []));
@@ -113,12 +116,15 @@ export class UserService {
       return new Observable((subscriber) => subscriber.next([]));
     }
 
-    if (user.type == "M") path = `get_pending_auths/${user.name}`;
+    if (user.type == "M")
+      path = `/admin/user/api/v1/get_pending_auths/${user.name}`;
+    else if (user.type == "G")
+      path = `/admin/useradmin/api/v1/get_pending_auths/${user.name}`;
     else
-      path = `get_pending_auths_by_institution/${user.organizationId}/${user.name}`;
+      path = `/admin/user/api/v1/get_pending_auths_by_institution/${user.organizationId}/${user.name}`;
 
     return this.http
-      .get<any>(`${this.apiUrl}/admin/user/api/v1/${path}`, {
+      .get<any>(`${this.apiUrl}${path}`, {
         headers: this.getHeaders(),
       })
       .pipe(map((response) => response.users || []));

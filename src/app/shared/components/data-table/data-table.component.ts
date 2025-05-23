@@ -8,11 +8,12 @@ import {
 import { CommonModule } from "@angular/common";
 import { NgxDatatableModule } from "@swimlane/ngx-datatable";
 import { FormsModule } from "@angular/forms";
+import { ButtonComponent } from "../button/button.component";
 
 @Component({
   selector: "app-data-table",
   standalone: true,
-  imports: [CommonModule, NgxDatatableModule, FormsModule],
+  imports: [CommonModule, NgxDatatableModule, FormsModule, ButtonComponent],
   template: `
     <div class="bg-white rounded-xl shadow-sm border border-gray-200">
       <!-- Loading Overlay -->
@@ -91,7 +92,8 @@ import { FormsModule } from "@angular/forms";
                 </ng-container>
                 <ng-template #actionsTemplate>
                   <div class="relative">
-                    <button
+                    <app-button
+                      variant="semiFilled"
                       (click)="toggleActionMenu($event, row)"
                       class="inline-flex items-center justify-center w-8 h-8 text-gray-400 hover:text-gray-500 focus:outline-none rounded-full hover:bg-gray-100"
                     >
@@ -108,7 +110,7 @@ import { FormsModule } from "@angular/forms";
                           d="M12 5v.01M12 12v.01M12 19v.01M12 6a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2z"
                         />
                       </svg>
-                    </button>
+                    </app-button>
 
                     <!-- Dropdown Menu -->
                     <div
@@ -125,7 +127,7 @@ import { FormsModule } from "@angular/forms";
                           *ngFor="let action of getActions(row)"
                           (click)="onActionClick(action, row)"
                           [disabled]="
-                            action.isDisabled && action.isDisabled(row)
+                            action.isDisabled ? action.isDisabled(row) : false
                           "
                           class="text-sm w-full text-left px-4 py-2 hover:bg-gray-100 disabled:opacity-50 disabled:cursor-not-allowed flex items-center"
                           [class.text-gray-700]="action.type === 'primary'"

@@ -20,7 +20,7 @@ import { ButtonComponent } from "../button/button.component";
           <h2 class="text-lg font-semibold text-gray-900">{{ title }}</h2>
         </div>
 
-        <app-button variant="default" (click)="close.emit()">
+        <app-button variant="semiFilled" (click)="close.emit()">
           <span class="sr-only">Close drawer</span>
           <svg
             class="h-4 w-4"

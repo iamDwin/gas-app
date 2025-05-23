@@ -64,9 +64,9 @@
           >
             <p class="text-sm font-medium text-gray-900">{{ fullName }}</p>
             <p class="text-xs text-gray-500">{{ userEmail }}</p>
-            <p *ngif="institutionType !== 'G'" class="text-xs text-gray-500">
+            <div *ngif="institutionType !== 'G'" class="text-xs text-gray-500">
               {{ institutionName }} - {{ institutionType }}
-            </p>
+            </div>
           </div>
         </div>
       </div>

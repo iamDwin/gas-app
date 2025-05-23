@@ -16,6 +16,8 @@ import {
   ConfirmationModalConfig,
 } from "../../shared/components/confirmation-modal/confirmation-modal.component";
 import { ToastService } from "../../shared/services/toast.service";
+import { User } from "../users/user.model";
+import { AuthService } from "../../core/auth/auth.service";
 
 @Component({
   selector: "app-organizations",
@@ -39,7 +41,7 @@ import { ToastService } from "../../shared/services/toast.service";
       >
         <div tableActions>
           <app-button
-            variant="filled"
+            variant="semiFilled"
             (click)="openDrawer()"
             [iconLeft]="
               '<svg class=&quot;w-5 h-5&quot; fill=&quot;none&quot; viewBox=&quot;0 0 24 24&quot; stroke=&quot;currentColor&quot;><path stroke-linecap=&quot;round&quot; stroke-linejoin=&quot;round&quot; stroke-width=&quot;2&quot; d=&quot;M12 6v6m0 0v6m0-6h6m-6 0H6&quot;/></svg>'
@@ -74,9 +76,11 @@ import { ToastService } from "../../shared/services/toast.service";
         <app-organization-form
           *ngIf="isDrawerOpen"
           [organization]="selectedOrganization"
+          [organizations]="organizations"
           (save)="saveOrganization($event)"
           (onCancel)="closeDrawer()"
         ></app-organization-form>
+        <!-- [user]="user" -->
       </div>
 
       <!-- Backdrop -->
@@ -103,6 +107,7 @@ export class OrganizationsComponent implements OnInit {
   isLoading = false;
   showDeleteModal = false;
   organizationToDelete?: Organization;
+  // user = this.authService.getCurrentUser();
 
   deleteModalConfig: ConfirmationModalConfig = {
     title: "Delete Organization",
@@ -139,7 +144,8 @@ export class OrganizationsComponent implements OnInit {
     private breadcrumbService: BreadcrumbService,
     private notificationService: NotificationService,
     private loadingService: LoadingService,
-    private toastService: ToastService
+    private toastService: ToastService,
+    private authService: AuthService
   ) {}
 
   ngOnInit() {
@@ -248,6 +254,7 @@ export class OrganizationsComponent implements OnInit {
   }
 
   saveOrganization(orgData: CreateOrganizationRequest) {
+    console.log({ orgData });
     this.loadingService.show(
       this.selectedOrganization
         ? "Updating organization..."

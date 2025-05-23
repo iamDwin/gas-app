@@ -9,13 +9,22 @@ import { ToastService } from "../../shared/services/toast.service";
 export interface User {
   id: string;
   email: string;
-  role: "admin" | "org_admin" | "org_user" | "viewer";
+  role: "admin" | "officer" | "viewer";
   organizationId: string | null;
   organizationName: string;
   institutionType: string;
   type: string;
   name: string;
   fullName: string;
+}
+
+export interface AuthUser {
+  id: string;
+  name: string;
+  email: string;
+  role: "admin" | "officer" | "viewer";
+  organizationId: string;
+  createdAt?: Date;
 }
 
 export interface AuthResponse {
@@ -222,9 +231,9 @@ export class AuthService {
       case "admin":
         return "admin";
       case "organization admin":
-        return "org_admin";
+        return "officer";
       case "organization user":
-        return "org_user";
+        return "viewer";
       default:
         return "viewer";
     }
@@ -265,7 +274,7 @@ export class AuthService {
         { username }
       )
       .pipe(
-        tap(() => {
+        tap((response) => {
           this.toastService.show({
             title: "Password Reset Email Sent",
             message: "Please check your email for instructions",
@@ -312,7 +321,7 @@ export class AuthService {
 
   isOrganizationUser(): boolean {
     const user = this.currentUserSubject.value;
-    return user?.role === "org_admin" || user?.role === "org_user";
+    return user?.role === "officer" || user?.role === "viewer";
   }
 
   isAdmin(): boolean {

@@ -15,7 +15,6 @@ import { AuthService } from "../../core/auth/auth.service";
 })
 export class OrganizationService {
   private apiUrl = environment.apiUrl;
-  // user = this.authService.getCurrentUser();
   constructor(private http: HttpClient, private authService: AuthService) {}
 
   private getHeaders(): HttpHeaders {
@@ -65,7 +64,6 @@ export class OrganizationService {
     const user = this.authService.getCurrentUser();
     const payload = {
       ...organization,
-      type: organization.type === "Upstream" ? "U" : "D",
       createdBy: user?.name || "",
     };
 
@@ -76,10 +74,15 @@ export class OrganizationService {
     );
   }
 
-  updateOrganization(organization: Organization): Observable<Organization> {
+  updateOrganization(organization: Organization): Observable<any> {
+    let user = this.authService.getCurrentUser();
+    if (!user) {
+      return new Observable((subscriber) => subscriber.next({}));
+    }
+
     const payload = {
       ...organization,
-      type: organization.type === "Upstream" ? "U" : "D",
+      createdBy: user.name,
     };
 
     return this.http.patch<Organization>(
