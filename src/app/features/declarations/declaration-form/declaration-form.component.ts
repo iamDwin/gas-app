@@ -16,6 +16,7 @@ import { Organization } from "../../organizations/organization.model";
 import { OrganizationService } from "../../organizations/organization.service";
 import { NotificationService } from "../../../shared/services/notification.service";
 import { ToastService } from "../../../shared/services/toast.service";
+import { AuthService, User } from "../../../core/auth/auth.service";
 
 @Component({
   selector: "app-declaration-form",
@@ -34,7 +35,7 @@ import { ToastService } from "../../../shared/services/toast.service";
     >
       <div drawerContent>
         <form [formGroup]="form" class="space-y-4">
-          <div>
+          <div *ngIf="isGasCompanyAdmin()">
             <label class="block text-sm font-medium text-gray-700">
               Institution <span class="text-red-500">*</span>
             </label>
@@ -46,6 +47,18 @@ import { ToastService } from "../../../shared/services/toast.service";
             ></app-institution-dropdown>
           </div>
 
+          <div *ngIf="currentUser?.type == 'U'">
+            <label class="block text-sm font-medium text-gray-700">
+              Institution here... <span class="text-red-500">*</span>
+            </label>
+            <input
+              type="text"
+              formControlName="institutionCode"
+              value="currentUser?.organizationId"
+              class="mt-1 block w-full min-h-[44px] text-red rounded-xl border-gray-300 shadow-sm focus:border-primary focus:ring-primary sm:text-sm pr-10 border border-[#E9EAEB] shadow-[0px_1px_2px_0px_rgba(10,13,18,0.05)]"
+            />
+          </div>
+
           <div>
             <label class="block text-sm font-medium text-gray-700">
               Declared Quantity <span class="text-red-500">*</span>
@@ -53,7 +66,7 @@ import { ToastService } from "../../../shared/services/toast.service";
             <input
               type="number"
               formControlName="declaredQuantity"
-              class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primary focus:ring focus:ring-primary focus:ring-opacity-50"
+              class="mt-1 block w-full min-h-[44px] rounded-xl border-gray-300 shadow-sm focus:border-primary focus:ring-primary sm:text-sm pr-10 border border-[#E9EAEB] shadow-[0px_1px_2px_0px_rgba(10,13,18,0.05)]"
             />
           </div>
 
@@ -64,7 +77,7 @@ import { ToastService } from "../../../shared/services/toast.service";
             <input
               type="date"
               formControlName="startDate"
-              class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primary focus:ring focus:ring-primary focus:ring-opacity-50"
+              class="mt-1 block w-full min-h-[44px] p-2 rounded-xl border-gray-300 shadow-sm focus:border-primary focus:ring-primary sm:text-sm pr-10 border border-[#E9EAEB] shadow-[0px_1px_2px_0px_rgba(10,13,18,0.05)]"
             />
           </div>
 
@@ -75,7 +88,7 @@ import { ToastService } from "../../../shared/services/toast.service";
             <input
               type="date"
               formControlName="endDate"
-              class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primary focus:ring focus:ring-primary focus:ring-opacity-50"
+              class="mt-1 block w-full min-h-[44px] p-2 rounded-xl border-gray-300 shadow-sm focus:border-primary focus:ring-primary sm:text-sm pr-10 border border-[#E9EAEB] shadow-[0px_1px_2px_0px_rgba(10,13,18,0.05)]"
             />
           </div>
         </form>
@@ -111,6 +124,7 @@ export class DeclarationFormComponent {
   form: FormGroup;
   selectedInstitution?: Organization;
   institutions: Organization[] = [];
+  currentUser: User | null = null;
 
   // Mock institutions data - replace with actual data from your service
   // institutions: Organization[] = [
@@ -125,12 +139,17 @@ export class DeclarationFormComponent {
     private fb: FormBuilder,
     private institutionService: OrganizationService,
     private notify: NotificationService,
-    private toast: ToastService
+    private toast: ToastService,
+    private authService: AuthService
   ) {
     this.form = this.fb.group({
       declaredQuantity: ["", [Validators.required, Validators.min(0)]],
       startDate: ["", Validators.required],
       endDate: ["", Validators.required],
+      institutionCode: [
+        this.currentUser?.type === "U" ? this.currentUser?.organizationId : "",
+        Validators.required,
+      ],
     });
 
     this.getInstitutions();
@@ -139,9 +158,15 @@ export class DeclarationFormComponent {
   getInstitutions = () => {
     this.institutionService.getOrganizations().subscribe({
       next: (orgs) => {
+        console.log({ orgs });
         this.institutions = orgs;
+
+        this.institutions = this.institutions
+          .filter((org) => org.type === "U")
+          .sort((a, b) => a.name.localeCompare(b.name));
       },
       error: (error) => {
+        console.log(error);
         this.notify.addNotification({
           title: "Organization Request",
           message: "Failed To Get Institutions, Please Try Again",
@@ -157,6 +182,8 @@ export class DeclarationFormComponent {
   };
 
   ngOnInit() {
+    this.currentUser = this.authService.getCurrentUser();
+
     if (this.declaration) {
       // Find the institution from the list
       this.selectedInstitution = this.institutions?.find(
@@ -171,8 +198,20 @@ export class DeclarationFormComponent {
     }
   }
 
+  isUserAdmin(): boolean {
+    return this.currentUser?.role === "admin";
+  }
+
+  isGasCompanyAdmin(): boolean {
+    return this.currentUser?.type === "G" && this.currentUser?.role === "admin";
+  }
+
   onInstitutionSelected(institution: Organization) {
     this.selectedInstitution = institution;
+    this.form.patchValue({
+      declaredQuantity: this.selectedInstitution.dcv,
+      institutionCode: this.selectedInstitution.code,
+    });
   }
 
   onSubmit() {
@@ -182,8 +221,7 @@ export class DeclarationFormComponent {
 
       this.save.emit({
         ...formValue,
-        institutionCode: this.selectedInstitution.code,
-        uploadedBy: user.email || "",
+        uploadedBy: user.name,
       });
     }
   }

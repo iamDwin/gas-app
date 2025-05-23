@@ -8,7 +8,7 @@ import {
   DataTableComponent,
   TableAction,
 } from "../../shared/components/data-table/data-table.component";
-import { AuthService } from "../../core/auth/auth.service";
+import { AuthService, User } from "../../core/auth/auth.service";
 import { BreadcrumbService } from "../../shared/services/breadcrumb.service";
 import { NotificationService } from "../../shared/services/notification.service";
 import { ButtonComponent } from "../../shared/components/button/button.component";
@@ -34,7 +34,7 @@ import { ToastService } from "../../shared/services/toast.service";
         defaultSort="createdAt"
         (actionClick)="onActionClick($event)"
       >
-        <div tableActions>
+        <div *ngIf="!isGasCompanyAdmin()" tableActions>
           <app-button
             variant="filled"
             (click)="openDrawer()"
@@ -77,6 +77,7 @@ export class DeclarationsComponent implements OnInit {
   selectedDeclaration?: Declaration;
   isLoading = false;
   loadingMessage = "Loading Declarations...";
+  currentUser: User | null = null;
 
   columns = [
     { prop: "id", name: "#" },
@@ -117,11 +118,21 @@ export class DeclarationsComponent implements OnInit {
   ) {}
 
   ngOnInit() {
+    this.currentUser = this.authService.getCurrentUser();
+
     this.breadcrumbService.setBreadcrumbs([
       { label: "Declarations", link: "/declarations" },
     ]);
 
     this.loadDeclarations();
+  }
+
+  isUserAdmin(): boolean {
+    return this.currentUser?.role === "admin";
+  }
+
+  isGasCompanyAdmin(): boolean {
+    return this.currentUser?.type === "G";
   }
 
   formatDate(date: string): string {
@@ -144,15 +155,7 @@ export class DeclarationsComponent implements OnInit {
     this.isLoading = true;
     this.declarationService.getDeclarations().subscribe({
       next: (response: any) => {
-        if (response.errorCode == "0") {
-          this.formattedDeclarations = response;
-        } else {
-          this.toaster.show({
-            title: "Declaration Request",
-            message: "Failed To Get Declarations, Please Try Again",
-            type: "error",
-          });
-        }
+        this.formattedDeclarations = response;
         this.isLoading = false;
       },
       error: (error) => {
@@ -197,51 +200,59 @@ export class DeclarationsComponent implements OnInit {
   }
 
   saveDeclaration(declarationData: Partial<Declaration>) {
+    console.log({ declarationData });
     this.isLoading = true;
     this.loadingMessage = this.selectedDeclaration
       ? "Updating declaration..."
       : "Creating declaration...";
 
-    setTimeout(() => {
-      const currentUser = this.authService.getCurrentUser();
+    // setTimeout(() => {
+    const currentUser = this.authService.getCurrentUser();
 
-      if (this.selectedDeclaration) {
-        // Update existing declaration
-        const updatedDeclaration: Declaration = {
-          ...this.selectedDeclaration,
-          ...declarationData,
-          updatedAt: new Date(),
-        };
+    if (this.selectedDeclaration) {
+      // Update existing declaration
+      const updatedDeclaration: Declaration = {
+        ...this.selectedDeclaration,
+        ...declarationData,
+        updatedAt: new Date(),
+      };
 
-        // this.declarationService.updateDeclaration(updatedDeclaration);
-        this.notificationService.addNotification({
-          title: "Declaration Updated",
-          message: `Declaration "${updatedDeclaration.title}" has been updated`,
-          type: "success",
-        });
-      } else {
-        // Create new declaration
-        const newDeclaration: Omit<
-          Declaration,
-          "id" | "createdAt" | "updatedAt"
-        > = {
-          ...declarationData,
-          organizationId: currentUser?.organizationId || "",
-          createdBy: currentUser?.id || "",
-          status: "draft",
-        } as Omit<Declaration, "id" | "createdAt" | "updatedAt">;
+      // this.declarationService.updateDeclaration(updatedDeclaration);
+      this.notificationService.addNotification({
+        title: "Declaration Updated",
+        message: `Declaration "${updatedDeclaration.title}" has been updated`,
+        type: "success",
+      });
+    } else {
+      // Create new declaration
+      const newDeclaration: Omit<
+        Declaration,
+        "id" | "createdAt" | "updatedAt"
+      > = {
+        ...declarationData,
+        uploadedBy: currentUser?.name,
+      } as Omit<Declaration, "id" | "createdAt" | "updatedAt">;
 
-        // this.declarationService.addDeclaration(newDeclaration);
-        this.notificationService.addNotification({
-          title: "Declaration Created",
-          message: `Declaration "${newDeclaration.title}" has been created`,
-          type: "success",
-        });
-      }
+      console.log({ newDeclaration });
 
-      this.loadDeclarations();
-      this.closeDrawer();
-    }, 2000);
+      this.declarationService.createDeclaration(newDeclaration).subscribe({
+        next: (resposne) => {
+          console.log(resposne);
+        },
+        error: (errorResponse) => {
+          console.log(errorResponse);
+        },
+      });
+      // this.notificationService.addNotification({
+      //   title: "Declaration Created",
+      //   message: `Declaration "${newDeclaration.title}" has been created`,
+      //   type: "success",
+      // });
+    }
+
+    this.loadDeclarations();
+    this.closeDrawer();
+    // }, 2000);
   }
 
   deleteDeclaration(id: string) {

@@ -130,7 +130,7 @@ export class DeclarationService {
       return new Observable((subscriber) => subscriber.next([]));
     }
 
-    if (user.type == "M")
+    if (user.type == "M" || user.type == "G")
       path = `get_approved_declarations_midstream/${user.name}`;
     else path = `get_approved_declarations/${user.organizationId}/${user.name}`;
 
@@ -148,7 +148,7 @@ export class DeclarationService {
       return new Observable((subscriber) => subscriber.next([]));
     }
 
-    if (user.type == "M")
+    if (user.type == "M" || user.type == "G")
       path = `get_pending_declarations_midstream/${user.name}`;
     else path = `get_pending_declarations/${user.organizationId}/${user.name}`;
 
@@ -156,6 +156,22 @@ export class DeclarationService {
       .get<any>(`${this.apiUrl}/declaration/api/v1/${path}`, {
         headers: this.getHeaders(),
       })
+      .pipe(map((response) => response || []));
+  }
+
+  createDeclaration(newDeclaration: any): Observable<any | undefined> {
+    const user = this.authService.getCurrentUser();
+    if (!user) {
+      return new Observable((subscriber) => subscriber.next([]));
+    }
+    return this.http
+      .post<any>(
+        `${this.apiUrl}/declaration/api/v1/initiate_declaration`,
+        { newDeclaration },
+        {
+          headers: this.getHeaders(),
+        }
+      )
       .pipe(map((response) => response || []));
   }
 
