@@ -1,0 +1,88 @@
+<app-drawer
+  [isOpen]="true"
+  [title]="declaration ? 'Edit Declaration' : 'New Declaration'"
+  (close)="onCancel.emit()"
+>
+  <div drawerContent>
+    <form [formGroup]="form" class="space-y-4">
+      <div *ngIf="isMidStreamAdmin()">
+        <label class="block text-sm font-medium text-gray-700">
+          Institution <span class="text-red-500">*</span>
+        </label>
+        <app-institution-dropdown
+          [institutions]="institutions"
+          [selectedInstitution]="selectedInstitution"
+          (institutionSelected)="onInstitutionSelected($event)"
+          placeholder="Select an institution"
+        ></app-institution-dropdown>
+      </div>
+
+      <div *ngIf="!isMidStreamAdmin()">
+        <label class="block text-sm font-medium text-gray-700">
+          Institution <span class="text-red-500">*</span>
+        </label>
+        <input
+          type="text"
+          readonly="true"
+          formControlName="institutionCode"
+          [value]="currentUser?.organizationId || ''"
+          class="mt-1 block w-full min-h-[44px] text-red rounded-xl border-gray-300 shadow-sm focus:border-primary focus:ring-primary sm:text-sm pr-10 border border-[#E9EAEB] shadow-[0px_1px_2px_0px_rgba(10,13,18,0.05)]"
+        />
+      </div>
+
+      <div>
+        <label class="block text-sm font-medium text-gray-700">
+          Declared Quantity (MMscf) <span class="text-red-500">*</span>
+        </label>
+        <input
+          type="number"
+          min="0"
+          formControlName="declaredQuantity"
+          class="mt-1 block w-full min-h-[44px] rounded-xl border-gray-300 shadow-sm focus:border-primary focus:ring-primary sm:text-sm pr-10 border border-[#E9EAEB] shadow-[0px_1px_2px_0px_rgba(10,13,18,0.05)]"
+        />
+      </div>
+
+      <div>
+        <label class="block text-sm font-medium text-gray-700">
+          Start Date <span class="text-red-500">*</span>
+        </label>
+        <input
+          type="date"
+          formControlName="startDate"
+          class="mt-1 block w-full min-h-[44px] p-2 rounded-xl border-gray-300 shadow-sm focus:border-primary focus:ring-primary sm:text-sm pr-10 border border-[#E9EAEB] shadow-[0px_1px_2px_0px_rgba(10,13,18,0.05)]"
+        />
+      </div>
+
+      <div>
+        <label class="block text-sm font-medium text-gray-700">
+          End Date <span class="text-red-500">*</span>
+        </label>
+        <input
+          type="date"
+          formControlName="endDate"
+          class="mt-1 block w-full min-h-[44px] p-2 rounded-xl border-gray-300 shadow-sm focus:border-primary focus:ring-primary sm:text-sm pr-10 border border-[#E9EAEB] shadow-[0px_1px_2px_0px_rgba(10,13,18,0.05)]"
+        />
+      </div>
+    </form>
+  </div>
+
+  <div drawerFooter>
+    <div class="flex justify-end space-x-3">
+      <button
+        type="button"
+        (click)="onCancel.emit()"
+        class="px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 hover:bg-gray-50"
+      >
+        Cancel
+      </button>
+      <button
+        type="submit"
+        [disabled]="!form.valid"
+        (click)="onSubmit()"
+        class="px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-primary hover:bg-primary/90 disabled:opacity-50"
+      >
+        {{ declaration ? "Update" : "Declare" }}
+      </button>
+    </div>
+  </div>
+</app-drawer>

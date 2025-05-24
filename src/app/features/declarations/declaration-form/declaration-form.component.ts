@@ -27,94 +27,7 @@ import { AuthService, User } from "../../../core/auth/auth.service";
     DrawerComponent,
     InstitutionDropdownComponent,
   ],
-  template: `
-    <app-drawer
-      [isOpen]="true"
-      [title]="declaration ? 'Edit Declaration' : 'New Declaration'"
-      (close)="onCancel.emit()"
-    >
-      <div drawerContent>
-        <form [formGroup]="form" class="space-y-4">
-          <div *ngIf="isGasCompanyAdmin()">
-            <label class="block text-sm font-medium text-gray-700">
-              Institution <span class="text-red-500">*</span>
-            </label>
-            <app-institution-dropdown
-              [institutions]="institutions"
-              [selectedInstitution]="selectedInstitution"
-              (institutionSelected)="onInstitutionSelected($event)"
-              placeholder="Select an institution"
-            ></app-institution-dropdown>
-          </div>
-
-          <div *ngIf="currentUser?.type == 'U'">
-            <label class="block text-sm font-medium text-gray-700">
-              Institution here... <span class="text-red-500">*</span>
-            </label>
-            <input
-              type="text"
-              formControlName="institutionCode"
-              value="currentUser?.organizationId"
-              class="mt-1 block w-full min-h-[44px] text-red rounded-xl border-gray-300 shadow-sm focus:border-primary focus:ring-primary sm:text-sm pr-10 border border-[#E9EAEB] shadow-[0px_1px_2px_0px_rgba(10,13,18,0.05)]"
-            />
-          </div>
-
-          <div>
-            <label class="block text-sm font-medium text-gray-700">
-              Declared Quantity <span class="text-red-500">*</span>
-            </label>
-            <input
-              type="number"
-              formControlName="declaredQuantity"
-              class="mt-1 block w-full min-h-[44px] rounded-xl border-gray-300 shadow-sm focus:border-primary focus:ring-primary sm:text-sm pr-10 border border-[#E9EAEB] shadow-[0px_1px_2px_0px_rgba(10,13,18,0.05)]"
-            />
-          </div>
-
-          <div>
-            <label class="block text-sm font-medium text-gray-700">
-              Start Date <span class="text-red-500">*</span>
-            </label>
-            <input
-              type="date"
-              formControlName="startDate"
-              class="mt-1 block w-full min-h-[44px] p-2 rounded-xl border-gray-300 shadow-sm focus:border-primary focus:ring-primary sm:text-sm pr-10 border border-[#E9EAEB] shadow-[0px_1px_2px_0px_rgba(10,13,18,0.05)]"
-            />
-          </div>
-
-          <div>
-            <label class="block text-sm font-medium text-gray-700">
-              End Date <span class="text-red-500">*</span>
-            </label>
-            <input
-              type="date"
-              formControlName="endDate"
-              class="mt-1 block w-full min-h-[44px] p-2 rounded-xl border-gray-300 shadow-sm focus:border-primary focus:ring-primary sm:text-sm pr-10 border border-[#E9EAEB] shadow-[0px_1px_2px_0px_rgba(10,13,18,0.05)]"
-            />
-          </div>
-        </form>
-      </div>
-
-      <div drawerFooter>
-        <div class="flex justify-end space-x-3">
-          <button
-            type="button"
-            (click)="onCancel.emit()"
-            class="px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 hover:bg-gray-50"
-          >
-            Cancel
-          </button>
-          <button
-            type="submit"
-            [disabled]="!form.valid || !selectedInstitution"
-            (click)="onSubmit()"
-            class="px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-primary hover:bg-primary/90 disabled:opacity-50"
-          >
-            {{ declaration ? "Update" : "Create" }}
-          </button>
-        </div>
-      </div>
-    </app-drawer>
-  `,
+  templateUrl: "./declaration-form.component.html",
 })
 export class DeclarationFormComponent {
   @Input() declaration?: Declaration;
@@ -142,18 +55,45 @@ export class DeclarationFormComponent {
     private toast: ToastService,
     private authService: AuthService
   ) {
+    this.currentUser = this.authService.getCurrentUser();
+
     this.form = this.fb.group({
-      declaredQuantity: ["", [Validators.required, Validators.min(0)]],
+      declaredQuantity: [0, [Validators.required, Validators.min(0)]],
       startDate: ["", Validators.required],
       endDate: ["", Validators.required],
-      institutionCode: [
-        this.currentUser?.type === "U" ? this.currentUser?.organizationId : "",
-        Validators.required,
-      ],
+      institutionCode: [""],
     });
-
-    this.getInstitutions();
   }
+
+  ngOnInit() {
+    if (this.declaration) {
+      // Find the institution from the list
+      this.selectedInstitution = this.institutions?.find(
+        (inst) => inst.code === this.declaration?.institutionCode
+      );
+      this.form.patchValue({
+        declaredQuantity: this.declaration.declaredQuantity,
+        startDate: this.declaration.startDate,
+        endDate: this.declaration.endDate,
+      });
+    }
+
+    this.setDCVvalue();
+  }
+
+  setDCVvalue = () => {
+    let userType = this.currentUser?.type;
+    if (userType === "M") this.getInstitutions();
+
+    if (userType === "U") {
+      this.form.patchValue({
+        institutionCode: this.currentUser?.organizationId,
+      });
+    }
+
+    // let dcv = this.currentUser?.id;
+    // console.log(this.currentUser);
+  };
 
   getInstitutions = () => {
     this.institutionService.getOrganizations().subscribe({
@@ -162,7 +102,7 @@ export class DeclarationFormComponent {
         this.institutions = orgs;
 
         this.institutions = this.institutions
-          .filter((org) => org.type === "U")
+          .filter((org) => org.type === "D")
           .sort((a, b) => a.name.localeCompare(b.name));
       },
       error: (error) => {
@@ -181,25 +121,8 @@ export class DeclarationFormComponent {
     });
   };
 
-  ngOnInit() {
-    this.currentUser = this.authService.getCurrentUser();
-
-    if (this.declaration) {
-      // Find the institution from the list
-      this.selectedInstitution = this.institutions?.find(
-        (inst) => inst.code === this.declaration?.institutionCode
-      );
-
-      this.form.patchValue({
-        declaredQuantity: this.declaration.declaredQuantity,
-        startDate: this.declaration.startDate,
-        endDate: this.declaration.endDate,
-      });
-    }
-  }
-
-  isUserAdmin(): boolean {
-    return this.currentUser?.role === "admin";
+  isMidStreamAdmin(): boolean {
+    return this.currentUser?.type === "M" && this.currentUser?.role === "admin";
   }
 
   isGasCompanyAdmin(): boolean {
@@ -215,10 +138,15 @@ export class DeclarationFormComponent {
   }
 
   onSubmit() {
-    if (this.form.valid && this.selectedInstitution) {
+    if (this.form.valid) {
       const formValue = this.form.value;
       const user = JSON.parse(sessionStorage.getItem("auth_user") || "{}");
-
+      // Ensure declaredQuantity has two decimal places
+      if (formValue.declaredQuantity !== undefined) {
+        formValue.declaredQuantity = parseFloat(
+          formValue.declaredQuantity
+        ).toFixed(2);
+      }
       this.save.emit({
         ...formValue,
         uploadedBy: user.name,

@@ -159,20 +159,16 @@ export class DeclarationService {
       .pipe(map((response) => response || []));
   }
 
-  createDeclaration(newDeclaration: any): Observable<any | undefined> {
-    const user = this.authService.getCurrentUser();
-    if (!user) {
-      return new Observable((subscriber) => subscriber.next([]));
-    }
+  createDeclaration(payload: any): Observable<any | undefined> {
     return this.http
       .post<any>(
         `${this.apiUrl}/declaration/api/v1/initiate_declaration`,
-        { newDeclaration },
+        { ...payload },
         {
           headers: this.getHeaders(),
         }
       )
-      .pipe(map((response) => response || []));
+      .pipe(map((response) => response));
   }
 
   getDeclaration(id: string): Observable<any | undefined> {
