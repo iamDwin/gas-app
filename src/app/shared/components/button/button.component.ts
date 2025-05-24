@@ -45,7 +45,7 @@ export class ButtonComponent {
 
   getButtonClasses(): string {
     const baseClasses =
-      "inline-flex w-max items-center h-10 px-3 rounded-xl transition-all text-[14px] font-semibold";
+      "inline-flex w-max items-center h-10 px-3 rounded-xl transition-all text-[14px] font-normal";
     const widthClass = this.fullWidth ? "w-full" : "";
 
     const variantClasses = {

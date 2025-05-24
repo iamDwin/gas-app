@@ -1,0 +1,73 @@
+<div class="p-4">
+  <div class="bg-white rounded-lg shadow">
+    <div class="p-4 flex justify-between items-center border-b border-gray-200">
+      <!-- Tabs -->
+      <div
+        class="flex rounded-lg bg-gray-100 p-1 relative"
+        [style.width]="'500px'"
+      >
+        <!-- Sliding background -->
+        <div
+          class="absolute top-1 bottom-1 rounded-md bg-primary transition-transform duration-300 ease-out"
+          [style.width]="getTabWidth()"
+          [style.transform]="'translateX(' + getTabPosition() + ')'"
+        ></div>
+
+        <!-- Tab buttons -->
+        <button
+          *ngFor="let tab of visibleTabs"
+          (click)="switchTab(tab.id)"
+          [disabled]="tab.disabled"
+          class="flex-1 text-sm font-medium py-2 px-4 rounded-md transition-colors duration-200 relative z-10"
+          [class.text-white]="activeTab === tab.id"
+          [class.text-gray-600]="activeTab !== tab.id"
+        >
+          {{ tab.label }}
+        </button>
+      </div>
+
+      <!-- Date Picker -->
+      <div class="flex items-center gap-4">
+        <div class="flex items-center gap-2">
+          <label class="text-sm text-gray-600">From:</label>
+          <input
+            type="date"
+            disabled="true"
+            [(ngModel)]="tempStartDate"
+            class="px-3 py-2 border border-gray-300 rounded-md text-sm"
+          />
+        </div>
+        <div class="flex items-center gap-2">
+          <label class="text-sm text-gray-600">To:</label>
+          <input
+            type="date"
+            disabled="true"
+            [(ngModel)]="tempEndDate"
+            class="px-3 py-2 border border-gray-300 rounded-md text-sm"
+          />
+        </div>
+        <app-button
+          class="font-light"
+          variant="filled"
+          (click)="applyDateFilter()"
+          [disabled]="true"
+        >
+          <!-- [disabled]="!isDateRangeValid" -->
+          Apply Date Filter
+        </app-button>
+      </div>
+    </div>
+
+    <!-- Table -->
+    <div class="p-4">
+      <app-data-table
+        [rows]="currentData"
+        [columns]="currentColumns"
+        [actions]="actions"
+        [loading]="isLoading"
+        [loadingMessage]="'Loading ' + getCurrentTabLabel() + ' reports...'"
+      >
+      </app-data-table>
+    </div>
+  </div>
+</div>
