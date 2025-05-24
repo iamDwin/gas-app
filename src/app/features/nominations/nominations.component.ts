@@ -24,53 +24,7 @@ import { NominationService } from "./nominations.service";
     DataTableComponent,
     ButtonComponent,
   ],
-  template: `
-    <div class="p-4">
-      <app-data-table
-        [rows]="formattedDeclarations"
-        [columns]="columns"
-        [actions]="actions"
-        [loading]="isLoading"
-        [loadingMessage]="loadingMessage"
-        defaultSort="createdAt"
-        (actionClick)="onActionClick($event)"
-      >
-        <div tableActions>
-          <app-button
-            variant="filled"
-            [disabled]="true"
-            (click)="openDrawer()"
-            [iconLeft]="
-              '<svg class=&quot;w-5 h-5&quot; fill=&quot;none&quot; viewBox=&quot;0 0 24 24&quot; stroke=&quot;currentColor&quot;><path stroke-linecap=&quot;round&quot; stroke-linejoin=&quot;round&quot; stroke-width=&quot;2&quot; d=&quot;M12 6v6m0 0v6m0-6h6m-6 0H6&quot;/></svg>'
-            "
-          >
-            New Nomination
-          </app-button>
-        </div>
-      </app-data-table>
-
-      <!-- Drawer -->
-      <div
-        class="drawer"
-        [class.drawer-open]="isDrawerOpen"
-        [class.drawer-closed]="!isDrawerOpen"
-      >
-        <!-- <app-declaration-form
-          *ngIf="isDrawerOpen"
-          [declaration]="selectedDeclaration"
-          (save)="saveDeclaration($event)"
-          (onCancel)="closeDrawer()"
-        ></app-declaration-form> -->
-      </div>
-
-      <!-- Backdrop -->
-      <div
-        *ngIf="isDrawerOpen"
-        class="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity z-50"
-        (click)="closeDrawer()"
-      ></div>
-    </div>
-  `,
+  templateUrl: "./nominations.component.html",
 })
 export class NominationsComponent implements OnInit {
   declarations: Nomination[] = [];
@@ -119,7 +73,7 @@ export class NominationsComponent implements OnInit {
       { label: "Nominations", link: "/nominations" },
     ]);
 
-    this.loadDeclarations();
+    // this.loadDeclarations();
   }
 
   formatDate(date: string): string {
@@ -155,10 +109,10 @@ export class NominationsComponent implements OnInit {
         this.router.navigate(["/nominations", event.row.id]);
         break;
       case "Edit":
-        this.editDeclaration(event.row);
+        // this.editDeclaration(event.row);
         break;
       case "Delete":
-        this.deleteDeclaration(event.row.id);
+        // this.deleteDeclaration(event.row.id);
         break;
     }
   }
@@ -178,68 +132,68 @@ export class NominationsComponent implements OnInit {
     this.isDrawerOpen = true;
   }
 
-  saveDeclaration(declarationData: Partial<Nomination>) {
-    this.isLoading = true;
-    this.loadingMessage = this.selectedDeclaration
-      ? "Updating nominations..."
-      : "Creating nominations...";
+  // saveDeclaration(declarationData: Partial<Nomination>) {
+  //   this.isLoading = true;
+  //   this.loadingMessage = this.selectedDeclaration
+  //     ? "Updating nominations..."
+  //     : "Creating nominations...";
 
-    setTimeout(() => {
-      const currentUser = this.authService.getCurrentUser();
+  //   setTimeout(() => {
+  //     const currentUser = this.authService.getCurrentUser();
 
-      if (this.selectedDeclaration) {
-        // Update existing declaration
-        const updatedDeclaration: Nomination = {
-          ...this.selectedDeclaration,
-          ...declarationData,
-          updatedAt: new Date(),
-        };
+  //     if (this.selectedDeclaration) {
+  //       // Update existing declaration
+  //       const updatedDeclaration: Nomination = {
+  //         ...this.selectedDeclaration,
+  //         ...declarationData,
+  //         updatedAt: new Date(),
+  //       };
 
-        this.nominationService.updateDeclaration(updatedDeclaration);
-        this.notificationService.addNotification({
-          title: "Nominations Updated",
-          message: `Nominations "${updatedDeclaration.title}" has been updated`,
-          type: "success",
-        });
-      } else {
-        // Create new declaration
-        const newDeclaration: Omit<
-          Nomination,
-          "id" | "createdAt" | "updatedAt"
-        > = {
-          ...declarationData,
-          organizationId: currentUser?.organizationId || "",
-          createdBy: currentUser?.id || "",
-          status: "draft",
-        } as Omit<Nomination, "id" | "createdAt" | "updatedAt">;
+  //       this.nominationService.updateDeclaration(updatedDeclaration);
+  //       this.notificationService.addNotification({
+  //         title: "Nominations Updated",
+  //         message: `Nominations "${updatedDeclaration.title}" has been updated`,
+  //         type: "success",
+  //       });
+  //     } else {
+  //       // Create new declaration
+  //       const newDeclaration: Omit<
+  //         Nomination,
+  //         "id" | "createdAt" | "updatedAt"
+  //       > = {
+  //         ...declarationData,
+  //         organizationId: currentUser?.organizationId || "",
+  //         createdBy: currentUser?.id || "",
+  //         status: "draft",
+  //       } as Omit<Nomination, "id" | "createdAt" | "updatedAt">;
 
-        this.nominationService.addDeclaration(newDeclaration);
-        this.notificationService.addNotification({
-          title: "Nominations Created",
-          message: `Nominations "${newDeclaration.title}" has been created`,
-          type: "success",
-        });
-      }
+  //       this.nominationService.addDeclaration(newDeclaration);
+  //       this.notificationService.addNotification({
+  //         title: "Nominations Created",
+  //         message: `Nominations "${newDeclaration.title}" has been created`,
+  //         type: "success",
+  //       });
+  //     }
 
-      this.loadDeclarations();
-      this.closeDrawer();
-    }, 2000);
-  }
+  //     this.loadDeclarations();
+  //     this.closeDrawer();
+  //   }, 2000);
+  // }
 
-  deleteDeclaration(id: string) {
-    if (confirm("Are you sure you want to delete this declaration?")) {
-      this.isLoading = true;
-      this.loadingMessage = "Deleting Nominations...";
+  // deleteDeclaration(id: string) {
+  //   if (confirm("Are you sure you want to delete this declaration?")) {
+  //     this.isLoading = true;
+  //     this.loadingMessage = "Deleting Nominations...";
 
-      setTimeout(() => {
-        this.nominationService.deleteDeclaration(id);
-        this.notificationService.addNotification({
-          title: "Nominations Deleted",
-          message: "The Nominations has been deleted successfully",
-          type: "success",
-        });
-        this.loadDeclarations();
-      }, 2000);
-    }
-  }
+  //     setTimeout(() => {
+  //       this.nominationService.deleteDeclaration(id);
+  //       this.notificationService.addNotification({
+  //         title: "Nominations Deleted",
+  //         message: "The Nominations has been deleted successfully",
+  //         type: "success",
+  //       });
+  //       this.loadDeclarations();
+  //     }, 2000);
+  //   }
+  // }
 }

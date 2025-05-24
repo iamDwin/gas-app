@@ -101,6 +101,7 @@ export class PendingDeclarationsComponent implements OnInit {
   ngOnInit() {
     this.breadcrumbService.setBreadcrumbs([
       { label: "Declarations", link: "/declarations" },
+      { label: "Pending Declarations", link: "/declarations/pending" },
     ]);
 
     this.loadPendingDeclarations();

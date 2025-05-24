@@ -29,60 +29,64 @@ import { InstitutionDropdownComponent } from "../../../shared/components/institu
   template: `
     <app-drawer
       [isOpen]="true"
-      [title]="user ? 'Edit User' : 'Add User'"
+      [title]="user ? 'Edit User' : 'Create User'"
       (close)="onCancel.emit()"
     >
       <div drawerContent>
         <form [formGroup]="form" class="space-y-4">
           <div>
-            <label class="block text-sm font-medium text-gray-700"
+            <label class="block text-sm font-light text-gray-700"
               >Full Name</label
             >
             <input
               type="text"
               formControlName="fullName"
-              class="mt-1 block w-full rounded-xl  border border-gray-200 focus:outline-none focus:ring-2 focus:ring-green-500"
+              placeholder="Full Name"
+              class="mt-1 block w-full min-h-[44px] text-red rounded-xl border-gray-300 shadow-sm focus:border-primary focus:ring-primary sm:text-sm pr-10 border border-[#E9EAEB] shadow-[0px_1px_2px_0px_rgba(10,13,18,0.05)]"
             />
           </div>
           <div>
-            <label class="block text-sm font-medium text-gray-700"
+            <label class="block text-sm font-light text-gray-700"
               >User Name</label
             >
             <input
               type="text"
               formControlName="userName"
-              class="mt-1 block w-full rounded-xl  border border-gray-200 focus:outline-none focus:ring-2 focus:ring-green-500"
+              placeholder="username"
+              class="mt-1 block w-full min-h-[44px] text-red rounded-xl border-gray-300 shadow-sm focus:border-primary focus:ring-primary sm:text-sm pr-10 border border-[#E9EAEB] shadow-[0px_1px_2px_0px_rgba(10,13,18,0.05)]"
             />
           </div>
 
           <div>
-            <label class="block text-sm font-medium text-gray-700">Email</label>
+            <label class="block text-sm font-light text-gray-700">Email</label>
             <input
               type="email"
               formControlName="email"
-              class="mt-1 block w-full rounded-xl  border border-gray-200 focus:outline-none focus:ring-2 focus:ring-green-500"
+              placeholder="email address"
+              class="mt-1 block w-full min-h-[44px] text-red rounded-xl border-gray-300 shadow-sm focus:border-primary focus:ring-primary sm:text-sm pr-10 border border-[#E9EAEB] shadow-[0px_1px_2px_0px_rgba(10,13,18,0.05)]"
             />
           </div>
 
           <div>
-            <label class="block text-sm font-medium text-gray-700"
+            <label class="block text-sm font-light text-gray-700"
               >User Type</label
             >
             <select
               formControlName="type"
-              class="mt-1 block w-full rounded-xl  border border-gray-200 focus:outline-none focus:ring-2 focus:ring-green-500"
+              class="mt-1 block w-full min-h-[44px] text-red rounded-xl border-gray-300 shadow-sm focus:border-primary focus:ring-primary sm:text-sm pr-10 border border-[#E9EAEB] shadow-[0px_1px_2px_0px_rgba(10,13,18,0.05)]"
             >
-              <option value="M">MIDSTREAM</option>
-              <option value="U">UPSTREAM</option>
-              <option value="D">DOWNSTREAM</option>
+              <option value="U">Upstream</option>
+              <option value="M">Midstream</option>
+              <option value="D">Downstream</option>
             </select>
           </div>
 
           <div>
-            <label class="block text-sm font-medium text-gray-700">Role</label>
+            <label class="block text-sm font-light text-gray-700">Role</label>
             <select
               formControlName="roleId"
-              class="mt-1 block w-full rounded-xl  border border-gray-200 focus:outline-none focus:ring-2 focus:ring-green-500"
+              placeholder="role ID"
+              class="mt-1 block w-full min-h-[44px] text-red rounded-xl border-gray-300 shadow-sm focus:border-primary focus:ring-primary sm:text-sm pr-10 border border-[#E9EAEB] shadow-[0px_1px_2px_0px_rgba(10,13,18,0.05)]"
             >
               <option *ngFor="let role of userRoles" [value]="role.id">
                 {{ role.name }}
@@ -91,12 +95,12 @@ import { InstitutionDropdownComponent } from "../../../shared/components/institu
           </div>
 
           <div>
-            <label class="block text-sm font-medium text-gray-700"
+            <label class="block text-sm font-light text-gray-700"
               >Institutions</label
             >
             <select
               formControlName="institutionId"
-              class="mt-1 block w-full rounded-xl  border border-gray-200 focus:outline-none focus:ring-2 focus:ring-green-500"
+              class="mt-1 block w-full min-h-[44px] text-red rounded-xl border-gray-300 shadow-sm focus:border-primary focus:ring-primary sm:text-sm pr-10 border border-[#E9EAEB] shadow-[0px_1px_2px_0px_rgba(10,13,18,0.05)]"
             >
               <option
                 *ngFor="let institute of organizations"

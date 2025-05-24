@@ -66,7 +66,8 @@ export class LayoutComponent implements OnInit {
       count: 0,
       children: [
         { path: "/declarations", label: "All Declarations" },
-        { path: "/declarations/pending", label: "Pending Approvals" },
+        { path: "/declarations/pending", label: "Pending Declarations" },
+        { path: "/declarations/declined", label: "Declined Declarations" },
       ],
     },
     {
@@ -77,8 +78,9 @@ export class LayoutComponent implements OnInit {
       </svg>`,
       count: 0,
       children: [
-        { path: "/nominations", label: "All Nominations" },
-        // { path: "/nominations/pending", label: "Pending Nominations" },
+        { path: "/nominations", label: "Nominations" },
+        { path: "/nominations/pending", label: "Pending Nominations" },
+        { path: "/nominations/declined", label: "Declined Nominations" },
       ],
     },
     {
@@ -90,7 +92,7 @@ export class LayoutComponent implements OnInit {
       count: 0,
       children: [
         { path: "/scheduling", label: "Schedules" },
-        // { path: "/nominations/pending", label: "Pending Nominations" },
+        // { path: "/scheduling/pending", label: "Pending schedules" },
       ],
     },
     {
@@ -216,15 +218,20 @@ export class LayoutComponent implements OnInit {
             "/dashboard",
             "/users",
             "/declarations",
+            "/scheduling",
             "/nominations",
             "/reports",
           ].includes(item.path)
         );
       case "U":
         return this.menuItems.filter((item) =>
-          ["/dashboard", "/users", "/declarations", "/reports"].includes(
-            item.path
-          )
+          [
+            "/dashboard",
+            "/users",
+            "/declarations",
+            "/scheduling",
+            "/reports",
+          ].includes(item.path)
         );
       case "D":
         return this.menuItems.filter((item) =>

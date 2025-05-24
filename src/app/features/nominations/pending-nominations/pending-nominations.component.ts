@@ -1,19 +1,24 @@
-import { Component } from "@angular/core";
+import { Component, OnInit } from "@angular/core";
 import { CommonModule } from "@angular/common";
+import { NominationService } from "../nominations.service";
+import { BreadcrumbService } from "../../../shared/services/breadcrumb.service";
 
 @Component({
   selector: "app-pending-nominations",
   standalone: true,
   imports: [CommonModule],
-  template: `
-    <div class="p-4">
-      <!-- <h1 class="text-2xl font-bold mb-6">Nominations</h1> -->
-      <div class="bg-white rounded-lg shadow p-6">
-        <p class="text-gray-500">
-          Pending Nomination functionality coming soon...
-        </p>
-      </div>
-    </div>
-  `,
+  templateUrl: "./pending-nominations.component.html",
 })
-export class PendingNominationsComponent {}
+export class PendingNominationsComponent implements OnInit {
+  constructor(
+    private nominationService: NominationService,
+    private breadcrumbService: BreadcrumbService
+  ) {}
+
+  ngOnInit() {
+    this.breadcrumbService.setBreadcrumbs([
+      { label: "Nominations", link: "/nominations" },
+      { label: "Pending Nominations", link: "/nominations/pending" },
+    ]);
+  }
+}

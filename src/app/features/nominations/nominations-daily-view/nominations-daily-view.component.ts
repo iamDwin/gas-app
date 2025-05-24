@@ -185,26 +185,26 @@ export class NominationsDailyViewComponent implements OnInit {
   ngOnInit() {
     this.route.params.subscribe((params) => {
       const id = params["id"];
-      this.loadDeclaration(id);
+      // this.loadDeclaration(id);
     });
   }
 
-  loadDeclaration(id: string) {
-    this.declarationService.getDeclaration(id).subscribe((declaration) => {
-      if (declaration) {
-        this.declaration = declaration;
-        this.calculateTotalPages();
-        this.loadCurrentPage();
-        this.breadcrumbService.setBreadcrumbs([
-          { label: "Declarations", link: "/declarations" },
-          {
-            label: declaration.institutionCode,
-            link: `/declarations/${declaration.id}`,
-          },
-        ]);
-      }
-    });
-  }
+  // loadDeclaration(id: string) {
+  //   this.declarationService.getDeclaration(id).subscribe((declaration) => {
+  //     if (declaration) {
+  //       this.declaration = declaration;
+  //       this.calculateTotalPages();
+  //       this.loadCurrentPage();
+  //       this.breadcrumbService.setBreadcrumbs([
+  //         { label: "Declarations", link: "/declarations" },
+  //         {
+  //           label: declaration.institutionCode,
+  //           link: `/declarations/${declaration.id}`,
+  //         },
+  //       ]);
+  //     }
+  //   });
+  // }
 
   calculateTotalPages() {
     if (this.declaration) {
@@ -296,25 +296,25 @@ export class NominationsDailyViewComponent implements OnInit {
   }
 
   saveEdit(date: string) {
-    if (this.declaration) {
-      const quantity = this.declaration.dailyQuantities.find(
-        (dq) => dq.date === date
-      )?.quantity;
-      if (quantity !== undefined) {
-        this.declarationService.updateDailyQuantity(
-          this.declaration.id,
-          date,
-          quantity
-        );
-        this.notificationService.addNotification({
-          title: "Quantity Updated",
-          message: `Quantity for ${this.formatDate(date)} has been updated`,
-          type: "success",
-        });
-      }
-    }
-    this.editingDates.delete(date);
-    this.originalQuantities.delete(date);
+    // if (this.declaration) {
+    //   const quantity = this.declaration.dailyQuantities.find(
+    //     (dq) => dq.date === date
+    //   )?.quantity;
+    //   if (quantity !== undefined) {
+    //     this.declarationService.updateDailyQuantity(
+    //       this.declaration.id,
+    //       date,
+    //       quantity
+    //     );
+    //     this.notificationService.addNotification({
+    //       title: "Quantity Updated",
+    //       message: `Quantity for ${this.formatDate(date)} has been updated`,
+    //       type: "success",
+    //     });
+    //   }
+    // }
+    // this.editingDates.delete(date);
+    // this.originalQuantities.delete(date);
   }
 
   cancelEdit(date: string) {

@@ -93,6 +93,13 @@ export const routes: Routes = [
               ).then((m) => m.PendingDeclarationsComponent),
           },
           {
+            path: "declined",
+            loadComponent: () =>
+              import(
+                "./features/declarations/declined-declarations/declined-declarations.component"
+              ).then((m) => m.DeclinedDeclarationsComponent),
+          },
+          {
             path: ":id",
             loadComponent: () =>
               import(
@@ -120,6 +127,13 @@ export const routes: Routes = [
               ).then((m) => m.PendingNominationsComponent),
           },
           {
+            path: "declined",
+            loadComponent: () =>
+              import(
+                "./features/nominations/declined-nominations/declined-nominations.component"
+              ).then((m) => m.DeclinedNominationsComponent),
+          },
+          {
             path: ":id",
             loadComponent: () =>
               import(
@@ -128,6 +142,34 @@ export const routes: Routes = [
           },
         ],
       },
+      // ,
+      // {
+      //   path: "scheduling",
+
+      //   children: [
+      //     {
+      //       path: "",
+      //       loadComponent: () =>
+      //         import("./features/nominations/nominations.component").then(
+      //           (m) => m.NominationsComponent
+      //         ),
+      //     },
+      //     {
+      //       path: "pending",
+      //       loadComponent: () =>
+      //         import(
+      //           "./features/nominations/pending-nominations/pending-nominations.component"
+      //         ).then((m) => m.PendingNominationsComponent),
+      //     },
+      //     {
+      //       path: ":id",
+      //       loadComponent: () =>
+      //         import(
+      //           "./features/nominations/nominations-daily-view/nominations-daily-view.component"
+      //         ).then((m) => m.NominationsDailyViewComponent),
+      //     },
+      //   ],
+      // },
       {
         path: "pending-approvals",
         loadComponent: () =>
