@@ -27,9 +27,28 @@ export interface Declaration {
   updatedAt: Date;
   approvedBy?: string;
   approvedAt?: Date;
+  requestId: string;
   rejectedBy?: string;
   rejectedAt?: Date;
   rejectionReason?: string;
+}
+
+export interface DailyViewDeclaration {
+  id: number;
+  requestId: string;
+  declaredQuantity: number;
+  confirmedQuantity: null;
+  date: string;
+  declaredBy: string;
+  declaredByName: string;
+  confirmedBy: null;
+  confirmedByName: null;
+  institutionCode: string;
+  institutionName: string;
+  type: string;
+  comment: null;
+  createdAt: string;
+  status: number;
 }
 
 export interface CreateDeclarationRequest {

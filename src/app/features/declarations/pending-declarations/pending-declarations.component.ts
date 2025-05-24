@@ -28,14 +28,14 @@ export class PendingDeclarationsComponent implements OnInit {
   loadingMessage = "Loading Pending Declarations..";
 
   columns = [
-    { prop: "id", name: "#" },
+    { prop: "requestId", name: "#" },
     { prop: "institutionCode", name: "# Code" },
     { prop: "institutionName", name: "Institution" },
     { prop: "declaredQuantity", name: "DCV (MMscf)" },
     { prop: "currentAgreedDcv", name: "Agreed DCV (MMscf)" },
     { prop: "periodStartDate", name: "From" },
     { prop: "periodEndDate", name: "To" },
-    { prop: "status", name: "Status" },
+    // { prop: "status", name: "Status" },
     { prop: "actions", name: "Actions", sortable: false },
   ];
 
@@ -45,15 +45,23 @@ export class PendingDeclarationsComponent implements OnInit {
       type: "primary",
     },
     {
-      label: "Edit",
-      type: "primary",
-      isDisabled: (row: Declaration) => row.status !== "draft",
+      label: "Approve",
+      type: "success",
     },
     {
-      label: "Delete",
+      label: "Decline",
       type: "danger",
-      isDisabled: (row: Declaration) => row.status !== "draft",
     },
+    // {
+    //   label: "Edit",
+    //   type: "primary",
+    //   isDisabled: (row: Declaration) => row.status !== "draft",
+    // },
+    // {
+    //   label: "Delete",
+    //   type: "danger",
+    //   isDisabled: (row: Declaration) => row.status !== "draft",
+    // },
   ];
 
   constructor(
@@ -106,7 +114,13 @@ export class PendingDeclarationsComponent implements OnInit {
   onActionClick(event: { action: TableAction; row: Declaration }) {
     switch (event.action.label) {
       case "View Details":
-        this.router.navigate(["/declarations", event.row.id]);
+        this.router.navigate(["/declarations", event.row.requestId]);
+        break;
+      case "Approve":
+        this.editDeclaration(event.row);
+        break;
+      case "Decline":
+        this.editDeclaration(event.row);
         break;
       case "Edit":
         this.editDeclaration(event.row);

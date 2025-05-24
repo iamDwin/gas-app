@@ -183,7 +183,7 @@ export class DeclarationService {
           headers: this.getHeaders(),
         }
       )
-      .pipe(map((response) => response || []));
+      .pipe(map((response) => response.declarationStatementDetailsList || []));
   }
 
   // updateDailyQuantity(

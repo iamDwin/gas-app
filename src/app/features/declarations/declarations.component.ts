@@ -42,7 +42,7 @@ export class DeclarationsComponent implements OnInit {
     { prop: "currentAgreedDcv", name: "Agreed DCV (MMscf)" },
     { prop: "periodStartDate", name: "From" },
     { prop: "periodEndDate", name: "To" },
-    { prop: "status", name: "Status" },
+    // { prop: "status", name: "Status" },
     { prop: "actions", name: "Actions", sortable: false },
   ];
 
