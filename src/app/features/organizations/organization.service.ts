@@ -40,6 +40,21 @@ export class OrganizationService {
       .pipe(map((response) => response.institutionList || []));
   }
 
+  getInstitution() {
+    // /admin/institution/api/v1/get_institution/{code}/{createdBy}
+    const user = this.authService.getCurrentUser();
+    if (!user) {
+      return new Observable((subscriber) => subscriber.next([]));
+    }
+
+    return this.http
+      .get<OrganizationsResponse>(
+        `${this.apiUrl}/admin/institution/api/v1/get_institution/${user.organizationId}/${user.name}`,
+        { headers: this.getHeaders() }
+      )
+      .pipe(map((response) => response));
+  }
+
   getPendingOrganizations(): Observable<Organization[]> {
     let user = this.authService.getCurrentUser();
     if (!user) {

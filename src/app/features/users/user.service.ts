@@ -30,12 +30,13 @@ export class UserService {
       return new Observable((subscriber) => subscriber.next([]));
     }
 
-    if (user.type == "M")
-      path = `/admin/user/api/v1/get_all_users/${user.name}`;
-    else if (user.type == "G")
+    // if (user.type == "M")
+    //   path = `/admin/user/api/v1/get_all_users/${user.name}`;
+    // else
+    if (user.type == "G")
       path = `/admin/useradmin/api/v1/get_all_users/${user.name}`;
     else
-      path = `/admin/user/api/v1/get_users_by_institution_id/${user.organizationId}/${user.name}`;
+      path = `/admin/user/api/v1/get_approved_auths_by_institution/${user.organizationId}/${user.name}`;
 
     return this.http
       .get<UsersResponse>(`${this.apiUrl}${path}`, {

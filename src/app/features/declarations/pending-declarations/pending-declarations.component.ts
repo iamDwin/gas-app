@@ -17,41 +17,7 @@ import { ButtonComponent } from "../../../shared/components/button/button.compon
   selector: "app-pending-declarations",
   standalone: true,
   imports: [CommonModule, DeclarationFormComponent, DataTableComponent],
-  template: `
-    <div class="p-4">
-      <app-data-table
-        [rows]="formattedDeclarations"
-        [columns]="columns"
-        [actions]="actions"
-        [loading]="isLoading"
-        [loadingMessage]="loadingMessage"
-        defaultSort="createdAt"
-        (actionClick)="onActionClick($event)"
-      >
-      </app-data-table>
-
-      <!-- Drawer -->
-      <div
-        class="drawer"
-        [class.drawer-open]="isDrawerOpen"
-        [class.drawer-closed]="!isDrawerOpen"
-      >
-        <app-declaration-form
-          *ngIf="isDrawerOpen"
-          [declaration]="selectedDeclaration"
-          (save)="saveDeclaration($event)"
-          (onCancel)="closeDrawer()"
-        ></app-declaration-form>
-      </div>
-
-      <!-- Backdrop -->
-      <div
-        *ngIf="isDrawerOpen"
-        class="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity z-50"
-        (click)="closeDrawer()"
-      ></div>
-    </div>
-  `,
+  templateUrl: "./pending-declaration.component.html",
 })
 export class PendingDeclarationsComponent implements OnInit {
   declarations: Declaration[] = [];

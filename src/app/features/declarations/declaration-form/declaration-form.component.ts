@@ -37,6 +37,7 @@ export class DeclarationFormComponent {
   form: FormGroup;
   selectedInstitution?: Organization;
   institutions: Organization[] = [];
+  institution: any;
   currentUser: User | null = null;
 
   // Mock institutions data - replace with actual data from your service
@@ -51,6 +52,7 @@ export class DeclarationFormComponent {
   constructor(
     private fb: FormBuilder,
     private institutionService: OrganizationService,
+    private orgService: OrganizationService,
     private notify: NotificationService,
     private toast: ToastService,
     private authService: AuthService
@@ -89,10 +91,8 @@ export class DeclarationFormComponent {
       this.form.patchValue({
         institutionCode: this.currentUser?.organizationId,
       });
+      this.getUserInstitution();
     }
-
-    // let dcv = this.currentUser?.id;
-    // console.log(this.currentUser);
   };
 
   getInstitutions = () => {
@@ -120,6 +120,25 @@ export class DeclarationFormComponent {
       },
     });
   };
+
+  getUserInstitution() {
+    this.orgService.getInstitution().subscribe({
+      next: (orgs) => {
+        this.institution = orgs;
+        this.form.patchValue({
+          declaredQuantity: this.institution.dcv,
+        });
+      },
+      error: (error) => {
+        // console.log(error);
+        this.toast.show({
+          title: "Organization Request",
+          message: "Failed To Get User's Institutions data",
+          type: "error",
+        });
+      },
+    });
+  }
 
   isMidStreamAdmin(): boolean {
     return this.currentUser?.type === "M" && this.currentUser?.role === "admin";

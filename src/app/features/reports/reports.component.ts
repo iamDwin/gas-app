@@ -30,7 +30,7 @@ export class ReportsComponent implements OnInit {
       id: "nominations",
       label: "Nomination Reports",
       showFor: ["D", "M", "G"],
-      disabled: false,
+      disabled: true,
     },
     {
       id: "schedule",
