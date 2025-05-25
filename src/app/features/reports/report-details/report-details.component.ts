@@ -226,15 +226,20 @@ export class ReportDetailsComponent implements OnInit {
   }
 
   downloadReport() {
-    const requestId = this.declarationId; // Assuming declarationId is the requestId
-    const username = "your-username"; // Replace with actual username logic
-
+    this.isLoading = true;
+    this.isloadingMessage = "Downloading Report";
+    const requestId = this.declarationId;
     // { responseType: 'blob' }
     this.reportService.downloadReport(requestId).subscribe({
       next: (response) => {
         console.log(response);
         const blob = new Blob([response], { type: "application/pdf" }); // Adjust MIME type as needed
-        saveAs(blob, "report.pdf"); // Adjust file name and extension as needed
+        saveAs(blob, "declaration-report.pdf"); // Adjust file name and extension as needed
+        // this.toaster.show({
+        //   title: "Download Report",
+        //   message: "Report generated and downloaded successfully",
+        //   type: "success",
+        // });
       },
       error: (error) => {
         console.log(error);
@@ -243,6 +248,9 @@ export class ReportDetailsComponent implements OnInit {
           message: "Failed to download the report",
           type: "error",
         });
+      },
+      complete: () => {
+        this.isLoading = true;
       },
     });
   }

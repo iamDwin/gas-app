@@ -80,7 +80,7 @@
         [columns]="currentColumns"
         [actions]="actions"
         [loading]="isLoading"
-        [loadingMessage]="'Loading ' + getCurrentTabLabel() + ' reports...'"
+        [loadingMessage]="isloadingMessage"
         (actionClick)="onActionClick($event)"
       >
       </app-data-table>

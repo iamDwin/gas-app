@@ -246,7 +246,7 @@ export class PendingDeclarationsComponent implements OnInit {
     this.loadingMessage = "Performing Action...";
     let currentUser = this.authService.getCurrentUser();
     let payload = {
-      id: this.declarationToActivate.id,
+      id: this.declarationToActivate.id.toString(),
       by: currentUser?.name,
       comment: `${this.actAction} declaration`,
     };

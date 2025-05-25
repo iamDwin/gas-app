@@ -95,7 +95,7 @@ export class PendingNominationsComponent implements OnInit {
   onActionClick(event: { action: TableAction; row: Nomination }) {
     switch (event.action.label) {
       case "View Details":
-        this.router.navigate(["/nominations", event.row.id]);
+        // this.router.navigate(["/nominations", event.row.id]);
         break;
       case "Edit":
         // this.editDeclaration(event.row);

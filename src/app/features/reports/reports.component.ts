@@ -11,6 +11,8 @@ import { AuthService } from "../../core/auth/auth.service";
 import { Declaration } from "../declarations/declaration.model";
 import { ReportService } from "./report.service";
 import { Router } from "@angular/router";
+import saveAs from "file-saver";
+import { ToastService } from "../../shared/services/toast.service";
 
 @Component({
   selector: "app-reports",
@@ -68,6 +70,7 @@ export class ReportsComponent implements OnInit {
   tempStartDate: string = "";
   tempEndDate: string = "";
   isLoading = false;
+  isloadingMessage = "Loading";
 
   // Sample data structure for each report type
   declarationColumns = [
@@ -112,7 +115,8 @@ export class ReportsComponent implements OnInit {
     private breadcrumbService: BreadcrumbService,
     private authService: AuthService,
     private reportService: ReportService,
-    private router: Router
+    private router: Router,
+    private toaster: ToastService
   ) {
     // Set default dates to current month
     const today = new Date();
@@ -264,10 +268,37 @@ export class ReportsComponent implements OnInit {
         this.router.navigate(["/reports", event.row.requestId]);
         break;
       case "Download Report":
-        this.downloadDeclarationReport(event.row);
+        this.downloadReport(event.row);
         break;
     }
   }
 
-  downloadDeclarationReport(data: any) {}
+  downloadReport(data: any) {
+    this.isLoading = true;
+    this.isloadingMessage = "Downloading Report";
+    const requestId = data.declarationId;
+    // { responseType: 'blob' }
+    this.reportService.downloadReport(requestId).subscribe({
+      next: (response) => {
+        console.log(response);
+        const blob = new Blob([response], { type: "application/pdf" });
+        saveAs(blob, "declaration-report.pdf");
+        this.toaster.show({
+          title: "Download Report",
+          message: "Report generated and downloaded successfully",
+          type: "success",
+        });
+      },
+      error: (error) => {
+        this.toaster.show({
+          title: "Download Error",
+          message: "Failed to download the report",
+          type: "error",
+        });
+      },
+      complete: () => {
+        this.isLoading = false;
+      },
+    });
+  }
 }

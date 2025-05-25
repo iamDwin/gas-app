@@ -97,6 +97,6 @@ export class ReportService {
           headers: this.getHeaders(),
         }
       )
-      .pipe(map((response) => response || []));
+      .pipe(map((response) => response));
   }
 }
