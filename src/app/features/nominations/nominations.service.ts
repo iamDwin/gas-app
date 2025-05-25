@@ -15,71 +15,7 @@ import { environment } from "../../../environments/environment";
 })
 export class NominationService {
   private apiUrl = environment.apiUrl;
-  // private declarations = new BehaviorSubject<Nomination[]>([
-  //   {
-  //     id: "1",
-  //     title: "January 2024 Nomination",
-  //     description: "Monthly declaration for January 2024",
-  //     status: "pending_org_approval",
-  //     organizationId: "1",
-  //     createdBy: "1",
-  //     createdAt: new Date("2024-01-15"),
-  //     updatedAt: new Date("2024-01-15"),
-  //     uploadedBy: "1",
-  //     institutionCode: "ENV001",
-  //     declaredQuantity: 1000,
-  //     startDate: "2024-01-01",
-  //     endDate: "2024-01-31",
-  //     dailyQuantities: this.generateDailyQuantities(
-  //       "2024-01-01",
-  //       "2024-01-31",
-  //       1000,
-  //       0.2
-  //     ),
-  //   },
-  //   {
-  //     id: "2",
-  //     title: "February 2024 Nomination",
-  //     description: "Monthly declaration for February 2024",
-  //     status: "approved",
-  //     organizationId: "2",
-  //     createdBy: "2",
-  //     createdAt: new Date("2024-02-01"),
-  //     updatedAt: new Date("2024-02-01"),
-  //     uploadedBy: "2",
-  //     institutionCode: "SAF001",
-  //     declaredQuantity: 500,
-  //     startDate: "2024-02-01",
-  //     endDate: "2024-02-29",
-  //     dailyQuantities: this.generateDailyQuantities(
-  //       "2024-02-01",
-  //       "2024-02-29",
-  //       500,
-  //       0.15
-  //     ),
-  //   },
-  //   {
-  //     id: "3",
-  //     title: "March 2024 Nomination",
-  //     description: "Monthly declaration for March 2024",
-  //     status: "draft",
-  //     organizationId: "1",
-  //     createdBy: "3",
-  //     createdAt: new Date("2024-03-01"),
-  //     updatedAt: new Date("2024-03-01"),
-  //     uploadedBy: "3",
-  //     institutionCode: "WST001",
-  //     declaredQuantity: 750,
-  //     startDate: "2024-03-01",
-  //     endDate: "2024-03-31",
-  //     dailyQuantities: this.generateDailyQuantities(
-  //       "2024-03-01",
-  //       "2024-03-31",
-  //       750,
-  //       0.1
-  //     ),
-  //   },
-  // ]);
+
   nominations: Nomination[] = [];
   // private approvals = new BehaviorSubject<NominationApproval[]>([]);
 
@@ -94,7 +30,7 @@ export class NominationService {
     });
   }
 
-  getDeclarations = () => {
+  getNominations = () => {
     const user = this.authService.getCurrentUser();
     let path = "";
     if (!user) {
@@ -102,11 +38,12 @@ export class NominationService {
     }
 
     if (user.type == "M" || user.type == "G")
-      path = `get_approved_declarations_midstream/${user.name}`;
-    else path = `get_approved_declarations/${user.organizationId}/${user.name}`;
+      path = `/declaration/api/v1/get_approved_nomination_midstream/${user.name}`;
+    else
+      path = `/declaration/api/v1/get_approved_nomination/${user.organizationId}/${user.name}`;
 
     return this.http
-      .get<any>(`${this.apiUrl}/declaration/api/v1/${path}`, {
+      .get<any>(`${this.apiUrl}${path}`, {
         headers: this.getHeaders(),
       })
       .pipe(map((response) => response || []));

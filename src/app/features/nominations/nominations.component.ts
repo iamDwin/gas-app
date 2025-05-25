@@ -14,16 +14,12 @@ import { NotificationService } from "../../shared/services/notification.service"
 import { ButtonComponent } from "../../shared/components/button/button.component";
 import { Nomination } from "./nominations.model";
 import { NominationService } from "./nominations.service";
+import { FormsComponent } from "./forms/forms.component";
 
 @Component({
   selector: "app-nominations",
   standalone: true,
-  imports: [
-    CommonModule,
-    // DeclarationFormComponent,
-    DataTableComponent,
-    ButtonComponent,
-  ],
+  imports: [CommonModule, FormsComponent, DataTableComponent, ButtonComponent],
   templateUrl: "./nominations.component.html",
 })
 export class NominationsComponent implements OnInit {
@@ -73,7 +69,7 @@ export class NominationsComponent implements OnInit {
       { label: "Nominations", link: "/nominations" },
     ]);
 
-    // this.loadDeclarations();
+    this.loadNominations();
   }
 
   formatDate(date: string): string {
@@ -92,15 +88,16 @@ export class NominationsComponent implements OnInit {
     }));
   }
 
-  loadDeclarations() {
+  loadNominations() {
     this.isLoading = true;
-    setTimeout(() => {
-      this.nominationService.getDeclarations().subscribe((nomination: any) => {
-        this.declarations = nomination;
-        this.formatDeclarations(nomination);
-        this.isLoading = false;
-      });
-    }, 1000);
+    // setTimeout(() => {
+    this.nominationService.getNominations().subscribe((nomination: any) => {
+      console.log({ nomination });
+      this.declarations = nomination;
+      this.formatDeclarations(nomination);
+      this.isLoading = false;
+    });
+    // }, 1000);
   }
 
   onActionClick(event: { action: TableAction; row: Nomination }) {

@@ -1,0 +1,114 @@
+<app-drawer
+  [isOpen]="true"
+  [title]="nomination ? 'Update Nomination' : 'New Nomination'"
+  (close)="onCancel.emit()"
+>
+  <div drawerContent>
+    <form [formGroup]="form" class="space-y-4">
+      <!-- <div *ngIf="isMidStreamAdmin()">
+        <label class="block text-sm font-medium text-gray-700">
+          Institution <span class="text-red-500">*</span>
+        </label>
+        <app-institution-dropdown
+          [institutions]="institutions"
+          [selectedInstitution]="selectedInstitution"
+          (institutionSelected)="onInstitutionSelected($event)"
+          placeholder="Select an institution"
+        ></app-institution-dropdown>
+      </div> -->
+
+      <div>
+        <label class="block text-sm font-medium text-gray-700">
+          Institution <span class="text-red-500">*</span>
+        </label>
+        <input
+          type="text"
+          readonly="true"
+          formControlName="institutionCode"
+          [value]="currentUser?.organizationId || ''"
+          class="mt-1 block w-full min-h-[44px] text-red rounded-xl border-gray-300 shadow-sm focus:border-primary focus:ring-primary sm:text-sm pr-10 border border-[#E9EAEB] shadow-[0px_1px_2px_0px_rgba(10,13,18,0.05)]"
+        />
+      </div>
+
+      <div>
+        <label class="block text-sm font-medium text-gray-700">
+          Declared Quantity (MMscf) <span class="text-red-500">*</span>
+        </label>
+        <input
+          type="number"
+          min="0"
+          formControlName="declaredQuantity"
+          class="mt-1 block w-full min-h-[44px] rounded-xl border-gray-300 shadow-sm focus:border-primary focus:ring-primary sm:text-sm pr-10 border border-[#E9EAEB] shadow-[0px_1px_2px_0px_rgba(10,13,18,0.05)]"
+        />
+      </div>
+
+      <!-- <div>
+        <label class="block text-sm font-medium text-gray-700">
+          Start Date <span class="text-red-500">*</span>
+        </label>
+        <input
+          type="date"
+          formControlName="startDate"
+          class="mt-1 block w-full min-h-[44px] p-2 rounded-xl border-gray-300 shadow-sm focus:border-primary focus:ring-primary sm:text-sm pr-10 border border-[#E9EAEB] shadow-[0px_1px_2px_0px_rgba(10,13,18,0.05)]"
+        />
+      </div> -->
+      <!-- 
+      <div>
+        <label class="block text-sm font-medium text-gray-700">
+          End Date <span class="text-red-500">*</span>
+        </label>
+        <input
+          type="date"
+          formControlName="endDate"
+          class="mt-1 block w-full min-h-[44px] p-2 rounded-xl border-gray-300 shadow-sm focus:border-primary focus:ring-primary sm:text-sm pr-10 border border-[#E9EAEB] shadow-[0px_1px_2px_0px_rgba(10,13,18,0.05)]"
+        />
+      </div> -->
+    </form>
+  </div>
+
+  <div drawerFooter>
+    <div class="flex justify-end space-x-2">
+      <app-button variant="defaultDanger" (click)="onCancel.emit()">
+        Cancel
+        <svg
+          class="ml-2"
+          width="20"
+          height="20"
+          viewBox="0 0 20 20"
+          fill="none"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <path
+            d="M7.5 7.5L12.5 12.5M12.5 7.5L7.5 12.5M6.5 17.5H13.5C14.9001 17.5 15.6002 17.5 16.135 17.2275C16.6054 16.9878 16.9878 16.6054 17.2275 16.135C17.5 15.6002 17.5 14.9001 17.5 13.5V6.5C17.5 5.09987 17.5 4.3998 17.2275 3.86502C16.9878 3.39462 16.6054 3.01217 16.135 2.77248C15.6002 2.5 14.9001 2.5 13.5 2.5H6.5C5.09987 2.5 4.3998 2.5 3.86502 2.77248C3.39462 3.01217 3.01217 3.39462 2.77248 3.86502C2.5 4.3998 2.5 5.09987 2.5 6.5V13.5C2.5 14.9001 2.5 15.6002 2.77248 16.135C3.01217 16.6054 3.39462 16.9878 3.86502 17.2275C4.3998 17.5 5.09987 17.5 6.5 17.5Z"
+            stroke="currentColor"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          />
+        </svg>
+      </app-button>
+
+      <app-button
+        [disabled]="!form.valid"
+        (click)="onSubmit()"
+        variant="filled"
+      >
+        {{ nomination ? "Update" : "Nominate" }}
+        <svg
+          width="18"
+          class="ml-2"
+          height="18"
+          viewBox="0 0 20 20"
+          fill="none"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <path
+            d="M7.5 9.16667L10 11.6667L18.3333 3.33333M13.3333 2.5H6.5C5.09987 2.5 4.3998 2.5 3.86502 2.77248C3.39462 3.01217 3.01217 3.39462 2.77248 3.86502C2.5 4.3998 2.5 5.09987 2.5 6.5V13.5C2.5 14.9001 2.5 15.6002 2.77248 16.135C3.01217 16.6054 3.39462 16.9878 3.86502 17.2275C4.3998 17.5 5.09987 17.5 6.5 17.5H13.5C14.9001 17.5 15.6002 17.5 16.135 17.2275C16.6054 16.9878 16.9878 16.6054 17.2275 16.135C17.5 15.6002 17.5 14.9001 17.5 13.5V10"
+            stroke="currentColor"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          />
+        </svg>
+      </app-button>
+    </div>
+  </div>
+</app-drawer>
