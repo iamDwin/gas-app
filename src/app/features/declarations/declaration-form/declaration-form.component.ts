@@ -17,6 +17,7 @@ import { OrganizationService } from "../../organizations/organization.service";
 import { NotificationService } from "../../../shared/services/notification.service";
 import { ToastService } from "../../../shared/services/toast.service";
 import { AuthService, User } from "../../../core/auth/auth.service";
+import { ButtonComponent } from "../../../shared/components/button/button.component";
 
 @Component({
   selector: "app-declaration-form",
@@ -26,6 +27,7 @@ import { AuthService, User } from "../../../core/auth/auth.service";
     ReactiveFormsModule,
     DrawerComponent,
     InstitutionDropdownComponent,
+    ButtonComponent,
   ],
   templateUrl: "./declaration-form.component.html",
 })

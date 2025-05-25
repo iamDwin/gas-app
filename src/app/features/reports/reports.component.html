@@ -3,12 +3,12 @@
     <div class="p-4 flex justify-between items-center border-b border-gray-200">
       <!-- Tabs -->
       <div
-        class="flex rounded-lg bg-gray-100 p-1 relative"
+        class="flex rounded-xl bg-gray-100 p-1 relative"
         [style.width]="'500px'"
       >
         <!-- Sliding background -->
         <div
-          class="absolute top-1 bottom-1 rounded-md bg-primary transition-transform duration-300 ease-out"
+          class="absolute top-1 bottom-1 rounded-lg bg-primary transition-transform duration-300 ease-out"
           [style.width]="getTabWidth()"
           [style.transform]="'translateX(' + getTabPosition() + ')'"
         ></div>
@@ -18,7 +18,7 @@
           *ngFor="let tab of visibleTabs"
           (click)="switchTab(tab.id)"
           [disabled]="tab.disabled"
-          class="flex-1 text-sm font-medium py-2 px-4 rounded-md transition-colors duration-200 relative z-10"
+          class="flex-1 text-sm font-medium py-2 px-4 rounded-lg transition-colors duration-200 relative z-10"
           [class.text-white]="activeTab === tab.id"
           [class.text-gray-600]="activeTab !== tab.id"
         >
@@ -34,7 +34,7 @@
             type="date"
             disabled="true"
             [(ngModel)]="tempStartDate"
-            class="px-3 py-2 border border-gray-300 rounded-md text-sm"
+            class="px-3 py-2 border border-gray-300 rounded-xl text-sm block w-full min-h-[40px] rounded-xl border-gray-300 shadow-sm focus:border-primary focus:ring-primary sm:text-sm border border-[#E9EAEB] shadow-[0px_1px_2px_0px_rgba(10,13,18,0.05)]"
           />
         </div>
         <div class="flex items-center gap-2">
@@ -43,7 +43,7 @@
             type="date"
             disabled="true"
             [(ngModel)]="tempEndDate"
-            class="px-3 py-2 border border-gray-300 rounded-md text-sm"
+            class="px-3 py-2 border border-gray-300 rounded-xl text-sm block w-full min-h-[40px] rounded-xl border-gray-300 shadow-sm focus:border-primary focus:ring-primary sm:text-sm border border-[#E9EAEB] shadow-[0px_1px_2px_0px_rgba(10,13,18,0.05)]"
           />
         </div>
         <app-button
@@ -53,7 +53,22 @@
           [disabled]="true"
         >
           <!-- [disabled]="!isDateRangeValid" -->
-          Apply Date Filter
+          Apply Filter
+          <svg
+            class="ml-2"
+            width="20"
+            height="20"
+            viewBox="0 0 20 20"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              d="M7.5 9.16667L10 11.6667L18.3333 3.33333M13.3333 2.5H6.5C5.09987 2.5 4.3998 2.5 3.86502 2.77248C3.39462 3.01217 3.01217 3.39462 2.77248 3.86502C2.5 4.3998 2.5 5.09987 2.5 6.5V13.5C2.5 14.9001 2.5 15.6002 2.77248 16.135C3.01217 16.6054 3.39462 16.9878 3.86502 17.2275C4.3998 17.5 5.09987 17.5 6.5 17.5H13.5C14.9001 17.5 15.6002 17.5 16.135 17.2275C16.6054 16.9878 16.9878 16.6054 17.2275 16.135C17.5 15.6002 17.5 14.9001 17.5 13.5V10"
+              stroke="#414651"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
+          </svg>
         </app-button>
       </div>
     </div>
