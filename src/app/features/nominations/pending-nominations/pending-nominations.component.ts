@@ -9,6 +9,7 @@ import {
 import { FormsComponent } from "../forms/forms.component";
 import { Nomination } from "../nominations.model";
 import { Router } from "@angular/router";
+import { ToastService } from "../../../shared/services/toast.service";
 
 @Component({
   selector: "app-pending-nominations",
@@ -21,7 +22,7 @@ export class PendingNominationsComponent implements OnInit {
   loadingMessage = "loading...";
   formattedNominations: any[] = [];
   isDrawerOpen = false;
-  selectedDeclaration?: Nomination;
+  selectedNomination?: Nomination;
   nominations?: Nomination[];
 
   columns = [
@@ -35,15 +36,19 @@ export class PendingNominationsComponent implements OnInit {
   ];
 
   actions: TableAction[] = [
+    // {
+    //   label: "View Details",
+    //   type: "primary",
+    // },
     {
-      label: "View Details",
-      type: "primary",
+      label: "Nominate",
+      type: "success",
     },
-    {
-      label: "Edit",
-      type: "primary",
-      isDisabled: (row: Nomination) => row.status !== "draft",
-    },
+    // {
+    //   label: "Edit",
+    //   type: "primary",
+    //   isDisabled: (row: Nomination) => row.status !== "draft",
+    // },
     // {
     //   label: "Delete",
     //   type: "danger",
@@ -54,7 +59,8 @@ export class PendingNominationsComponent implements OnInit {
   constructor(
     private nominationService: NominationService,
     private breadcrumbService: BreadcrumbService,
-    private router: Router
+    private router: Router,
+    private toaster: ToastService
   ) {}
 
   ngOnInit() {
@@ -97,16 +103,50 @@ export class PendingNominationsComponent implements OnInit {
       case "View Details":
         // this.router.navigate(["/nominations", event.row.id]);
         break;
-      case "Edit":
-        // this.editDeclaration(event.row);
+      case "Nominate":
+        this.openDrawer(event.row);
         break;
       case "Delete":
         // this.deleteDeclaration(event.row.id);
         break;
     }
   }
+
+  openDrawer(data: any) {
+    this.selectedNomination = data;
+    this.isDrawerOpen = true;
+  }
+
   closeDrawer() {
     this.isDrawerOpen = false;
-    this.selectedDeclaration = undefined;
+    this.selectedNomination = undefined;
+  }
+
+  saveDeclaration(data: any) {
+    console.log(data);
+    this.isLoading = true;
+    this.nominationService.nominate(data).subscribe({
+      next: (response) => {
+        console.log(response);
+        this.toaster.show({
+          title: "Create Declaration Action",
+          message: `${response.errorMessage}`,
+          type: response.errorCode == "1" ? "error" : "success",
+        });
+      },
+      error: (error) => {
+        console.log(error);
+        this.toaster.show({
+          title: "Create Declaration Action",
+          message: `${error.errorMessage}`,
+          type: error.errorCode == "1" ? "error" : "success",
+        });
+      },
+      complete: () => {
+        this.isLoading = false;
+        this.closeDrawer();
+        this.loadPendingNominations();
+      },
+    });
   }
 }

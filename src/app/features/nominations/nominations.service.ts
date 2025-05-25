@@ -66,6 +66,23 @@ export class NominationService {
       .pipe(map((response) => response || []));
   };
 
+  nominate(payload: any): Observable<any | undefined> {
+    const user = this.authService.getCurrentUser();
+    if (!user) {
+      return new Observable((subscriber) => subscriber.next([]));
+    }
+    const path = `/declaration/api/v1/nominate_declaration_request?id=${payload.id}&by=${payload.by}&comment=${payload.comment}&confirmedQuantity=${payload.confirmedQuantity}`;
+    return this.http
+      .post<any>(
+        `${this.apiUrl}${path}`,
+        { ...payload },
+        {
+          headers: this.getHeaders(),
+        }
+      )
+      .pipe(map((response) => response));
+  }
+
   // private generateDailyQuantities(
   //   startDate: string,
   //   endDate: string,

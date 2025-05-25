@@ -1,22 +1,10 @@
 <app-drawer
   [isOpen]="true"
-  [title]="nomination ? 'Update Nomination' : 'New Nomination'"
+  [title]="nomination ? 'Nomination' : 'New Nomination'"
   (close)="onCancel.emit()"
 >
   <div drawerContent>
     <form [formGroup]="form" class="space-y-4">
-      <!-- <div *ngIf="isMidStreamAdmin()">
-        <label class="block text-sm font-medium text-gray-700">
-          Institution <span class="text-red-500">*</span>
-        </label>
-        <app-institution-dropdown
-          [institutions]="institutions"
-          [selectedInstitution]="selectedInstitution"
-          (institutionSelected)="onInstitutionSelected($event)"
-          placeholder="Select an institution"
-        ></app-institution-dropdown>
-      </div> -->
-
       <div>
         <label class="block text-sm font-medium text-gray-700">
           Institution <span class="text-red-500">*</span>
@@ -25,44 +13,45 @@
           type="text"
           readonly="true"
           formControlName="institutionCode"
-          [value]="currentUser?.organizationId || ''"
           class="mt-1 block w-full min-h-[44px] text-red rounded-xl border-gray-300 shadow-sm focus:border-primary focus:ring-primary sm:text-sm pr-10 border border-[#E9EAEB] shadow-[0px_1px_2px_0px_rgba(10,13,18,0.05)]"
         />
       </div>
 
       <div>
         <label class="block text-sm font-medium text-gray-700">
-          Declared Quantity (MMscf) <span class="text-red-500">*</span>
+          Nominated Quantity (MMscf) <span class="text-red-500">*</span>
         </label>
         <input
           type="number"
           min="0"
-          formControlName="declaredQuantity"
+          formControlName="confirmedQuantity"
           class="mt-1 block w-full min-h-[44px] rounded-xl border-gray-300 shadow-sm focus:border-primary focus:ring-primary sm:text-sm pr-10 border border-[#E9EAEB] shadow-[0px_1px_2px_0px_rgba(10,13,18,0.05)]"
         />
       </div>
 
-      <!-- <div>
+      <div>
         <label class="block text-sm font-medium text-gray-700">
           Start Date <span class="text-red-500">*</span>
         </label>
         <input
           type="date"
+          [readonly]="true"
           formControlName="startDate"
           class="mt-1 block w-full min-h-[44px] p-2 rounded-xl border-gray-300 shadow-sm focus:border-primary focus:ring-primary sm:text-sm pr-10 border border-[#E9EAEB] shadow-[0px_1px_2px_0px_rgba(10,13,18,0.05)]"
         />
-      </div> -->
-      <!-- 
+      </div>
+
       <div>
         <label class="block text-sm font-medium text-gray-700">
           End Date <span class="text-red-500">*</span>
         </label>
         <input
           type="date"
+          [readonly]="true"
           formControlName="endDate"
           class="mt-1 block w-full min-h-[44px] p-2 rounded-xl border-gray-300 shadow-sm focus:border-primary focus:ring-primary sm:text-sm pr-10 border border-[#E9EAEB] shadow-[0px_1px_2px_0px_rgba(10,13,18,0.05)]"
         />
-      </div> -->
+      </div>
     </form>
   </div>
 
@@ -92,7 +81,7 @@
         (click)="onSubmit()"
         variant="filled"
       >
-        {{ nomination ? "Update" : "Nominate" }}
+        {{ nomination ? "Nominate" : "Nominate" }}
         <svg
           width="18"
           class="ml-2"

@@ -193,8 +193,9 @@ export class DeclarationService {
     }
     let path = "";
     if (user.type !== "M")
-      path = "/declaration/api/v1/approve_declaration_request";
-    else path = "/declaration/api/v1/approve_nomination_declaration_request";
+      path = `/declaration/api/v1/approve_declaration_request?id=${payload.id}&by=${payload.by}&comment=${payload.comment}`;
+    else
+      path = `/declaration/api/v1/approve_declaration_request?id=${payload.id}&by=${payload.by}&comment=${payload.comment}`;
 
     return this.http
       .post<any>(

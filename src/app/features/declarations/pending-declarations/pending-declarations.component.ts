@@ -282,6 +282,10 @@ export class PendingDeclarationsComponent implements OnInit {
               type: error.errorCode == "1" ? "error" : "success",
             });
           },
+          complete: () => {
+            this.isLoading = false;
+            this.loadPendingDeclarations();
+          },
         });
     } else {
       this.declarationService
@@ -295,8 +299,9 @@ export class PendingDeclarationsComponent implements OnInit {
             type: response.errorCode == "1" ? "error" : "success",
           });
         });
+      this.loadPendingDeclarations();
+      this.isLoading = false;
     }
-    this.isLoading = false;
   };
 
   deleteDeclaration(id: string) {

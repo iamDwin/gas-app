@@ -16,9 +16,12 @@
     [class.drawer-open]="isDrawerOpen"
     [class.drawer-closed]="!isDrawerOpen"
   >
-    <!-- [declaration]="selectedDeclaration"
-  (save)="saveDeclaration($event)" -->
-    <app-forms *ngIf="isDrawerOpen" (onCancel)="closeDrawer()"></app-forms>
+    <app-forms
+      (save)="saveDeclaration($event)"
+      [nomination]="selectedNomination"
+      *ngIf="isDrawerOpen"
+      (onCancel)="closeDrawer()"
+    ></app-forms>
   </div>
 
   <!-- Backdrop -->

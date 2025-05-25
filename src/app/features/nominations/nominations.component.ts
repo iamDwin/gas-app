@@ -19,9 +19,10 @@ import { FormsComponent } from "./forms/forms.component";
 @Component({
   selector: "app-nominations",
   standalone: true,
-  imports: [CommonModule, FormsComponent, DataTableComponent, ButtonComponent],
+  imports: [CommonModule, FormsComponent, DataTableComponent],
   templateUrl: "./nominations.component.html",
 })
+// ButtonComponent
 export class NominationsComponent implements OnInit {
   declarations: Nomination[] = [];
   formattedDeclarations: any[] = [];

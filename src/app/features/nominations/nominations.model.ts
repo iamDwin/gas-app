@@ -30,6 +30,8 @@ export interface Nomination {
   rejectedBy?: string;
   rejectedAt?: Date;
   rejectionReason?: string;
+  periodEndDate: string;
+  periodStartDate: string;
 }
 
 export interface CreateNominationRequest {

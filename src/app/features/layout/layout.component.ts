@@ -71,7 +71,7 @@ export class LayoutComponent implements OnInit {
       children: [
         { path: "/declarations", label: "All Declarations" },
         { path: "/declarations/pending", label: "Pending Declarations" },
-        { path: "/declarations/declined", label: "Declined Declarations" },
+        // { path: "/declarations/declined", label: "Declined Declarations" },
       ],
     },
     {
