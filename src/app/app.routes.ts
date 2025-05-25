@@ -177,12 +177,25 @@ export const routes: Routes = [
             "./features/pending-approvals/pending-approvals.component"
           ).then((m) => m.PendingApprovalsComponent),
       },
+
       {
         path: "reports",
-        loadComponent: () =>
-          import("./features/reports/reports.component").then(
-            (m) => m.ReportsComponent
-          ),
+        children: [
+          {
+            path: "",
+            loadComponent: () =>
+              import("./features/reports/reports.component").then(
+                (m) => m.ReportsComponent
+              ),
+          },
+          {
+            path: ":id",
+            loadComponent: () =>
+              import(
+                "./features/reports/report-details/report-details.component"
+              ).then((m) => m.ReportDetailsComponent),
+          },
+        ],
       },
       {
         path: "",

@@ -10,6 +10,7 @@ import { ButtonComponent } from "../../shared/components/button/button.component
 import { AuthService } from "../../core/auth/auth.service";
 import { Declaration } from "../declarations/declaration.model";
 import { ReportService } from "./report.service";
+import { Router } from "@angular/router";
 
 @Component({
   selector: "app-reports",
@@ -110,7 +111,8 @@ export class ReportsComponent implements OnInit {
   constructor(
     private breadcrumbService: BreadcrumbService,
     private authService: AuthService,
-    private reportService: ReportService
+    private reportService: ReportService,
+    private router: Router
   ) {
     // Set default dates to current month
     const today = new Date();
@@ -206,14 +208,6 @@ export class ReportsComponent implements OnInit {
     }
   }
 
-  // loadData() {
-  //   this.isLoading = true;
-  //   // Simulate API call
-  //   setTimeout(() => {
-  //     // Here you would normally filter data based on date range
-  //     this.isLoading = false;
-  //   }, 1000);
-  // }
   loadData() {
     this.isLoading = true;
     const params = {
@@ -263,4 +257,17 @@ export class ReportsComponent implements OnInit {
         break;
     }
   }
+
+  onActionClick(event: { action: TableAction; row: Declaration }) {
+    switch (event.action.label) {
+      case "View Details":
+        this.router.navigate(["/reports", event.row.requestId]);
+        break;
+      case "Download Report":
+        this.downloadDeclarationReport(event.row);
+        break;
+    }
+  }
+
+  downloadDeclarationReport(data: any) {}
 }

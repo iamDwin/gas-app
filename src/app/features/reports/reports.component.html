@@ -81,6 +81,7 @@
         [actions]="actions"
         [loading]="isLoading"
         [loadingMessage]="'Loading ' + getCurrentTabLabel() + ' reports...'"
+        (actionClick)="onActionClick($event)"
       >
       </app-data-table>
     </div>
