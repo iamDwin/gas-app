@@ -12,11 +12,21 @@ import { AuthService } from "../../../core/auth/auth.service";
 import { BreadcrumbService } from "../../../shared/services/breadcrumb.service";
 import { NotificationService } from "../../../shared/services/notification.service";
 import { ButtonComponent } from "../../../shared/components/button/button.component";
+import {
+  ConfirmationModalComponent,
+  ConfirmationModalConfig,
+} from "../../../shared/components/confirmation-modal/confirmation-modal.component";
+import { ToastService } from "../../../shared/services/toast.service";
 
 @Component({
   selector: "app-pending-declarations",
   standalone: true,
-  imports: [CommonModule, DeclarationFormComponent, DataTableComponent],
+  imports: [
+    CommonModule,
+    DeclarationFormComponent,
+    DataTableComponent,
+    ConfirmationModalComponent,
+  ],
   templateUrl: "./pending-declaration.component.html",
 })
 export class PendingDeclarationsComponent implements OnInit {
@@ -25,6 +35,9 @@ export class PendingDeclarationsComponent implements OnInit {
   isDrawerOpen = false;
   selectedDeclaration?: Declaration;
   isLoading = false;
+  showConfirmModal = false;
+  declarationToActivate: any;
+  actAction: any;
   loadingMessage = "Loading Pending Declarations..";
 
   columns = [
@@ -64,12 +77,29 @@ export class PendingDeclarationsComponent implements OnInit {
     // },
   ];
 
+  approveDeclarationConfig: ConfirmationModalConfig = {
+    title: "Approve Declaration",
+    message: "Are you sure you want to approve this declaration ?",
+    confirmText: "Approve Declaration",
+    cancelText: "Cancel",
+    type: "warning",
+  };
+  declineDeclarationConfig: ConfirmationModalConfig = {
+    title: "Decline Declaration",
+    message: "Are you sure you want to decline this declaration ?",
+    confirmText: "Decline Declaration",
+    cancelText: "Cancel",
+    type: "danger",
+  };
+  activateModalMessage: ConfirmationModalConfig = this.approveDeclarationConfig;
+
   constructor(
     private declarationService: DeclarationService,
     private authService: AuthService,
     private breadcrumbService: BreadcrumbService,
     private notificationService: NotificationService,
-    private router: Router
+    private router: Router,
+    private toaster: ToastService
   ) {}
 
   ngOnInit() {
@@ -117,10 +147,10 @@ export class PendingDeclarationsComponent implements OnInit {
         this.router.navigate(["/declarations", event.row.requestId]);
         break;
       case "Approve":
-        this.editDeclaration(event.row);
+        this.declarationAction(event.row, "approve");
         break;
       case "Decline":
-        this.editDeclaration(event.row);
+        this.declarationAction(event.row, "decline");
         break;
       case "Edit":
         this.editDeclaration(event.row);
@@ -193,6 +223,81 @@ export class PendingDeclarationsComponent implements OnInit {
       this.closeDrawer();
     }, 2000);
   }
+
+  declarationAction(data: any, action: string) {
+    if (action === "approve")
+      this.activateModalMessage = this.approveDeclarationConfig;
+    else this.activateModalMessage = this.declineDeclarationConfig;
+    this.showConfirmModal = true;
+    this.declarationToActivate = data;
+    this.actAction = action;
+    console.log({ data, action }, this.declarationToActivate);
+  }
+
+  cancelActivate() {
+    this.showConfirmModal = false;
+    this.declarationToActivate = undefined;
+    this.actAction = "";
+  }
+
+  confirmAction = () => {
+    this.isLoading = true;
+    this.showConfirmModal = false;
+    this.loadingMessage = "Performing Action...";
+    let currentUser = this.authService.getCurrentUser();
+    let payload = {
+      id: this.declarationToActivate.id,
+      by: currentUser?.name,
+      comment: `${this.actAction} declaration`,
+    };
+
+    if (this.actAction == "approve") {
+      this.declarationService
+        .approveDeclaration(payload, this.actAction)
+        .subscribe({
+          next: (response) => {
+            // console.log({ response });
+            this.isLoading = false;
+            this.notificationService.addNotification({
+              title: "Declaration Request",
+              message: `${response.errorMessage}`,
+              type: response.errorCode == "1" ? "error" : "success",
+            });
+            this.toaster.show({
+              title: "Declaration Request",
+              message: `${response.errorMessage}`,
+              type: response.errorCode == "1" ? "error" : "success",
+            });
+          },
+          error: (error) => {
+            this.isLoading = false;
+            this.notificationService.addNotification({
+              title: "Declaration Request",
+              message: `${error.errorMessage}`,
+              type: error.errorCode == "1" ? "error" : "success",
+            });
+            this.toaster.show({
+              title: "Declaration Request",
+              message: `${error.errorMessage}`,
+              type: error.errorCode == "1" ? "error" : "success",
+            });
+          },
+        });
+    } else {
+      this.declarationService
+        .declineDeclaration(payload, this.actAction)
+        .subscribe((response) => {
+          // console.log(response);
+          this.isLoading = false;
+          this.toaster.show({
+            title: "Declaration Request",
+            message: `${response.errorMessage}`,
+            type: response.errorCode == "1" ? "error" : "success",
+          });
+        });
+    }
+    this.isLoading = false;
+  };
 
   deleteDeclaration(id: string) {
     if (confirm("Are you sure you want to delete this declaration?")) {

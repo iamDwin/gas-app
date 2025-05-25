@@ -1,6 +1,30 @@
 <div class="p-4">
-  <!-- <h1 class="text-2xl font-bold mb-6">Nominations</h1> -->
-  <div class="bg-white rounded-lg shadow p-6">
-    <p class="text-gray-500">Pending Nomination functionality coming soon...</p>
+  <app-data-table
+    [rows]="formattedNominations"
+    [columns]="columns"
+    [actions]="actions"
+    [loading]="isLoading"
+    [loadingMessage]="loadingMessage"
+    defaultSort="createdAt"
+    (actionClick)="onActionClick($event)"
+  >
+  </app-data-table>
+
+  <!-- Drawer -->
+  <div
+    class="drawer"
+    [class.drawer-open]="isDrawerOpen"
+    [class.drawer-closed]="!isDrawerOpen"
+  >
+    <!-- [declaration]="selectedDeclaration"
+  (save)="saveDeclaration($event)" -->
+    <app-forms *ngIf="isDrawerOpen" (onCancel)="closeDrawer()"></app-forms>
   </div>
+
+  <!-- Backdrop -->
+  <div
+    *ngIf="isDrawerOpen"
+    class="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity z-50"
+    (click)="closeDrawer()"
+  ></div>
 </div>

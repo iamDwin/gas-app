@@ -90,14 +90,12 @@ export class NominationsComponent implements OnInit {
 
   loadNominations() {
     this.isLoading = true;
-    // setTimeout(() => {
     this.nominationService.getNominations().subscribe((nomination: any) => {
       console.log({ nomination });
       this.declarations = nomination;
       this.formatDeclarations(nomination);
       this.isLoading = false;
     });
-    // }, 1000);
   }
 
   onActionClick(event: { action: TableAction; row: Nomination }) {

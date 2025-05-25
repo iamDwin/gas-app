@@ -15,9 +15,7 @@ import { environment } from "../../../environments/environment";
 })
 export class NominationService {
   private apiUrl = environment.apiUrl;
-
   nominations: Nomination[] = [];
-  // private approvals = new BehaviorSubject<NominationApproval[]>([]);
 
   constructor(private authService: AuthService, private http: HttpClient) {}
 
@@ -41,6 +39,25 @@ export class NominationService {
       path = `/declaration/api/v1/get_approved_nomination_midstream/${user.name}`;
     else
       path = `/declaration/api/v1/get_approved_nomination/${user.organizationId}/${user.name}`;
+
+    return this.http
+      .get<any>(`${this.apiUrl}${path}`, {
+        headers: this.getHeaders(),
+      })
+      .pipe(map((response) => response || []));
+  };
+
+  getPendingNominations = () => {
+    const user = this.authService.getCurrentUser();
+    let path = "";
+    if (!user) {
+      return new Observable((subscriber) => subscriber.next([]));
+    }
+
+    if (user.type == "M" || user.type == "G")
+      path = `/declaration/api/v1/get_pending_nominations_midstream/${user.name}`;
+    else
+      path = `/declaration/api/v1/get_pending_nominations/${user.organizationId}/${user.name}`;
 
     return this.http
       .get<any>(`${this.apiUrl}${path}`, {

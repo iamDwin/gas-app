@@ -85,7 +85,7 @@ export class LayoutComponent implements OnInit {
       children: [
         { path: "/nominations", label: "Nominations" },
         { path: "/nominations/pending", label: "Pending Nominations" },
-        { path: "/nominations/declined", label: "Declined Nominations" },
+        // { path: "/nominations/declined", label: "Declined Nominations" },
       ],
     },
     {

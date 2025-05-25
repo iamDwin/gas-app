@@ -24,6 +24,12 @@
     ></app-declaration-form>
   </div>
 
+  <app-confirmation-modal
+    [show]="showConfirmModal"
+    [config]="activateModalMessage"
+    (onCancel)="cancelActivate()"
+    (onConfirm)="confirmAction()"
+  ></app-confirmation-modal>
   <!-- Backdrop -->
   <div
     *ngIf="isDrawerOpen"

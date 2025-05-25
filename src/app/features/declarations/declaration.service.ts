@@ -186,6 +186,50 @@ export class DeclarationService {
       .pipe(map((response) => response.declarationStatementDetailsList || []));
   }
 
+  approveDeclaration(payload: any, action: string) {
+    const user = this.authService.getCurrentUser();
+    if (!user) {
+      return new Observable((subscriber) => subscriber.next([]));
+    }
+    let path = "";
+    if (user.type !== "M")
+      path = "/declaration/api/v1/approve_declaration_request";
+    else path = "/declaration/api/v1/approve_nomination_declaration_request";
+
+    return this.http
+      .post<any>(
+        `${this.apiUrl}${path}`,
+        { ...payload },
+        {
+          headers: this.getHeaders(),
+        }
+      )
+      .pipe(map((response) => response));
+  }
+
+  declineDeclaration(payload: any, action: string) {
+    const user = this.authService.getCurrentUser();
+    if (!user) {
+      return new Observable((subscriber) => subscriber.next([]));
+    }
+    let path = "";
+    if (user.type !== "M")
+      path = "/declaration/api/v1/decline_approval_declaration_request";
+    else
+      path =
+        "/declaration/api/v1/decline_approval_nomination_declaration_request";
+
+    return this.http
+      .post<any>(
+        `${this.apiUrl}${path}`,
+        { ...payload },
+        {
+          headers: this.getHeaders(),
+        }
+      )
+      .pipe(map((response) => response));
+  }
+
   // updateDailyQuantity(
   //   declarationId: string,
   //   date: string,
