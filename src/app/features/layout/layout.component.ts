@@ -170,13 +170,13 @@ export class LayoutComponent implements OnInit {
     });
 
     // Update menu item counts
-    this.pendingItemsService.pendingDeclarations$.subscribe((count) => {
-      this.updateMenuItemCount("declarations", count);
-    });
+    // this.pendingItemsService.pendingDeclarations$.subscribe((count) => {
+    //   this.updateMenuItemCount("declarations", count);
+    // });
 
-    this.pendingItemsService.pendingNominations$.subscribe((count) => {
-      this.updateMenuItemCount("nominations", count);
-    });
+    // this.pendingItemsService.pendingNominations$.subscribe((count) => {
+    //   this.updateMenuItemCount("nominations", count);
+    // });
 
     // this.pendingItemsService.pendingContracts$.subscribe((count) => {
     //   this.updateMenuItemCount("contracts", count);
@@ -187,11 +187,11 @@ export class LayoutComponent implements OnInit {
     // });
 
     // Update pending organizations count
-    this.organizationService
-      .getPendingOrganizations()
-      .subscribe((organizations) => {
-        this.pendingOrganizations = organizations.length;
-      });
+    // this.organizationService
+    //   .getPendingOrganizations()
+    //   .subscribe((organizations) => {
+    //     this.pendingOrganizations = organizations.length;
+    //   });
 
     // Update user info
     const user = this.authService.getCurrentUser();
