@@ -17,7 +17,8 @@ import { ButtonComponent } from "../../../shared/components/button/button.compon
 @Component({
   selector: "app-declaration-daily-view",
   standalone: true,
-  imports: [CommonModule, FormsModule, LoadingComponent, ButtonComponent],
+  imports: [CommonModule, FormsModule, LoadingComponent],
+  // ButtonComponent
   templateUrl: "./declaration-daily-view.component.html",
 })
 export class DeclarationDailyViewComponent implements OnInit {

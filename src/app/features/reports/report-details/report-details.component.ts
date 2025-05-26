@@ -250,7 +250,7 @@ export class ReportDetailsComponent implements OnInit {
         });
       },
       complete: () => {
-        this.isLoading = true;
+        this.isLoading = false;
       },
     });
   }

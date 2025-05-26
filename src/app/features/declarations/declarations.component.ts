@@ -182,6 +182,7 @@ export class DeclarationsComponent implements OnInit {
             message: `${response.errorMessage}`,
             type: response.errorCode == "1" ? "error" : "success",
           });
+          this.router.navigateByUrl("/declarations/pending");
         },
         error: (errorResponse) => {
           this.toaster.show({

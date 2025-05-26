@@ -39,16 +39,17 @@ export class PendingDeclarationsComponent implements OnInit {
   declarationToActivate: any;
   actAction: any;
   loadingMessage = "Loading Pending Declarations..";
+  currentUser = this.authService.getCurrentUser();
 
   columns = [
     { prop: "requestId", name: "#" },
-    { prop: "institutionCode", name: "# Code" },
-    { prop: "institutionName", name: "Institution" },
+    // { prop: "institutionCode", name: "# Code" },
+    // { prop: "institutionName", name: "Institution" },
     { prop: "declaredQuantity", name: "DCV (MMscf)" },
     { prop: "currentAgreedDcv", name: "Agreed DCV (MMscf)" },
     { prop: "periodStartDate", name: "From" },
     { prop: "periodEndDate", name: "To" },
-    // { prop: "status", name: "Status" },
+    { prop: "declarationStatus", name: "Status" },
     { prop: "actions", name: "Actions", sortable: false },
   ];
 
@@ -60,21 +61,13 @@ export class PendingDeclarationsComponent implements OnInit {
     {
       label: "Approve",
       type: "success",
+      isDisabled: (row: any) => row.declaredBy == this.currentUser?.name,
     },
     {
       label: "Decline",
       type: "danger",
+      isDisabled: (row: any) => row.declaredBy == this.currentUser?.name,
     },
-    // {
-    //   label: "Edit",
-    //   type: "primary",
-    //   isDisabled: (row: Declaration) => row.status !== "draft",
-    // },
-    // {
-    //   label: "Delete",
-    //   type: "danger",
-    //   isDisabled: (row: Declaration) => row.status !== "draft",
-    // },
   ];
 
   approveDeclarationConfig: ConfirmationModalConfig = {
@@ -112,26 +105,46 @@ export class PendingDeclarationsComponent implements OnInit {
   }
 
   formatDate(date: string): string {
-    return new Date(date).toLocaleDateString("en-US", {
+    const datte = new Date(date).toLocaleDateString("en-US", {
       year: "numeric",
       month: "short",
       day: "numeric",
     });
+
+    console.log({ datte });
+    return datte;
   }
 
   formatDeclarations(declarations: Declaration[]) {
     this.formattedDeclarations = declarations.map((declaration) => ({
       ...declaration,
-      startDate: this.formatDate(declaration.startDate),
-      endDate: this.formatDate(declaration.endDate),
+      periodStartDate: this.formatDate(declaration.periodStartDate),
+      periodEndDate: this.formatDate(declaration.periodEndDate),
+      declarationStatus: this.getDeclarationStatus(
+        declaration.declarationStatus
+      ),
     }));
+  }
+
+  getDeclarationStatus(status: number): string {
+    switch (status) {
+      case 0:
+        return "Pending Approval";
+      case 1:
+        return "Approved";
+      case 2:
+        return "Declined";
+      default:
+        return "Unknown Status";
+    }
   }
 
   loadPendingDeclarations() {
     this.isLoading = true;
     this.declarationService.getPendingDeclarations().subscribe({
       next: (response) => {
-        this.formattedDeclarations = response;
+        // this.formattedDeclarations = response;
+        this.formatDeclarations(response);
         this.isLoading = false;
       },
       error: (error) => {

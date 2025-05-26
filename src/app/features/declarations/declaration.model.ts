@@ -31,6 +31,9 @@ export interface Declaration {
   rejectedBy?: string;
   rejectedAt?: Date;
   rejectionReason?: string;
+  declarationStatus: number;
+  periodEndDate: string;
+  periodStartDate: string;
 }
 
 export interface DailyViewDeclaration {
