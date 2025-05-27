@@ -208,7 +208,7 @@ export class LoginComponent {
   isLoading = false;
   error: string | null = null;
   showPassword = false;
-  activeTab: "admin" | "institution" = "admin";
+  activeTab: "admin" | "institution" = "institution";
 
   constructor(
     private fb: FormBuilder,
