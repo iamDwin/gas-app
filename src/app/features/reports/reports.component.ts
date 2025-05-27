@@ -11,7 +11,7 @@ import { AuthService } from "../../core/auth/auth.service";
 import { Declaration } from "../declarations/declaration.model";
 import { ReportService } from "./report.service";
 import { Router } from "@angular/router";
-import saveAs from "file-saver";
+import { saveAs } from "file-saver";
 import { ToastService } from "../../shared/services/toast.service";
 
 @Component({
@@ -33,13 +33,13 @@ export class ReportsComponent implements OnInit {
       id: "nominations",
       label: "Nomination Reports",
       showFor: ["D", "M", "G"],
-      disabled: true,
+      disabled: false,
     },
     {
       id: "schedule",
       label: "Schedule Reports",
       showFor: ["U", "D", "M", "G"],
-      disabled: true,
+      disabled: false,
     },
   ];
 
@@ -277,12 +277,10 @@ export class ReportsComponent implements OnInit {
     this.isLoading = true;
     this.isloadingMessage = "Downloading Report";
     const requestId = data.declarationId;
-    // { responseType: 'blob' }
-    this.reportService.downloadReport(requestId).subscribe({
+    this.reportService.downloadReport2(requestId).subscribe({
       next: (response) => {
         console.log(response);
-        const blob = new Blob([response], { type: "application/pdf" });
-        saveAs(blob, "declaration-report.pdf");
+        this.downLoadFile(response, "declaration");
         this.toaster.show({
           title: "Download Report",
           message: "Report generated and downloaded successfully",
@@ -300,5 +298,27 @@ export class ReportsComponent implements OnInit {
         this.isLoading = false;
       },
     });
+  }
+
+  /**
+   * Method is use to download file.
+   * @param data - Array Buffer data
+   * @param type - type of the document.
+   */
+  downLoadFile(data: any, product: any) {
+    let binaryData = [];
+    binaryData.push(data);
+    let downloadLink = document.createElement("a");
+    downloadLink.href = window.URL.createObjectURL(
+      new Blob([data], {
+        type: "application/pdf",
+      })
+    );
+    downloadLink.setAttribute(
+      "download",
+      product + "_" + new Date().toLocaleString()
+    );
+    document.body.appendChild(downloadLink);
+    downloadLink.click();
   }
 }

@@ -2,7 +2,7 @@ import { HttpClient, HttpHeaders } from "@angular/common/http";
 import { Injectable } from "@angular/core";
 import { environment } from "../../../environments/environment";
 import { AuthService } from "../../core/auth/auth.service";
-import { BehaviorSubject, map, Observable } from "rxjs";
+import { BehaviorSubject, map, Observable, tap } from "rxjs";
 import { Declaration } from "../declarations/declaration.model";
 
 @Injectable({
@@ -29,8 +29,8 @@ export class ReportService {
     }
 
     if (user.type == "M" || user.type == "G")
-      path = `get_pending_declarations_midstream/${user.name}`;
-    else path = `get_pending_declarations/${user.organizationId}/${user.name}`;
+      path = `get_approved_declarations_midstream/${user.name}`;
+    else path = `get_approved_declarations/${user.organizationId}/${user.name}`;
 
     return this.http
       .get<any>(`${this.apiUrl}/declaration/api/v1/${path}`, {
@@ -46,10 +46,9 @@ export class ReportService {
       return new Observable((subscriber) => subscriber.next([]));
     }
 
-    // if (user.type == "M" || user.type == "G")
-    //   path = `get_approved_nominations_midstream/${user.name}`;
-    // else
-    path = `get_approved_nomination/${user.organizationId}/${user.name}`;
+    if (user.type == "M" || user.type == "G")
+      path = `get_approved_nomination_midstream/${user.name}`;
+    else path = `get_approved_nomination/${user.organizationId}/${user.name}`;
 
     return this.http
       .get<any>(`${this.apiUrl}/declaration/api/v1/${path}`, {
@@ -74,6 +73,29 @@ export class ReportService {
         headers: this.getHeaders(),
       })
       .pipe(map((response) => response || []));
+  }
+
+  downloadReport2(id: string) {
+    const user = this.authService.getCurrentUser();
+    if (!user) {
+      return new Observable((subscriber) => subscriber.next([]));
+    }
+    let url =
+      user.type == "U"
+        ? `/declaration/api/v1/export_declaration_report_upstream/${id}/${user.name}`
+        : `/declaration/api/v1/export_declaration_report_upstream/${id}/${user.name}`;
+    const payload = {
+      requestId: id,
+      username: user.name,
+    };
+
+    return this.http
+      .post(
+        `${this.apiUrl}${url}`,
+        { ...payload },
+        { responseType: "arraybuffer", headers: this.getHeaders() }
+      )
+      .pipe(map((response) => response));
   }
 
   downloadReport(id: string): Observable<any> {

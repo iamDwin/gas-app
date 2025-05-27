@@ -229,20 +229,17 @@ export class ReportDetailsComponent implements OnInit {
     this.isLoading = true;
     this.isloadingMessage = "Downloading Report";
     const requestId = this.declarationId;
-    // { responseType: 'blob' }
-    this.reportService.downloadReport(requestId).subscribe({
+    this.reportService.downloadReport2(requestId).subscribe({
       next: (response) => {
-        console.log(response);
-        const blob = new Blob([response], { type: "application/pdf" }); // Adjust MIME type as needed
-        saveAs(blob, "declaration-report.pdf"); // Adjust file name and extension as needed
-        // this.toaster.show({
-        //   title: "Download Report",
-        //   message: "Report generated and downloaded successfully",
-        //   type: "success",
-        // });
+        console.log({ response });
+        this.downLoadFile(response, "declaration");
+        this.toaster.show({
+          title: "Download Report",
+          message: "Report generated and downloaded successfully",
+          type: "success",
+        });
       },
       error: (error) => {
-        console.log(error);
         this.toaster.show({
           title: "Download Error",
           message: "Failed to download the report",
@@ -254,6 +251,30 @@ export class ReportDetailsComponent implements OnInit {
       },
     });
   }
+
+  /**
+   * Method is use to download file.
+   * @param data - Array Buffer data
+   * @param type - type of the document.
+   */
+  downLoadFile(data: any, product: any) {
+    let binaryData = [];
+    binaryData.push(data);
+    let downloadLink = document.createElement("a");
+    downloadLink.href = window.URL.createObjectURL(
+      new Blob([data], {
+        type: "application/pdf",
+      })
+    );
+    downloadLink.setAttribute(
+      "download",
+      product + "_" + new Date().toLocaleString()
+    );
+    console.log({ downloadLink });
+    document.body.appendChild(downloadLink);
+    downloadLink.click();
+  }
+
   showApproveConfirmation() {}
   showRejectConfirmation() {}
 }
