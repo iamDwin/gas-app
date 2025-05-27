@@ -50,6 +50,7 @@ export class PendingDeclarationsComponent implements OnInit {
     { prop: "periodStartDate", name: "From" },
     { prop: "periodEndDate", name: "To" },
     { prop: "declarationStatus", name: "Status" },
+    { prop: "nominationStatus", name: "Nomination" },
     { prop: "actions", name: "Actions", sortable: false },
   ];
 
@@ -61,12 +62,20 @@ export class PendingDeclarationsComponent implements OnInit {
     {
       label: "Approve",
       type: "success",
-      isDisabled: (row: any) => row.declaredBy == this.currentUser?.name,
+      isDisabled: (row: Declaration) => {
+        return (
+          row.declaredBy == this.currentUser?.name || row.approvedBy !== null
+        );
+      },
     },
     {
       label: "Decline",
       type: "danger",
-      isDisabled: (row: any) => row.declaredBy == this.currentUser?.name,
+      isDisabled: (row: Declaration) => {
+        return (
+          row.declaredBy == this.currentUser?.name || row.approvedBy !== null
+        );
+      },
     },
   ];
 
@@ -110,8 +119,6 @@ export class PendingDeclarationsComponent implements OnInit {
       month: "short",
       day: "numeric",
     });
-
-    console.log({ datte });
     return datte;
   }
 
@@ -123,6 +130,7 @@ export class PendingDeclarationsComponent implements OnInit {
       declarationStatus: this.getDeclarationStatus(
         declaration.declarationStatus
       ),
+      nominationStatus: this.getDeclarationStatus(declaration.nominationStatus),
     }));
   }
 

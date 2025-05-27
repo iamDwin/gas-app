@@ -12,7 +12,7 @@ import { BreadcrumbService } from "../../../shared/services/breadcrumb.service";
 import { NotificationService } from "../../../shared/services/notification.service";
 import { LoadingComponent } from "../../../shared/components/loading/loading.component";
 import { ToastService } from "../../../shared/services/toast.service";
-import { ButtonComponent } from "../../../shared/components/button/button.component";
+// import { ButtonComponent } from "../../../shared/components/button/button.component";
 
 @Component({
   selector: "app-declaration-daily-view",
@@ -41,7 +41,7 @@ export class DeclarationDailyViewComponent implements OnInit {
 
   constructor(
     private route: ActivatedRoute,
-    private navigator: Router,
+    private router: Router,
     private toaster: ToastService,
     private declarationService: DeclarationService,
     private breadcrumbService: BreadcrumbService,
@@ -65,23 +65,36 @@ export class DeclarationDailyViewComponent implements OnInit {
 
   loadDeclaration(id: string) {
     this.isLoading = true;
-    this.declarationService.getDeclaration(id).subscribe((decDetails) => {
-      if (decDetails) {
-        this.declarationDetails = decDetails;
-        console.log(this.declarationDetails);
-        this.calculateTotalPages();
-        this.loadCurrentPage();
-        this.getMainDataFromSet();
-        this.isLoading = false;
-      } else {
-        this.isLoading = false;
+    this.declarationService.getDeclaration(id).subscribe({
+      next: (decDetails) => {
+        if (decDetails) {
+          this.declarationDetails = decDetails;
+          this.calculateTotalPages();
+          this.loadCurrentPage();
+          this.getMainDataFromSet();
+        } else {
+          this.toaster.show({
+            title: "Declaration Details Action",
+            message: "Failed to load declaration details",
+            type: "error",
+          });
+          this.router.navigateByUrl("/declarations");
+        }
+      },
+      error: (error) => {
+        console.log({ error });
+        this.isLoading = true;
         this.toaster.show({
-          title: "Declaration Details Action",
-          message: "Failed to load declaration details",
+          title: "Error",
+          message:
+            "Failed to load declaration details. Returning to the previous page.",
           type: "error",
         });
-        this.navigator.navigateByUrl("/declarations");
-      }
+        this.router.navigateByUrl("/declarations");
+      },
+      complete: () => {
+        this.isLoading = false;
+      },
     });
   }
 

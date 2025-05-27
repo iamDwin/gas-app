@@ -35,14 +35,15 @@ export class DeclarationsComponent implements OnInit {
   currentUser: User | null = null;
 
   columns = [
-    { prop: "id", name: "#" },
-    { prop: "institutionCode", name: "# Code" },
+    // { prop: "id", name: "#" },
+    // { prop: "institutionCode", name: "# Code" },
     { prop: "institutionName", name: "Institution" },
     { prop: "declaredQuantity", name: "DCV (MMscf)" },
     { prop: "currentAgreedDcv", name: "Agreed DCV (MMscf)" },
     { prop: "periodStartDate", name: "From" },
     { prop: "periodEndDate", name: "To" },
-    // { prop: "status", name: "Status" },
+    { prop: "declarationStatus", name: "Declaration" },
+    { prop: "nominationStatus", name: "Nomination" },
     { prop: "actions", name: "Actions", sortable: false },
   ];
 
@@ -51,16 +52,16 @@ export class DeclarationsComponent implements OnInit {
       label: "View Details",
       type: "primary",
     },
-    {
-      label: "Edit",
-      type: "primary",
-      isDisabled: (row: Declaration) => row.status !== "draft",
-    },
-    {
-      label: "Delete",
-      type: "danger",
-      isDisabled: (row: Declaration) => row.status !== "draft",
-    },
+    // {
+    //   label: "Edit",
+    //   type: "primary",
+    //   isDisabled: (row: Declaration) => row.status !== "draft",
+    // },
+    // {
+    //   label: "Delete",
+    //   type: "danger",
+    //   isDisabled: (row: Declaration) => row.status !== "draft",
+    // },
   ];
 
   constructor(
@@ -101,16 +102,34 @@ export class DeclarationsComponent implements OnInit {
   formatDeclarations(declarations: Declaration[]) {
     this.formattedDeclarations = declarations.map((declaration) => ({
       ...declaration,
-      startDate: this.formatDate(declaration.startDate),
-      endDate: this.formatDate(declaration.endDate),
+      periodStartDate: this.formatDate(declaration.periodStartDate),
+      periodEndDate: this.formatDate(declaration.periodEndDate),
+      declarationStatus: this.getDeclarationStatus(
+        declaration.declarationStatus
+      ),
+      nominationStatus: this.getDeclarationStatus(declaration.nominationStatus),
     }));
+  }
+
+  getDeclarationStatus(status: number): string {
+    switch (status) {
+      case 0:
+        return "Pending Approval";
+      case 1:
+        return "Approved";
+      case 2:
+        return "Declined";
+      default:
+        return "Unknown Status";
+    }
   }
 
   loadDeclarations() {
     this.isLoading = true;
     this.declarationService.getDeclarations().subscribe({
       next: (response: any) => {
-        this.formattedDeclarations = response;
+        // this.formattedDeclarations = response;
+        this.formatDeclarations(response);
         this.isLoading = false;
       },
       error: (error) => {
@@ -128,7 +147,7 @@ export class DeclarationsComponent implements OnInit {
   onActionClick(event: { action: TableAction; row: Declaration }) {
     switch (event.action.label) {
       case "View Details":
-        this.router.navigate(["/declarations", event.row.id]);
+        this.router.navigate(["/declarations", event.row.requestId]);
         break;
       case "Edit":
         this.editDeclaration(event.row);
