@@ -32,11 +32,14 @@ export class NominationsComponent implements OnInit {
   loadingMessage = "Loading Nominations...";
 
   columns = [
-    { prop: "institutionCode", name: "Institution" },
+    // { prop: "id", name: "#" },
+    { prop: "institutionName", name: "Institution" },
     { prop: "declaredQuantity", name: "Quantity" },
-    { prop: "startDate", name: "Start Date" },
-    { prop: "endDate", name: "End Date" },
-    { prop: "status", name: "Status" },
+    { prop: "periodStartDate", name: "Start Date" },
+    { prop: "periodEndDate", name: "End Date" },
+    { prop: "period", name: "Period" },
+    { prop: "nominationStatus", name: "Status" },
+    // { prop: "nominationApprovalStatus", name: "Approval Status" },
     { prop: "actions", name: "Actions", sortable: false },
   ];
 
@@ -81,12 +84,69 @@ export class NominationsComponent implements OnInit {
     });
   }
 
-  formatDeclarations(declarations: Nomination[]) {
-    this.formattedDeclarations = declarations.map((declaration) => ({
-      ...declaration,
-      startDate: this.formatDate(declaration.startDate),
-      endDate: this.formatDate(declaration.endDate),
-    }));
+  // formatDeclarations(declarations: Nomination[]) {
+  //   this.formattedDeclarations = declarations.map((declaration) => ({
+  //     ...declaration,
+  //     startDate: this.formatDate(declaration.startDate),
+  //     endDate: this.formatDate(declaration.endDate),
+  //   }));
+  // }
+
+  formatDeclarations(nominations: any[]) {
+    this.formattedDeclarations = nominations
+      .filter((nomination) => nomination.declarationStatus === 1)
+      .map((nomination) => ({
+        ...nomination,
+        // periodStartDate: this.formatDate(nomination.periodStartDate),
+        // periodEndDate: this.formatDate(nomination.periodEndDate),
+
+        nominationStatus: this.getEffectiveStatus(nomination),
+        // nominationStatus: this.getNominationStatus(nomination.nominationStatus),
+        // nominationApprovalStatus: this.getDeclarationStatus(
+        //   nomination.nominationStatus
+        // ),
+      }));
+  }
+
+  getEffectiveStatus(nomination: any): string {
+    if (
+      nomination.nominationStatus === 1 &&
+      nomination.nominationApprovalStatus == 0
+    ) {
+      return this.getDeclarationStatus(nomination.nominationApprovalStatus);
+    } else if (
+      nomination.nominationStatus === 0 ||
+      nomination.nominationStatus === 2
+    ) {
+      return this.getNominationStatus(nomination.nominationStatus);
+    }
+    return this.getNominationStatus(nomination.nominationStatus);
+  }
+
+  getNominationStatus(status: number): string {
+    switch (status) {
+      case 0:
+        return "Pending Nomination";
+      case 1:
+        return "Approved";
+      case 2:
+        return "Declined";
+      default:
+        return "Unknown Status";
+    }
+  }
+
+  getDeclarationStatus(status: number): string {
+    switch (status) {
+      case 0:
+        return "Pending Approval";
+      case 1:
+        return "Approved";
+      case 2:
+        return "Declined";
+      default:
+        return "Unknown Status";
+    }
   }
 
   loadNominations() {
@@ -102,7 +162,7 @@ export class NominationsComponent implements OnInit {
   onActionClick(event: { action: TableAction; row: Nomination }) {
     switch (event.action.label) {
       case "View Details":
-        this.router.navigate(["/nominations", event.row.id]);
+        this.router.navigate(["/nominations", event.row.requestId]);
         break;
       case "Edit":
         // this.editDeclaration(event.row);

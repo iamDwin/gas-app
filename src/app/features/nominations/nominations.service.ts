@@ -83,6 +83,65 @@ export class NominationService {
       .pipe(map((response) => response));
   }
 
+  approveNomination(payload: any, action: string) {
+    const user = this.authService.getCurrentUser();
+    if (!user) {
+      return new Observable((subscriber) => subscriber.next([]));
+    }
+    let path = "";
+    if (user.type !== "M")
+      path = `/declaration/api/v1/approve_nomination_declaration_request?id=${payload.id}&by=${payload.by}&comment=${payload.comment}`;
+    else
+      path = `/declaration/api/v1/approve_nomination_declaration_request?id=${payload.id}&by=${payload.by}&comment=${payload.comment}`;
+
+    return this.http
+      .post<any>(
+        `${this.apiUrl}${path}`,
+        { ...payload },
+        {
+          headers: this.getHeaders(),
+        }
+      )
+      .pipe(map((response) => response));
+  }
+
+  declineNomination(payload: any, action: string) {
+    const user = this.authService.getCurrentUser();
+    if (!user) {
+      return new Observable((subscriber) => subscriber.next([]));
+    }
+    let path = "";
+    if (user.type !== "M")
+      path = `/declaration/api/v1/decline_approval_declaration_request?id=${payload.id}&by=${payload.by}&comment=${payload.comment}`;
+    else
+      path = `/declaration/api/v1/decline_approval_declaration_request?id=${payload.id}&by=${payload.by}&comment=${payload.comment}`;
+
+    return this.http
+      .post<any>(
+        `${this.apiUrl}${path}`,
+        { ...payload },
+        {
+          headers: this.getHeaders(),
+        }
+      )
+      .pipe(map((response) => response));
+  }
+
+  getNomination(id: string): Observable<any | undefined> {
+    const user = this.authService.getCurrentUser();
+    if (!user) {
+      return new Observable((subscriber) => subscriber.next([]));
+    }
+    return this.http
+      .get<any>(
+        `${this.apiUrl}/declaration/api/v1/get_declaration_details/${id}/${user.name}`,
+        {
+          headers: this.getHeaders(),
+        }
+      )
+      .pipe(map((response) => response.declarationStatementDetailsList || []));
+  }
+
   // private generateDailyQuantities(
   //   startDate: string,
   //   endDate: string,

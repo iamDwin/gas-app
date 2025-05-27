@@ -17,12 +17,19 @@
     [class.drawer-closed]="!isDrawerOpen"
   >
     <app-forms
-      (save)="saveDeclaration($event)"
+      (save)="nominate($event)"
       [nomination]="selectedNomination"
       *ngIf="isDrawerOpen"
       (onCancel)="closeDrawer()"
     ></app-forms>
   </div>
+
+  <app-confirmation-modal
+    [show]="showConfirmModal"
+    [config]="activateModalMessage"
+    (onCancel)="cancelActivate()"
+    (onConfirm)="confirmAction()"
+  ></app-confirmation-modal>
 
   <!-- Backdrop -->
   <div

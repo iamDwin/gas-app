@@ -19,9 +19,10 @@ export interface Nomination {
   createdBy: string;
   uploadedBy: string;
   institutionCode: string;
-  declaredQuantity: number;
+  declaredQuantity: Number;
   startDate: string;
   endDate: string;
+  requestId: string;
   dailyQuantities: DailyQuantity[];
   createdAt: Date;
   updatedAt: Date;
@@ -32,6 +33,10 @@ export interface Nomination {
   rejectionReason?: string;
   periodEndDate: string;
   periodStartDate: string;
+  nominationApprovalStatus: Number;
+  nominationBy: string;
+  approvedNominationBy: string;
+  nominationStatus: Number;
 }
 
 export interface CreateNominationRequest {
