@@ -74,13 +74,18 @@
                 "
               >
                 <span
-                  class="inline-flex items-center px-3 py-0.5 rounded-full text-sm font-medium"
+                  class="inline-flex items-center px-3 py-0.5 rounded-full text-sm font-light"
                   [ngClass]="getStatusBadgeClass(row[col.prop])"
                 >
                   {{ row[col.prop] }}
                 </span>
               </ng-container>
-              <ng-container *ngIf="col.prop !== 'declarationStatus'">
+              <ng-container
+                *ngIf="
+                  col.prop !== 'declarationStatus' &&
+                  col.prop !== 'nominationStatus'
+                "
+              >
                 {{ row[col.prop] }}
               </ng-container>
             </ng-container>

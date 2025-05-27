@@ -174,12 +174,17 @@ export class DataTableComponent {
   getStatusBadgeClass(status: string | number): string {
     switch (status) {
       case "Pending Approval":
+        return "bg-yellow-500 text-white";
+      case "Pending Nomination":
+        return "bg-gray-500 text-white";
       case 0:
         return "bg-yellow-500 text-white";
       case "Approved":
+        return "bg-green-500 text-white";
       case 1:
         return "bg-green-500 text-white";
       case "Declined":
+        return "bg-red-500 text-white";
       case 2:
         return "bg-red-500 text-white";
       default:
