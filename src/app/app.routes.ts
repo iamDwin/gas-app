@@ -142,34 +142,32 @@ export const routes: Routes = [
           },
         ],
       },
-      // ,
-      // {
-      //   path: "scheduling",
-
-      //   children: [
-      //     {
-      //       path: "",
-      //       loadComponent: () =>
-      //         import("./features/nominations/nominations.component").then(
-      //           (m) => m.NominationsComponent
-      //         ),
-      //     },
-      //     {
-      //       path: "pending",
-      //       loadComponent: () =>
-      //         import(
-      //           "./features/nominations/pending-nominations/pending-nominations.component"
-      //         ).then((m) => m.PendingNominationsComponent),
-      //     },
-      //     {
-      //       path: ":id",
-      //       loadComponent: () =>
-      //         import(
-      //           "./features/nominations/nominations-daily-view/nominations-daily-view.component"
-      //         ).then((m) => m.NominationsDailyViewComponent),
-      //     },
-      //   ],
-      // },
+      {
+        path: "schedule",
+        children: [
+          {
+            path: "",
+            loadComponent: () =>
+              import("./features/schedule/schedule.component").then(
+                (m) => m.ScheduleComponent
+              ),
+          },
+          // {
+          //   path: "pending",
+          //   loadComponent: () =>
+          //     import(
+          //       "./features/nominations/pending-nominations/pending-nominations.component"
+          //     ).then((m) => m.PendingNominationsComponent),
+          // },
+          // {
+          //   path: ":id",
+          //   loadComponent: () =>
+          //     import(
+          //       "./features/nominations/nominations-daily-view/nominations-daily-view.component"
+          //     ).then((m) => m.NominationsDailyViewComponent),
+          // },
+        ],
+      },
       {
         path: "pending-approvals",
         loadComponent: () =>

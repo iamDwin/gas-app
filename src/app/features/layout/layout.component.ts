@@ -55,8 +55,6 @@ export class LayoutComponent implements OnInit {
       icon: `<svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
 <path d="M17.6753 13.2421C17.1452 14.4959 16.316 15.6006 15.2602 16.4599C14.2045 17.3191 12.9543 17.9067 11.619 18.1711C10.2837 18.4356 8.90401 18.3689 7.60045 17.977C6.29688 17.585 5.10918 16.8797 4.14118 15.9227C3.17317 14.9657 2.45434 13.7861 2.04752 12.4871C1.64071 11.1881 1.55829 9.8092 1.80749 8.47099C2.05669 7.13278 2.62991 5.87599 3.47703 4.81049C4.32416 3.74499 5.41939 2.90323 6.66699 2.3588M17.6993 6.81144C18.0329 7.61682 18.2376 8.46827 18.307 9.3345C18.3242 9.5485 18.3327 9.6555 18.2902 9.75188C18.2548 9.8324 18.1844 9.90859 18.107 9.9504C18.0143 10.0005 17.8985 10.0005 17.667 10.0005H10.667C10.4336 10.0005 10.317 10.0005 10.2278 9.95505C10.1494 9.9151 10.0857 9.85136 10.0457 9.77296C10.0003 9.68383 10.0003 9.56715 10.0003 9.3338V2.3338C10.0003 2.10224 10.0003 1.98646 10.0504 1.89378C10.0922 1.81636 10.1684 1.74604 10.2489 1.71054C10.3453 1.66805 10.4523 1.67663 10.6663 1.69378C11.5325 1.76323 12.384 1.96787 13.1894 2.30147C14.2004 2.72026 15.1191 3.33409 15.8929 4.10791C16.6667 4.88173 17.2805 5.80039 17.6993 6.81144Z" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/>
 </svg>
-
-
 `,
       exact: true,
     },
@@ -89,18 +87,15 @@ export class LayoutComponent implements OnInit {
       ],
     },
     {
-      path: "/scheduling",
-      label: "Scheduling",
+      path: "/schedule",
+      label: "Schedules",
       icon: `<svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-<path d="M10 7.91699V11.2503L12.0833 12.5003M10 4.16699C6.08798 4.16699 2.91666 7.33831 2.91666 11.2503C2.91666 15.1623 6.08798 18.3337 10 18.3337C13.912 18.3337 17.0833 15.1623 17.0833 11.2503C17.0833 7.33831 13.912 4.16699 10 4.16699ZM10 4.16699V1.66699M8.33333 1.66699H11.6667M16.9408 4.66036L15.6908 3.41036L16.3158 4.03536M3.05918 4.66036L4.30918 3.41036L3.68418 4.03536" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/>
-</svg>
-
-`,
+<path d="M10 7.91699V11.2503L12.0833 12.5003M10 4.16699C6.08798 4.16699 2.91666 7.33831 2.91666 11.2503C2.91666 15.1623 6.08798 18.3337 10 18.3337C13.912 18.3337 17.0833 15.1623 17.0833 11.2503C17.0833 7.33831 13.912 4.16699 10 4.16699ZM10 4.16699V1.66699M8.33333 1.66699H11.6667M16.9408 4.66036L15.6908 3.41036L16.3158 4.03536M3.05918 4.66036L4.30918 3.41036L3.68418 4.03536" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg>`,
       count: 0,
-      children: [
-        { path: "/scheduling", label: "Schedules" },
-        // { path: "/scheduling/pending", label: "Pending schedules" },
-      ],
+      // children: [
+      // { path: "/schedule", label: "Schedules" },
+      // { path: "/scheduling/pending", label: "Pending schedules" },
+      // ],
     },
     {
       path: "/organizations",
@@ -228,7 +223,7 @@ export class LayoutComponent implements OnInit {
             "/dashboard",
             "/users",
             "/declarations",
-            "/scheduling",
+            "/schedule",
             "/nominations",
             "/reports",
           ].includes(item.path)
@@ -239,15 +234,19 @@ export class LayoutComponent implements OnInit {
             "/dashboard",
             "/users",
             "/declarations",
-            "/scheduling",
+            "/schedule",
             "/reports",
           ].includes(item.path)
         );
       case "D":
         return this.menuItems.filter((item) =>
-          ["/dashboard", "/users", "/nominations", "/reports"].includes(
-            item.path
-          )
+          [
+            "/dashboard",
+            "/users",
+            "/nominations",
+            "/schedule",
+            "/reports",
+          ].includes(item.path)
         );
       default:
         return this.menuItems; // Default to showing all items except allocations
