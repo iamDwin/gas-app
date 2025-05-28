@@ -32,12 +32,57 @@ export class ScheduleService {
 
     if (user.type == "M" || user.type == "G")
       path = `/schedule/api/v1/get_schedules_by_date/${date}/${user.name}`;
-    else path = `/schedule/api/v1/get_schedules_by_date/${date}/${user.name}`;
+    else
+      path = `/schedule/api/v1/get_schedules/${date}/${user.organizationId}/${user.name}`;
 
     return this.http
       .get<any>(`${this.apiUrl}${path}`, {
         headers: this.getHeaders(),
       })
+      .pipe(map((response) => response));
+  }
+
+  updateSchedule(payload: any): Observable<any[]> {
+    const user = this.authService.getCurrentUser();
+    let path = "";
+    if (!user) {
+      return new Observable((subscriber) => subscriber.next([]));
+    }
+
+    if (user.type == "M" || user.type == "G")
+      path = `/schedule/api/v1/update_schedule`;
+    else path = `/schedule/api/v1/update_schedule`;
+
+    return this.http
+      .post<any>(
+        `${this.apiUrl}${path}`,
+        { ...payload },
+        {
+          headers: this.getHeaders(),
+        }
+      )
+      .pipe(map((response) => response));
+  }
+
+  updateDailyQuantity(payload: any): Observable<any[]> {
+    const user = this.authService.getCurrentUser();
+    let path = "";
+    if (!user) {
+      return new Observable((subscriber) => subscriber.next([]));
+    }
+
+    if (user.type == "M" || user.type == "G")
+      path = `/schedule/api/v1/update_schedule`;
+    else path = `/schedule/api/v1/update_schedule`;
+
+    return this.http
+      .post<any>(
+        `${this.apiUrl}${path}`,
+        { ...payload },
+        {
+          headers: this.getHeaders(),
+        }
+      )
       .pipe(map((response) => response));
   }
 }

@@ -42,7 +42,7 @@ export class PendingDeclarationsComponent implements OnInit {
   currentUser = this.authService.getCurrentUser();
 
   columns = [
-    { prop: "requestId", name: "#" },
+    // { prop: "requestId", name: "#" },
     // { prop: "institutionCode", name: "# Code" },
     // { prop: "institutionName", name: "Institution" },
     { prop: "declaredQuantity", name: "DCV (MMscf)" },
