@@ -41,17 +41,21 @@ export class PendingDeclarationsComponent implements OnInit {
   loadingMessage = "Loading Pending Declarations..";
   currentUser = this.authService.getCurrentUser();
 
+  isGasCompanyAdmin(): boolean {
+    return this.currentUser?.type === "G" && this.currentUser?.role === "admin";
+  }
+
   columns = [
     // { prop: "requestId", name: "#" },
     // { prop: "institutionCode", name: "# Code" },
     // { prop: "institutionName", name: "Institution" },
+    { prop: "currentAgreedDcv", name: "Contract DCV (MMscf)" },
     { prop: "declaredQuantity", name: "DCV (MMscf)" },
-    { prop: "currentAgreedDcv", name: "Agreed DCV (MMscf)" },
     { prop: "periodStartDate", name: "From" },
     { prop: "periodEndDate", name: "To" },
     { prop: "declarationStatus", name: "Status" },
     { prop: "nominationStatus", name: "Nomination" },
-    { prop: "actions", name: "Actions", sortable: false },
+    { prop: "actions", name: "Actions" },
   ];
 
   actions: TableAction[] = [
@@ -148,6 +152,9 @@ export class PendingDeclarationsComponent implements OnInit {
   }
 
   loadPendingDeclarations() {
+    // if (!this.isGasCompanyAdmin()) {
+    //   this.columns.push({ prop: "actions", name: "Actions" });
+    // }
     this.isLoading = true;
     this.declarationService.getPendingDeclarations().subscribe({
       next: (response) => {

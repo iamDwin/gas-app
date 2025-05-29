@@ -39,6 +39,25 @@ export class ReportService {
       .pipe(map((response) => response || []));
   }
 
+  getDailyReport(date?: any): Observable<Declaration[]> {
+    const user = this.authService.getCurrentUser();
+    let path = "";
+    if (!user) {
+      return new Observable((subscriber) => subscriber.next([]));
+    }
+
+    if (user.type == "M" || user.type == "G")
+      path = `/schedule/api/v1/get_schedules_by_date_gas_manager/${date}/${user.name}`;
+    else
+      path = `/schedule/api/v1/get_schedules/${date}/${user.organizationId}/${user.name}`;
+
+    return this.http
+      .get<any>(`${this.apiUrl}${path}`, {
+        headers: this.getHeaders(),
+      })
+      .pipe(map((response) => response || []));
+  }
+
   getApprovadNomination(): Observable<Declaration[]> {
     const user = this.authService.getCurrentUser();
     let path = "";

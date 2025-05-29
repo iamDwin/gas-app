@@ -24,6 +24,19 @@
         <input
           type="text"
           readonly="true"
+          formControlName="organizationName"
+          [value]="currentUser?.organizationName"
+          class="mt-1 block w-full min-h-[44px] text-red rounded-xl border-gray-300 shadow-sm focus:border-primary focus:ring-primary sm:text-sm pr-10 border border-[#E9EAEB] shadow-[0px_1px_2px_0px_rgba(10,13,18,0.05)]"
+        />
+      </div>
+
+      <div style="display: none" *ngIf="!isMidStreamAdmin()">
+        <label class="block text-sm font-medium text-gray-700">
+          Institution <span class="text-red-500">*</span>
+        </label>
+        <input
+          type="text"
+          readonly="true"
           formControlName="institutionCode"
           [value]="currentUser?.organizationId || ''"
           class="mt-1 block w-full min-h-[44px] text-red rounded-xl border-gray-300 shadow-sm focus:border-primary focus:ring-primary sm:text-sm pr-10 border border-[#E9EAEB] shadow-[0px_1px_2px_0px_rgba(10,13,18,0.05)]"

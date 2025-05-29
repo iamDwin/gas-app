@@ -44,6 +44,7 @@ export class PendingNominationsComponent implements OnInit {
     // { prop: "id", name: "#" },
     { prop: "institutionName", name: "Institution" },
     { prop: "declaredQuantity", name: "Quantity" },
+    { prop: "confirmedQuantity", name: "Confirmed Quantity" },
     { prop: "periodStartDate", name: "Start Date" },
     { prop: "periodEndDate", name: "End Date" },
     { prop: "period", name: "Period" },

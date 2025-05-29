@@ -34,7 +34,8 @@ export class NominationsComponent implements OnInit {
   columns = [
     // { prop: "id", name: "#" },
     { prop: "institutionName", name: "Institution" },
-    { prop: "declaredQuantity", name: "Quantity" },
+    { prop: "declaredQuantity", name: "Declared Quantity" },
+    { prop: "confirmedQuantity", name: "Confirmed Quantity" },
     { prop: "periodStartDate", name: "Start Date" },
     { prop: "periodEndDate", name: "End Date" },
     { prop: "period", name: "Period" },

@@ -24,6 +24,12 @@ export class ReportsComponent implements OnInit {
   userType: string = "";
   tabs = [
     {
+      id: "daily",
+      label: "Daily Reports",
+      showFor: ["U", "D", "M", "G"],
+      disabled: false,
+    },
+    {
       id: "declarations",
       label: "Declaration Reports",
       showFor: ["U", "M", "G"],
@@ -43,25 +49,25 @@ export class ReportsComponent implements OnInit {
     },
   ];
 
+  get shouldShowViewDetails(): boolean {
+    return this.activeTab !== "daily";
+  }
+
   actions: TableAction[] = [
-    {
-      label: "View Details",
-      type: "primary",
-    },
     {
       label: "Download Report",
       type: "success",
+      isDisabled: (row: any) => {
+        return this.activeTab === "daily";
+      },
     },
-    // {
-    //   label: "Edit",
-    //   type: "primary",
-    //   isDisabled: (row: Declaration) => row.status !== "draft",
-    // },
-    // {
-    //   label: "Delete",
-    //   type: "danger",
-    //   isDisabled: (row: Declaration) => row.status !== "draft",
-    // },
+    {
+      label: "View Details",
+      type: "primary",
+      isDisabled: (row: any) => {
+        return this.activeTab === "daily";
+      },
+    },
   ];
 
   activeTab: string = "";
@@ -73,6 +79,17 @@ export class ReportsComponent implements OnInit {
   isloadingMessage = "Loading";
 
   // Sample data structure for each report type
+
+  dailyColumns = [
+    // { prop: "requestId", name: "#" },
+    { prop: "institutionCode", name: "# Code" },
+    { prop: "institutionName", name: "Institution" },
+    { prop: "declaredQuantity", name: "DCV (MMscf)" },
+    { prop: "date", name: "Date" },
+    // { prop: "status", name: "Status" },
+    { prop: "actions", name: "Actions", sortable: false },
+  ];
+
   declarationColumns = [
     { prop: "id", name: "#" },
     { prop: "institutionCode", name: "# Code" },
@@ -81,7 +98,7 @@ export class ReportsComponent implements OnInit {
     { prop: "currentAgreedDcv", name: "Declared DCV (MMscf)" },
     { prop: "periodStartDate", name: "From" },
     { prop: "periodEndDate", name: "To" },
-    { prop: "status", name: "Status" },
+    // { prop: "status", name: "Status" },
     { prop: "actions", name: "Actions", sortable: false },
   ];
 
@@ -93,7 +110,7 @@ export class ReportsComponent implements OnInit {
     { prop: "currentAgreedDcv", name: "Nominated DCV (MMscf)" },
     { prop: "periodStartDate", name: "From" },
     { prop: "periodEndDate", name: "To" },
-    { prop: "status", name: "Status" },
+    // { prop: "status", name: "Status" },
     { prop: "actions", name: "Actions", sortable: false },
   ];
 
@@ -102,13 +119,14 @@ export class ReportsComponent implements OnInit {
     { prop: "institution", name: "Institution" },
     { prop: "type", name: "Type" },
     { prop: "time", name: "Time" },
-    { prop: "status", name: "Status" },
+    // { prop: "status", name: "Status" },
     { prop: "actions", name: "Actions", sortable: false },
   ];
 
   // Sample data
   declarationData: any[] = [];
   nominationData: any[] = [];
+  dailyData: any[] = [];
   scheduleData: any[] = [];
 
   constructor(
@@ -156,6 +174,8 @@ export class ReportsComponent implements OnInit {
 
   get currentColumns() {
     switch (this.activeTab) {
+      case "daily":
+        return this.dailyColumns;
       case "nominations":
         return this.nominationColumns;
       case "schedule":
@@ -167,6 +187,8 @@ export class ReportsComponent implements OnInit {
 
   get currentData() {
     switch (this.activeTab) {
+      case "daily":
+        return this.dailyData;
       case "nominations":
         return this.nominationData;
       case "schedule":
@@ -206,21 +228,76 @@ export class ReportsComponent implements OnInit {
 
   applyDateFilter() {
     if (this.isDateRangeValid) {
-      this.startDate = this.tempStartDate;
-      this.endDate = this.tempEndDate;
+      this.startDate = this.tempEndDate;
+      // this.endDate = this.tempEndDate;
       this.loadData();
+    }
+  }
+
+  getActions(): TableAction[] {
+    switch (this.activeTab) {
+      case "daily":
+        return [
+          {
+            label: "Download Report",
+            type: "success",
+          },
+        ];
+      case "declarations":
+        return [
+          {
+            label: "View Details",
+            type: "primary",
+          },
+          {
+            label: "Download Report",
+            type: "success",
+          },
+        ];
+      case "nominations":
+        return [
+          {
+            label: "View Details",
+            type: "primary",
+          },
+          {
+            label: "Download Report",
+            type: "success",
+          },
+        ];
+      case "schedule":
+        return [
+          {
+            label: "View Details",
+            type: "primary",
+          },
+          {
+            label: "Download Report",
+            type: "success",
+          },
+        ];
+      default:
+        return [];
     }
   }
 
   loadData() {
     this.isLoading = true;
-    const params = {
-      startDate: this.startDate,
-      endDate: this.endDate,
-    };
-
-    let endpoint = "";
     switch (this.activeTab) {
+      case "daily":
+        this.reportService.getDailyReport(this.startDate).subscribe({
+          next: (data: any) => {
+            console.log({ data });
+            this.dailyData = data;
+            this.isLoading = false;
+          },
+          error: (error: any) => {
+            console.error("Error loading declaration reports:", error);
+            this.isLoading = false;
+          },
+        });
+        break;
+
       case "declarations":
         this.reportService.getApprovadDeclarations().subscribe({
           next: (data: any) => {
@@ -263,6 +340,7 @@ export class ReportsComponent implements OnInit {
   }
 
   onActionClick(event: { action: TableAction; row: Declaration }) {
+    console.log("Action clicked:", event.action.label);
     switch (event.action.label) {
       case "View Details":
         this.router.navigate(["/reports", event.row.requestId]);
@@ -270,6 +348,8 @@ export class ReportsComponent implements OnInit {
       case "Download Report":
         this.downloadReport(event.row);
         break;
+      default:
+        console.warn("Unknown action:", event.action.label);
     }
   }
 
@@ -320,5 +400,35 @@ export class ReportsComponent implements OnInit {
     );
     document.body.appendChild(downloadLink);
     downloadLink.click();
+  }
+
+  getStatusBadgeClass(status: string | number): string {
+    switch (status) {
+      case 0:
+        return "bg-yellow-500 text-white";
+      case "Approved":
+        return "bg-green-500 text-white";
+      case 1:
+        return "bg-green-500 text-white";
+      case "Declined":
+        return "bg-red-500 text-white";
+      case 2:
+        return "bg-red-500 text-white";
+      default:
+        return "bg-gray-500 text-white";
+    }
+  }
+
+  getStatus(status: number): string {
+    switch (status) {
+      case 0:
+        return "Pending Approval";
+      case 1:
+        return "Approved";
+      case 2:
+        return "Declined";
+      default:
+        return "Unknown Status";
+    }
   }
 }
