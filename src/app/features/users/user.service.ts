@@ -89,8 +89,14 @@ export class UserService {
       return new Observable((subscriber) => subscriber.next([]));
     }
 
+    let path = "";
+    if (user.type == "M") path = `/admin/user/api/v1/init_create_user`;
+    else if (user.type == "G")
+      path = `/admin/useradmin/api/v1/init_create_user`;
+    else path = `/admin/user/api/v1/init_create_user`;
+
     return this.http.post<any>(
-      `${this.apiUrl}/admin/user/api/v1/init_create_user`,
+      `${this.apiUrl}${path}`,
       { ...userData, createdBy: user.name },
       { headers: this.getHeaders() }
     );
