@@ -261,6 +261,7 @@ export class UsersComponent implements OnInit {
         });
       }
     } else {
+      // console.log({ userData });
       this.userService.addUser(userData).subscribe({
         next: (response: any) => {
           this.notificationService.addNotification({

@@ -51,7 +51,7 @@ export class ScheduleComponent implements OnInit {
       { label: "Schedule", link: "/schedule" },
     ]);
     this.currentUser = this.authService.getCurrentUser();
-    console.log(this.currentUser);
+    // console.log(this.currentUser);
     this.filterDate = this.defaultDate;
     this.getDefaultData();
   }
@@ -68,6 +68,7 @@ export class ScheduleComponent implements OnInit {
     this.scheduler.getScheduleData(this.defaultDate).subscribe({
       next: (response) => {
         this.scheduleData = response;
+        this.isLoading = false;
       },
       error: () => {
         this.toaster.show({
@@ -75,6 +76,7 @@ export class ScheduleComponent implements OnInit {
           message: `Could get schedule for the selected date, Please try again`,
           type: "error",
         });
+        this.isLoading = false;
       },
       complete: () => {
         this.isLoading = false;

@@ -95,9 +95,11 @@ export class UserFormComponent {
   onInstitutionSelected(institution: Organization) {
     this.selectedInstitution = institution;
     this.form.patchValue({
-      institutionId: institution.id,
+      institutionId: institution.code,
       type: institution.type,
     });
+
+    console.log(this.form.value);
   }
 
   getUserRole = () => {
