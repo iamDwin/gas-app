@@ -138,14 +138,24 @@ export class UserService {
 
   approveUser(id: string): Observable<any> {
     let user = this.authService.getCurrentUser();
+    if (!user) {
+      return new Observable((subscriber) => subscriber.next([]));
+    }
     let request = {
       id: id,
       authorizedBy: user?.name,
       authorizedComment: null,
       authStatus: 1,
     };
+
+    let path = "";
+    if (user.type == "M") path = `/admin/user/api/v1/authorize_request`;
+    else if (user.type == "G")
+      path = `/admin/useradmin/api/v1/authorize_request`;
+    else path = `/admin/user/api/v1/authorize_request`;
+
     return this.http.post<any>(
-      `${this.apiUrl}/admin/user/api/v1/authorize_request`,
+      `${this.apiUrl}${path}`,
       { ...request },
       { headers: this.getHeaders() }
     );
