@@ -15,6 +15,7 @@ import {
 import { PendingItemsService } from "../../shared/services/pending-items.service";
 import { DomSanitizer } from "@angular/platform-browser";
 import { OrganizationService } from "../../features/organizations/organization.service";
+import { AnnouncementBarComponent } from "../../shared/components/announcement/announcement.component";
 
 @Component({
   selector: "app-layout",
@@ -27,6 +28,7 @@ import { OrganizationService } from "../../features/organizations/organization.s
     BreadcrumbComponent,
     NotificationsComponent,
     ConfirmationModalComponent,
+    AnnouncementBarComponent,
   ],
   templateUrl: "./layout.component.html", // Assuming you have a separate HTML file
 })
@@ -47,6 +49,7 @@ export class LayoutComponent implements OnInit {
   institutionName = "";
   institutionType: string = "";
   openMenus: { [key: string]: boolean } = {};
+  showAnnouncement = true;
 
   menuItems = [
     {

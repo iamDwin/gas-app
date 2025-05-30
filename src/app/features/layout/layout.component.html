@@ -1,4 +1,4 @@
-<div class="min-h-screen bg-white flex">
+<div class="min-h-screen bg-gray-50 flex">
   <!-- Sidebar -->
   <div
     class="fixed inset-y-0 left-0 z-[30] transform lg:transform-none lg:opacity-100 duration-200 ease-in-out"
@@ -254,6 +254,23 @@
     </header>
 
     <main class="flex-1 mt-16 bg-gray-100">
+      <app-announcement-bar
+        [announcements]="[
+          {
+            title: 'Pending Declarations',
+            description:
+              'You have pending declarations that require your attention.',
+            link: '/declarations/pending'
+          },
+          {
+            title: 'Pending Nominations',
+            description:
+              'You have pending nominations that require your attention.',
+            link: '/nominations/pending'
+          }
+        ]"
+        [show]="showAnnouncement"
+      ></app-announcement-bar>
       <router-outlet></router-outlet>
     </main>
   </div>
