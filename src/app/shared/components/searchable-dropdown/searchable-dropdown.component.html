@@ -1,0 +1,47 @@
+<div
+  class="dropdown-container"
+  [class.open]="isOpen"
+  [class.disabled]="disabled"
+>
+  <div
+    class="dropdown-trigger"
+    (click)="toggleDropdown()"
+    [class.disabled]="disabled"
+  >
+    <span class="selected-text" [class.placeholder]="!selectedOption">
+      {{ selectedOption?.label || placeholder }}
+    </span>
+    <span class="dropdown-arrow" [class.rotated]="isOpen">▼</span>
+  </div>
+
+  <div class="dropdown-content" *ngIf="isOpen">
+    <div class="search-container" *ngIf="searchable">
+      <input
+        #searchInput
+        type="text"
+        class="search-input"
+        [formControl]="searchControl"
+        [placeholder]="searchPlaceholder"
+        (click)="$event.stopPropagation()"
+      />
+    </div>
+
+    <div class="options-container">
+      <div class="no-options" *ngIf="filteredOptions.length === 0">
+        {{ noOptionsText }}
+      </div>
+
+      <div
+        class="dropdown-option"
+        *ngFor="let option of filteredOptions; trackBy: trackByValue"
+        [class.selected]="isSelected(option)"
+        (click)="selectOption(option)"
+      >
+        {{ option.label }}
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Backdrop to close dropdown when clicking outside -->
+<div class="dropdown-backdrop" *ngIf="isOpen" (click)="closeDropdown()"></div>
