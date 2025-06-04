@@ -1,3 +1,12 @@
 <div class="p-4">
-  <app-data-table></app-data-table>
+  <app-data-table
+    [rows]="formattedDeclarations"
+    [columns]="columns"
+    [actions]="actions"
+    [loading]="isLoading"
+    [loadingMessage]="loadingMessage"
+    defaultSort="createdAt"
+    (actionClick)="onActionClick($event)"
+  >
+  </app-data-table>
 </div>

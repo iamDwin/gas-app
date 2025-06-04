@@ -318,17 +318,27 @@ export class PendingDeclarationsComponent implements OnInit {
     } else {
       this.declarationService
         .declineDeclaration(payload, this.actAction)
-        .subscribe((response) => {
-          // console.log(response);
-          this.isLoading = false;
-          this.toaster.show({
-            title: "Declaration Request",
-            message: `${response.errorMessage}`,
-            type: response.errorCode == "1" ? "error" : "success",
-          });
+        .subscribe({
+          next: (response) => {
+            this.isLoading = false;
+            this.toaster.show({
+              title: "Declaration Request",
+              message: `${response.errorMessage}`,
+              type: response.errorCode == "1" ? "error" : "success",
+            });
+          },
+          error: (error) => {
+            this.toaster.show({
+              title: "Declaration Request",
+              message: `${error.errorMessage}`,
+              type: error.errorCode == "1" ? "error" : "success",
+            });
+          },
+          complete: () => {
+            this.loadPendingDeclarations();
+            this.isLoading = false;
+          },
         });
-      this.loadPendingDeclarations();
-      this.isLoading = false;
     }
   };
 
