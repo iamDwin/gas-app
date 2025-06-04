@@ -5,23 +5,38 @@
 >
   <div drawerContent>
     <form [formGroup]="form" class="space-y-4">
-      <!-- <div>
-        <label class="block text-sm font-light text-gray-700"
-          >Institutions</label
+      <div
+        *ngIf="isGasCompanyAdmin()"
+        class="flex rounded-lg bg-gray-100 p-1 relative"
+      >
+        <!-- Sliding background -->
+        <div
+          class="absolute top-1 bottom-1 w-[calc(50%-4px)] rounded-md bg-primary transition-transform duration-300 ease-out"
+          [style.transform]="
+            'translateX(' + (activeTab === 'self' ? '0' : '100%') + ')'
+          "
+        ></div>
+
+        <!-- Tab buttons -->
+        <button
+          (click)="switchTab('self')"
+          class="flex-1 text-sm font-medium py-2 px-2 rounded-md transition-colors duration-200 relative z-10"
+          [class.text-white]="activeTab === 'self'"
+          [class.text-gray-600]="activeTab !== 'self'"
         >
-        <select
-          formControlName="institutionId"
-          class="mt-1 block w-full min-h-[44px] text-red rounded-xl border-gray-300 shadow-sm focus:border-primary focus:ring-primary sm:text-sm pr-10 border border-[#E9EAEB] shadow-[0px_1px_2px_0px_rgba(10,13,18,0.05)]"
+          Create for Self
+        </button>
+        <button
+          (click)="switchTab('institution')"
+          class="flex-1 text-sm font-medium py-2 px-2 rounded-md transition-colors duration-200 relative z-10"
+          [class.text-white]="activeTab === 'institution'"
+          [class.text-gray-600]="activeTab !== 'institution'"
         >
-          <option
-            *ngFor="let institute of organizations"
-            [value]="institute.code"
-          >
-            {{ institute.name }}
-          </option>
-        </select>
-      </div> -->
-      <div *ngIf="isGasCompanyAdmin()">
+          Create for Institution
+        </button>
+      </div>
+
+      <div *ngIf="activeTab === 'institution' && isGasCompanyAdmin()">
         <label class="block text-sm font-medium text-gray-700">
           Institution <span class="text-red-500">*</span>
         </label>
@@ -32,10 +47,11 @@
           placeholder="Select an institution"
         ></app-institution-dropdown>
       </div>
+
       <div style="display: none" *ngIf="!isGasCompanyAdmin()">
         <label class="block text-sm font-light text-gray-700"
-          >Institution</label
-        >
+          >Institution <span class="text-red-500">*</span>
+        </label>
         <input
           type="text"
           [readOnly]="true"
@@ -45,7 +61,9 @@
         />
       </div>
       <div>
-        <label class="block text-sm font-light text-gray-700">Full Name</label>
+        <label class="block text-sm font-light text-gray-700"
+          >Full Name <span class="text-red-500">*</span></label
+        >
         <input
           type="text"
           formControlName="fullName"
@@ -54,7 +72,9 @@
         />
       </div>
       <div>
-        <label class="block text-sm font-light text-gray-700">User Name</label>
+        <label class="block text-sm font-light text-gray-700"
+          >User Name <span class="text-red-500">*</span></label
+        >
         <input
           type="text"
           formControlName="userName"
@@ -64,7 +84,9 @@
       </div>
 
       <div>
-        <label class="block text-sm font-light text-gray-700">Email</label>
+        <label class="block text-sm font-light text-gray-700"
+          >Email <span class="text-red-500">*</span></label
+        >
         <input
           type="email"
           formControlName="email"
@@ -73,29 +95,15 @@
         />
       </div>
 
-      <!-- <div>
-        <label class="block text-sm font-light text-gray-700">User Type</label>
-        <select
-          formControlName="type"
-          class="mt-1 block w-full min-h-[44px] text-red rounded-xl border-gray-300 shadow-sm focus:border-primary focus:ring-primary sm:text-sm pr-10 border border-[#E9EAEB] shadow-[0px_1px_2px_0px_rgba(10,13,18,0.05)]"
-        >
-          <option value="U">Upstream</option>
-          <option value="M">Midstream</option>
-          <option value="D">Downstream</option>
-        </select>
-      </div> -->
-
       <div>
-        <label class="block text-sm font-light text-gray-700">Role</label>
-        <select
-          formControlName="roleId"
-          placeholder="role ID"
-          class="mt-1 block w-full min-h-[44px] text-red rounded-xl border-gray-300 shadow-sm focus:border-primary focus:ring-primary sm:text-sm pr-10 border border-[#E9EAEB] shadow-[0px_1px_2px_0px_rgba(10,13,18,0.05)]"
+        <label class="block text-sm font-light text-gray-700"
+          >Role <span class="text-red-500">*</span></label
         >
-          <option *ngFor="let role of userRoles" [value]="role.id">
-            {{ role.name }}
-          </option>
-        </select>
+        <app-searchable-dropdown
+          [options]="userRoles"
+          formControlName="roleId"
+          (selectionChange)="onRoleSelected($event)"
+        ></app-searchable-dropdown>
       </div>
     </form>
   </div>

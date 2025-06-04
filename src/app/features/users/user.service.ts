@@ -90,10 +90,12 @@ export class UserService {
     }
 
     let path = "";
-    if (user.type == "M") path = `/admin/user/api/v1/init_create_user`;
-    else if (user.type == "G")
-      path = `/admin/useradmin/api/v1/init_create_user`;
-    else path = `/admin/user/api/v1/init_create_user`;
+
+    if (user.type == "G") {
+      if (userData.for === "self")
+        path = `/admin/useradmin/api/v1/init_create_user`;
+      else path = `/admin/user/api/v1/init_create_user`;
+    } else path = `/admin/user/api/v1/init_create_user`;
 
     return this.http.post<any>(
       `${this.apiUrl}${path}`,

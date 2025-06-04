@@ -16,6 +16,18 @@ import { ToastService } from "../../../shared/services/toast.service";
 import { UserService } from "../user.service";
 import { InstitutionDropdownComponent } from "../../../shared/components/institution-dropdown/institution-dropdown.component";
 import { AuthService } from "../../../core/auth/auth.service";
+import {
+  DropdownOption,
+  SearchableDropdownComponent,
+} from "../../../shared/components/searchable-dropdown/searchable-dropdown.component";
+export interface UserRole {
+  createdBy: string;
+  id: number;
+  institutionId: string;
+  level: number;
+  name: string;
+  weight: number;
+}
 
 @Component({
   selector: "app-user-form",
@@ -26,6 +38,7 @@ import { AuthService } from "../../../core/auth/auth.service";
     DrawerComponent,
     ButtonComponent,
     InstitutionDropdownComponent,
+    SearchableDropdownComponent,
   ],
   templateUrl: "./user-form.component.html",
 })
@@ -35,10 +48,12 @@ export class UserFormComponent {
   @Output() onCancel = new EventEmitter<void>();
   organizations: Organization[] = [];
   selectedInstitution?: Organization;
-  userRoles: any;
+  userRoles: DropdownOption[] = [];
   currentUser: any;
-
+  selectedRole: DropdownOption | null = null;
   form: FormGroup;
+  activeTab: "self" | "institution" = "institution";
+  isAdmin = false;
   // institutions: any;
   constructor(
     private fb: FormBuilder,
@@ -58,11 +73,21 @@ export class UserFormComponent {
     });
 
     this.currentUser = this.authService.getCurrentUser();
+
     if (this.currentUser.type !== "G") {
-      this.form.patchValue({ institutionId: this.currentUser.organizationId });
+      this.form.patchValue({
+        institutionId: this.currentUser?.organizationId,
+        type: this.currentUser?.type,
+      });
     }
     this.loadOrganizations();
     this.getUserRole();
+  }
+
+  ngOnInit() {
+    if (this.user) {
+      this.form.patchValue(this.user);
+    }
   }
 
   loadOrganizations() {
@@ -88,6 +113,23 @@ export class UserFormComponent {
     });
   }
 
+  switchTab(tab: "self" | "institution") {
+    this.activeTab = tab;
+
+    if (tab == "self") {
+      this.form.patchValue({
+        institutionId: "0",
+        type: this.currentUser?.type,
+      });
+    } else {
+      this.form.patchValue({
+        institutionId: "",
+        type: "",
+      });
+      this.selectedInstitution = undefined;
+    }
+  }
+
   isGasCompanyAdmin(): boolean {
     return this.currentUser?.type === "G" && this.currentUser?.role === "admin";
   }
@@ -103,7 +145,10 @@ export class UserFormComponent {
   getUserRole = () => {
     this.userService.getUserRoles().subscribe({
       next: (response: any) => {
-        this.userRoles = response.responses;
+        this.userRoles = response.responses.map((role: UserRole) => ({
+          value: role.id,
+          label: role.name,
+        })) as DropdownOption[];
       },
       error: (error: any) => {
         this.notificationService.addNotification({
@@ -120,15 +165,18 @@ export class UserFormComponent {
     });
   };
 
-  ngOnInit() {
-    if (this.user) {
-      this.form.patchValue(this.user);
-    }
+  onRoleSelected(selectedOption: DropdownOption) {
+    this.selectedRole = selectedOption;
+    this.form.patchValue({ roleId: selectedOption.value });
   }
 
   onSubmit() {
     if (this.form.valid) {
-      this.save.emit(this.form.value);
+      let payload = {
+        ...this.form.value,
+        for: this.activeTab,
+      };
+      this.save.emit(payload);
     }
   }
 }
