@@ -19,7 +19,7 @@ interface Announcement {
 .announcement-container {
   overflow: hidden;
   position: relative;
-  height: 120px; /* Adjust based on your content */
+  height: 100px; /* Adjust based on your content */
 }
 
 .announcement-slide {
