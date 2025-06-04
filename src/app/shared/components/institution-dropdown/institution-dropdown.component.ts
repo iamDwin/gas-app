@@ -90,7 +90,10 @@ export interface Institution {
             <div class="flex-1">
               <div class="font-medium">{{ institution.name }}</div>
               <div class="text-xs text-gray-500">{{ institution.code }}</div>
-              <div class="text-xs text-gray-500">
+              <div
+                *ngIf="institution.type !== 'M'"
+                class="text-xs text-gray-500"
+              >
                 DCV - {{ institution.dcv }}
               </div>
               <div class="text-xs text-gray-500">

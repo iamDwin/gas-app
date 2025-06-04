@@ -98,8 +98,6 @@ export class UserFormComponent {
       institutionId: institution.code,
       type: institution.type,
     });
-
-    console.log(this.form.value);
   }
 
   getUserRole = () => {
