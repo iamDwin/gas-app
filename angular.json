@@ -38,7 +38,7 @@
             }
           },
           "options": {
-            "assets": ["src/assets", "src/favicoc.ico"],
+            "assets": ["src/assets", "src/favicoc.ico", "src/_redirects"],
             "index": "src/index.html",
             "browser": "src/main.ts",
             "outputPath": "dist/demo",
