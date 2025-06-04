@@ -14,7 +14,7 @@ export interface Declaration {
   id: string;
   title: string;
   description: string;
-  status: DeclarationStatus;
+  // status: DeclarationStatus;
   organizationId: string;
   createdBy: string;
   uploadedBy: string;
@@ -33,6 +33,7 @@ export interface Declaration {
   rejectionReason?: string;
   declarationStatus: number;
   nominationStatus: number;
+  status: number;
   periodEndDate: string;
   periodStartDate: string;
   declaredBy: string;

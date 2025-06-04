@@ -229,15 +229,12 @@ export class PendingDeclarationsComponent implements OnInit {
         });
       } else {
         // Create new declaration
-        const newDeclaration: Omit<
-          Declaration,
-          "id" | "createdAt" | "updatedAt"
-        > = {
+        const newDeclaration = {
           ...declarationData,
           organizationId: currentUser?.organizationId || "",
           createdBy: currentUser?.id || "",
           status: "draft",
-        } as Omit<Declaration, "id" | "createdAt" | "updatedAt">;
+        };
 
         // this.declarationService.addDeclaration(newDeclaration);
         this.notificationService.addNotification({
@@ -259,7 +256,6 @@ export class PendingDeclarationsComponent implements OnInit {
     this.showConfirmModal = true;
     this.declarationToActivate = data;
     this.actAction = action;
-    console.log({ data, action }, this.declarationToActivate);
   }
 
   cancelActivate() {

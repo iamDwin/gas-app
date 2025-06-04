@@ -280,7 +280,6 @@ export class PendingNominationsComponent implements OnInit {
     this.showConfirmModal = true;
     this.nominationToActivate = data;
     this.actAction = action;
-    console.log({ data, action }, this.nominationToActivate);
   }
 
   cancelActivate() {
@@ -339,17 +338,26 @@ export class PendingNominationsComponent implements OnInit {
     } else {
       this.nominationService
         .declineNomination(payload, this.actAction)
-        .subscribe((response) => {
-          // console.log(response);
-          this.isLoading = false;
-          this.toaster.show({
-            title: "Declaration Request",
-            message: `${response.errorMessage}`,
-            type: response.errorCode == "1" ? "error" : "success",
-          });
+        .subscribe({
+          next: (response: any) => {
+            this.toaster.show({
+              title: "Nomination Request",
+              message: `${response.errorMessage}`,
+              type: response.errorCode == "1" ? "error" : "success",
+            });
+          },
+          error: (error) => {
+            this.toaster.show({
+              title: "Nomination Request",
+              message: `${error.errorMessage}`,
+              type: error.errorCode == "1" ? "error" : "success",
+            });
+          },
+          complete: () => {
+            this.loadPendingNominations();
+            this.isLoading = false;
+          },
         });
-      this.loadPendingNominations();
-      this.isLoading = false;
     }
   };
 }

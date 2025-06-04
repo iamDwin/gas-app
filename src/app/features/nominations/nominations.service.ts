@@ -66,6 +66,25 @@ export class NominationService {
       .pipe(map((response) => response || []));
   };
 
+  getDeclinedNominations = () => {
+    const user = this.authService.getCurrentUser();
+    let path = "";
+    if (!user) {
+      return new Observable((subscriber) => subscriber.next([]));
+    }
+
+    if (user.type == "M" || user.type == "G")
+      path = `/declaration/api/v1/get_declined_nominations_midstream/${user.name}`;
+    else
+      path = `/declaration/api/v1/get_declined_nominations/${user.organizationId}/${user.name}`;
+
+    return this.http
+      .get<any>(`${this.apiUrl}${path}`, {
+        headers: this.getHeaders(),
+      })
+      .pipe(map((response) => response || []));
+  };
+
   nominate(payload: any): Observable<any | undefined> {
     const user = this.authService.getCurrentUser();
     if (!user) {
@@ -112,9 +131,9 @@ export class NominationService {
     }
     let path = "";
     if (user.type !== "M")
-      path = `/declaration/api/v1/decline_approval_declaration_request?id=${payload.id}&by=${payload.by}&comment=${payload.comment}`;
+      path = `/declaration/api/v1/decline_approval_nomination_declaration_request?id=${payload.id}&by=${payload.by}&comment=${payload.comment}`;
     else
-      path = `/declaration/api/v1/decline_approval_declaration_request?id=${payload.id}&by=${payload.by}&comment=${payload.comment}`;
+      path = `/declaration/api/v1/decline_approval_nomination_declaration_request?id=${payload.id}&by=${payload.by}&comment=${payload.comment}`;
 
     return this.http
       .post<any>(

@@ -70,7 +70,8 @@
               <ng-container
                 *ngIf="
                   col.prop === 'declarationStatus' ||
-                  col.prop === 'nominationStatus'
+                  col.prop === 'nominationStatus' ||
+                  col.prop === 'status'
                 "
               >
                 <span
@@ -83,7 +84,8 @@
               <ng-container
                 *ngIf="
                   col.prop !== 'declarationStatus' &&
-                  col.prop !== 'nominationStatus'
+                  col.prop !== 'nominationStatus' &&
+                  col.prop !== 'status'
                 "
               >
                 {{ row[col.prop] }}

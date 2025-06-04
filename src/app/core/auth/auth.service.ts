@@ -153,7 +153,8 @@ export class AuthService {
 
           this.toastService.show({
             title: "Login Failed",
-            message: errorMessage,
+            message:
+              "There was an error trying sign you in, Please try again, is issue persist, contact support",
             type: "error",
           });
 
