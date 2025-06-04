@@ -10,6 +10,11 @@ import { Organization, CreateOrganizationRequest } from "../organization.model";
 import { DrawerComponent } from "../../../shared/components/drawer/drawer.component";
 import { ButtonComponent } from "../../../shared/components/button/button.component";
 import { AuthService, User } from "../../../core/auth/auth.service";
+import {
+  DropdownOption,
+  SearchableDropdownComponent,
+} from "../../../shared/components/searchable-dropdown/searchable-dropdown.component";
+import { InstitutionDropdownComponent } from "../../../shared/components/institution-dropdown/institution-dropdown.component";
 
 @Component({
   selector: "app-organization-form",
@@ -19,128 +24,10 @@ import { AuthService, User } from "../../../core/auth/auth.service";
     ReactiveFormsModule,
     DrawerComponent,
     ButtonComponent,
+    SearchableDropdownComponent,
+    InstitutionDropdownComponent,
   ],
-  template: `
-    <app-drawer
-      [isOpen]="true"
-      [title]="organization ? 'Edit Organization' : 'Create Institution'"
-      (close)="onCancel.emit()"
-    >
-      <div drawerContent>
-        <form [formGroup]="form" class="space-y-4">
-          <div>
-            <label class="block text-sm font-light text-gray-700">
-              Institution Name <span class="text-red-500">*</span>
-            </label>
-            <input
-              type="text"
-              formControlName="name"
-              placeholder="Institution Name"
-              class="mt-1 block w-full min-h-[44px] rounded-xl border-gray-300 shadow-sm focus:border-primary focus:ring-primary sm:text-sm pr-10 border border-[#E9EAEB] shadow-[0px_1px_2px_0px_rgba(10,13,18,0.05)]"
-            />
-          </div>
-
-          <div>
-            <label class="block text-sm font-light text-gray-700">
-              Institution Email <span class="text-red-500">*</span>
-            </label>
-            <input
-              type="email"
-              formControlName="email"
-              placeholder="Institution Email"
-              class="mt-1 block w-full min-h-[44px] rounded-xl border-gray-300 shadow-sm focus:border-primary focus:ring-primary sm:text-sm pr-10 border border-[#E9EAEB] shadow-[0px_1px_2px_0px_rgba(10,13,18,0.05)]"
-            />
-          </div>
-
-          <div>
-            <label class="block text-sm font-light text-gray-700">
-              Institution Address (optional)
-            </label>
-            <input
-              type="text"
-              formControlName="address"
-              placeholder="Institution Address"
-              class="mt-1 block w-full min-h-[44px] rounded-xl border-gray-300 shadow-sm focus:border-primary focus:ring-primary sm:text-sm pr-10 border border-[#E9EAEB] shadow-[0px_1px_2px_0px_rgba(10,13,18,0.05)]"
-            />
-          </div>
-
-          <div>
-            <label class="block text-sm font-light text-gray-700">
-              Institution Phone (optional)
-            </label>
-            <input
-              type="tel"
-              formControlName="phone"
-              placeholder="Institution Phone Number"
-              class="mt-1 block w-full min-h-[44px] rounded-xl border-gray-300 shadow-sm focus:border-primary focus:ring-primary sm:text-sm pr-10 border border-[#E9EAEB] shadow-[0px_1px_2px_0px_rgba(10,13,18,0.05)]"
-            />
-          </div>
-
-          <div>
-            <label class="block text-sm font-light text-gray-700">
-              Declaration Contractual Volume (DCV) - MMscf
-              <span class="text-red-500">*</span>
-            </label>
-            <input
-              type="number"
-              [min]="0"
-              formControlName="dcv"
-              placeholder=" Declaration Contractual Volume"
-              class="mt-1 block w-full min-h-[44px] rounded-xl border-gray-300 shadow-sm focus:border-primary focus:ring-primary sm:text-sm pr-10 border border-[#E9EAEB] shadow-[0px_1px_2px_0px_rgba(10,13,18,0.05)]"
-            />
-          </div>
-
-          <div>
-            <label class="block text-sm font-light text-gray-700">
-              Institution Type <span class="text-red-500">*</span>
-            </label>
-            <select
-              formControlName="type"
-              class="mt-1 block w-full min-h-[44px] rounded-xl border-gray-300 shadow-sm focus:border-primary focus:ring-primary sm:text-sm pr-10 border border-[#E9EAEB] shadow-[0px_1px_2px_0px_rgba(10,13,18,0.05)]"
-              (change)="onTypeChange($event)"
-            >
-              <option value="D">Downstream</option>
-              <option value="M">Midstream</option>
-              <option value="U">Upstream</option>
-            </select>
-          </div>
-
-          <div *ngIf="showMidstreamDropdown">
-            <label class="block text-sm font-light text-gray-700">
-              Select Midstream Company
-            </label>
-            <!-- [multiple]="true" -->
-            <select
-              formControlName="midstream"
-              class="mt-1 block w-full min-h-[44px] rounded-xl border-gray-300 shadow-sm focus:border-primary focus:ring-primary sm:text-sm pr-10 border border-[#E9EAEB] shadow-[0px_1px_2px_0px_rgba(10,13,18,0.05)]"
-            >
-              <option
-                *ngFor="let company of midStreamOrganisations"
-                [value]="company.code"
-              >
-                {{ company.name }}
-              </option>
-            </select>
-          </div>
-        </form>
-      </div>
-
-      <div drawerFooter>
-        <div class="flex justify-end space-x-3">
-          <app-button variant="default" (click)="onCancel.emit()">
-            Cancel
-          </app-button>
-          <app-button
-            variant="filled"
-            [disabled]="!form.valid"
-            (click)="onSubmit()"
-          >
-            {{ organization ? "Update" : "Create Institution" }}
-          </app-button>
-        </div>
-      </div>
-    </app-drawer>
-  `,
+  templateUrl: "./organization-form.component.html",
 })
 export class OrganizationFormComponent {
   @Input() organization?: Organization;
@@ -151,6 +38,21 @@ export class OrganizationFormComponent {
   midStreamOrganisations: Organization[] = [];
   form: FormGroup;
   showMidstreamDropdown = false;
+  selectedInstitution?: Organization;
+  institutionTypes = [
+    {
+      value: "U",
+      label: "Upstream",
+    },
+    {
+      value: "M",
+      label: "Midstream",
+    },
+    {
+      value: "D",
+      label: "Downstream",
+    },
+  ];
 
   constructor(private fb: FormBuilder, private authService: AuthService) {
     this.form = this.fb.group({
@@ -159,7 +61,7 @@ export class OrganizationFormComponent {
       address: [""],
       phone: [""],
       dcv: [0, [Validators.required, Validators.min(0)]],
-      type: ["M", Validators.required],
+      type: ["", Validators.required],
       midstream: [""],
     });
   }
@@ -169,6 +71,7 @@ export class OrganizationFormComponent {
       this.form.patchValue(this.organization);
     }
 
+    this.updateShowMidstreamDropdown(this.form.value.type);
     this.currentUser = this.authService.getCurrentUser();
 
     if (this.organizations) {
@@ -178,9 +81,15 @@ export class OrganizationFormComponent {
     } else {
       this.midStreamOrganisations = [];
     }
+  }
 
-    // console.log(this.currentUser);
-    // console.log(this.midStreamOrganisations);
+  private updateShowMidstreamDropdown(type: string | null) {
+    this.showMidstreamDropdown = type === "U" || type === "D";
+    if (type === "M") {
+      this.form.patchValue({
+        dcv: 0,
+      });
+    }
   }
 
   isUserAdmin(): boolean {
@@ -199,9 +108,15 @@ export class OrganizationFormComponent {
     );
   }
 
-  onTypeChange(event: Event) {
-    const selectedType = (event.target as HTMLSelectElement).value;
-    this.showMidstreamDropdown = selectedType === "U" || selectedType === "D";
+  onTypeChange(selectedOption: DropdownOption | null) {
+    this.updateShowMidstreamDropdown(selectedOption?.value);
+  }
+
+  onInstitutionSelected(institution: Organization) {
+    this.selectedInstitution = institution;
+    this.form.patchValue({
+      midstream: institution.code,
+    });
   }
 
   onSubmit() {

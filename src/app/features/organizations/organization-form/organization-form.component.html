@@ -1,0 +1,110 @@
+<app-drawer
+  [isOpen]="true"
+  [title]="organization ? 'Edit Organization' : 'Create Institution'"
+  (close)="onCancel.emit()"
+>
+  <div drawerContent>
+    <form [formGroup]="form" class="space-y-4">
+      <div>
+        <label class="block text-sm font-light text-gray-700"
+          >Institution Type:</label
+        >
+        <app-searchable-dropdown
+          formControlName="type"
+          [options]="institutionTypes"
+          placeholder="Select Institution Type"
+          searchPlaceholder="Search..."
+          (selectionChange)="onTypeChange($event)"
+        ></app-searchable-dropdown>
+      </div>
+
+      <div *ngIf="showMidstreamDropdown">
+        <label class="block text-sm font-light text-gray-700">
+          Select Midstream Company
+        </label>
+        <app-institution-dropdown
+          [institutions]="midStreamOrganisations"
+          [selectedInstitution]="selectedInstitution"
+          (institutionSelected)="onInstitutionSelected($event)"
+          placeholder="Select an institution"
+        ></app-institution-dropdown>
+      </div>
+      <div>
+        <label class="block text-sm font-light text-gray-700">
+          Institution Name <span class="text-red-500">*</span>
+        </label>
+        <input
+          type="text"
+          formControlName="name"
+          placeholder="Institution Name"
+          class="mt-1 block w-full min-h-[44px] rounded-xl border-gray-300 shadow-sm focus:border-primary focus:ring-primary sm:text-sm pr-10 border border-[#E9EAEB] shadow-[0px_1px_2px_0px_rgba(10,13,18,0.05)]"
+        />
+      </div>
+
+      <div>
+        <label class="block text-sm font-light text-gray-700">
+          Institution Email <span class="text-red-500">*</span>
+        </label>
+        <input
+          type="email"
+          formControlName="email"
+          placeholder="Institution Email"
+          class="mt-1 block w-full min-h-[44px] rounded-xl border-gray-300 shadow-sm focus:border-primary focus:ring-primary sm:text-sm pr-10 border border-[#E9EAEB] shadow-[0px_1px_2px_0px_rgba(10,13,18,0.05)]"
+        />
+      </div>
+
+      <div>
+        <label class="block text-sm font-light text-gray-700">
+          Institution Address (optional)
+        </label>
+        <input
+          type="text"
+          formControlName="address"
+          placeholder="Institution Address"
+          class="mt-1 block w-full min-h-[44px] rounded-xl border-gray-300 shadow-sm focus:border-primary focus:ring-primary sm:text-sm pr-10 border border-[#E9EAEB] shadow-[0px_1px_2px_0px_rgba(10,13,18,0.05)]"
+        />
+      </div>
+
+      <div>
+        <label class="block text-sm font-light text-gray-700">
+          Institution Phone (optional)
+        </label>
+        <input
+          type="tel"
+          formControlName="phone"
+          placeholder="Institution Phone Number"
+          class="mt-1 block w-full min-h-[44px] rounded-xl border-gray-300 shadow-sm focus:border-primary focus:ring-primary sm:text-sm pr-10 border border-[#E9EAEB] shadow-[0px_1px_2px_0px_rgba(10,13,18,0.05)]"
+        />
+      </div>
+
+      <div *ngIf="showMidstreamDropdown">
+        <label class="block text-sm font-light text-gray-700">
+          Declaration Contractual Volume (DCV) - MMscf
+          <span class="text-red-500">*</span>
+        </label>
+        <input
+          type="number"
+          [min]="0"
+          formControlName="dcv"
+          placeholder="Declaration Contractual Volume"
+          class="mt-1 block w-full min-h-[44px] rounded-xl border-gray-300 shadow-sm focus:border-primary focus:ring-primary sm:text-sm pr-10 border border-[#E9EAEB] shadow-[0px_1px_2px_0px_rgba(10,13,18,0.05)]"
+        />
+      </div>
+    </form>
+  </div>
+
+  <div drawerFooter>
+    <div class="flex justify-end space-x-3">
+      <app-button variant="default" (click)="onCancel.emit()">
+        Cancel
+      </app-button>
+      <app-button
+        variant="filled"
+        [disabled]="!form.valid"
+        (click)="onSubmit()"
+      >
+        {{ organization ? "Update" : "Create Institution" }}
+      </app-button>
+    </div>
+  </div>
+</app-drawer>
