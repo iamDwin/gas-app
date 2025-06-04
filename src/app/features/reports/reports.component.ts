@@ -17,7 +17,7 @@ import { ToastService } from "../../shared/services/toast.service";
 @Component({
   selector: "app-reports",
   standalone: true,
-  imports: [CommonModule, FormsModule, DataTableComponent, ButtonComponent],
+  imports: [CommonModule, FormsModule, DataTableComponent],
   templateUrl: "./reports.component.html",
 })
 export class ReportsComponent implements OnInit {
@@ -81,21 +81,19 @@ export class ReportsComponent implements OnInit {
   // Sample data structure for each report type
 
   dailyColumns = [
-    // { prop: "requestId", name: "#" },
-    { prop: "institutionCode", name: "# Code" },
     { prop: "institutionName", name: "Institution" },
     { prop: "declaredQuantity", name: "DCV (MMscf)" },
+    { prop: "type", name: "Institution Type" },
     { prop: "date", name: "Date" },
     // { prop: "status", name: "Status" },
     { prop: "actions", name: "Actions", sortable: false },
   ];
 
   declarationColumns = [
-    { prop: "id", name: "#" },
-    { prop: "institutionCode", name: "# Code" },
     { prop: "institutionName", name: "Institution" },
     { prop: "declaredQuantity", name: "DCV (MMscf)" },
     { prop: "currentAgreedDcv", name: "Declared DCV (MMscf)" },
+    { prop: "type", name: "Institution Type" },
     { prop: "periodStartDate", name: "From" },
     { prop: "periodEndDate", name: "To" },
     // { prop: "status", name: "Status" },
@@ -103,11 +101,10 @@ export class ReportsComponent implements OnInit {
   ];
 
   nominationColumns = [
-    { prop: "id", name: "#" },
-    { prop: "institutionCode", name: "# Code" },
     { prop: "institutionName", name: "Institution" },
     { prop: "declaredQuantity", name: "DCV (MMscf)" },
     { prop: "currentAgreedDcv", name: "Nominated DCV (MMscf)" },
+    { prop: "type", name: "Institution Type" },
     { prop: "periodStartDate", name: "From" },
     { prop: "periodEndDate", name: "To" },
     // { prop: "status", name: "Status" },
@@ -430,5 +427,13 @@ export class ReportsComponent implements OnInit {
       default:
         return "Unknown Status";
     }
+  }
+
+  formatDate(date: string): string {
+    return new Date(date).toLocaleDateString("en-US", {
+      year: "numeric",
+      month: "short",
+      day: "numeric",
+    });
   }
 }

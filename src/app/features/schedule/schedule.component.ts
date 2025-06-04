@@ -34,6 +34,7 @@ export class ScheduleComponent implements OnInit {
     { prop: "institutionCode", name: "# Code" },
     { prop: "institutionName", name: "Institution" },
     { prop: "declaredQuantity", name: "DCV (MMscf)" },
+    { prop: "type", name: "Institution Type" },
     { prop: "status", name: "Status" },
     { prop: "actions", name: "Actions", sortable: false },
   ];

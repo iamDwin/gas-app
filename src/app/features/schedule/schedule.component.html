@@ -83,6 +83,11 @@
             <th
               class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
             >
+              Institution Type
+            </th>
+            <th
+              class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+            >
               Status
             </th>
             <th
@@ -115,6 +120,18 @@
               />
               <!-- [(ngModel)]="editedQuantity" -->
               <!-- (input)="updateQuantity($event, day.date || '')" -->
+            </td>
+
+            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+              {{
+                day.type === "U"
+                  ? "Upstream"
+                  : day.type === "D"
+                  ? "Downstream"
+                  : day.type === "M"
+                  ? "Midstream"
+                  : "Unknowns"
+              }}
             </td>
 
             <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
