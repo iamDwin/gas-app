@@ -26,15 +26,17 @@
 
     <!-- Date Picker -->
     <div class="flex items-center gap-4">
-      <!-- <div class="flex items-center gap-2">
-        <label class="text-sm text-gray-600">From:</label>
-        <input
+      <div class="flex items-center gap-2">
+        <!-- <label class="text-sm text-gray-600">From:</label> -->
+
+        <!-- <input
           type="date"
           disabled="true"
           [(ngModel)]="tempStartDate"
           class="px-3 py-2 border border-gray-300 rounded-xl text-sm block w-full min-h-[40px] rounded-xl border-gray-300 shadow-sm focus:border-primary focus:ring-primary sm:text-sm border border-[#E9EAEB] shadow-[0px_1px_2px_0px_rgba(10,13,18,0.05)]"
-        />
-      </div> -->
+        /> -->
+      </div>
+
       <div class="flex items-center gap-2">
         <label class="text-sm text-gray-600">Date: </label>
         <input
@@ -56,5 +58,39 @@
     [loadingMessage]="isloadingMessage"
     (actionClick)="onActionClick($event)"
   >
+    <div tableActions>
+      <div class="flex gap-2" *ngIf="isGasCompanyAdmin()">
+        <app-institution-dropdown
+          [institutions]="organizations"
+          [selectedInstitution]="selectedInstitution"
+          (institutionSelected)="onInstitutionSelected($event)"
+          placeholder="Filter by Institution"
+        ></app-institution-dropdown>
+
+        <app-button
+          [disabled]="!isFilterApplied"
+          variant="semiFilledDanger"
+          (click)="resetFilter()"
+        >
+          Reset
+
+          <svg
+            class="ml-4"
+            width="20"
+            height="20"
+            viewBox="0 0 20 20"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              d="M1.66666 11.6667C1.66666 11.6667 1.76776 12.3744 4.6967 15.3033C7.62563 18.2322 12.3744 18.2322 15.3033 15.3033C16.341 14.2656 17.0111 12.9994 17.3135 11.6667M1.66666 11.6667V16.6667M1.66666 11.6667H6.66666M18.3333 8.33333C18.3333 8.33333 18.2322 7.62563 15.3033 4.6967C12.3744 1.76777 7.62563 1.76777 4.6967 4.6967C3.65897 5.73443 2.98891 7.0006 2.68652 8.33333M18.3333 8.33333V3.33333M18.3333 8.33333H13.3333"
+              stroke="#414651"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
+          </svg>
+        </app-button>
+      </div>
+    </div>
   </app-data-table>
 </div>

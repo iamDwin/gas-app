@@ -76,7 +76,7 @@ export class ReportService {
       .pipe(map((response) => response || []));
   }
 
-  getApprovadSchedules(): Observable<Declaration[]> {
+  getApprovadSchedules(date?: any): Observable<Declaration[]> {
     const user = this.authService.getCurrentUser();
     let path = "";
     if (!user) {
@@ -84,8 +84,9 @@ export class ReportService {
     }
 
     if (user.type == "M" || user.type == "G")
-      path = `get_approved_declarations_midstream/${user.name}`;
-    else path = `get_approved_declarations/${user.organizationId}/${user.name}`;
+      path = `get_schedules_by_date/${date}/${user.name}`;
+    else
+      path = `get_schedules_by_institution/${user.organizationId}/${user.name}`;
 
     return this.http
       .get<any>(`${this.apiUrl}/declaration/api/v1/${path}`, {

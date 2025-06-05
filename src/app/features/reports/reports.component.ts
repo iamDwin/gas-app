@@ -1,3 +1,4 @@
+import { OrganizationService } from "./../organizations/organization.service";
 import { Component, OnInit } from "@angular/core";
 import { CommonModule } from "@angular/common";
 import { FormsModule } from "@angular/forms";
@@ -13,11 +14,21 @@ import { ReportService } from "./report.service";
 import { Router } from "@angular/router";
 import { saveAs } from "file-saver";
 import { ToastService } from "../../shared/services/toast.service";
+import { SearchableDropdownComponent } from "../../shared/components/searchable-dropdown/searchable-dropdown.component";
+import { InstitutionDropdownComponent } from "../../shared/components/institution-dropdown/institution-dropdown.component";
+import { Organization } from "../organizations/organization.model";
+import { NotificationService } from "../../shared/services/notification.service";
 
 @Component({
   selector: "app-reports",
   standalone: true,
-  imports: [CommonModule, FormsModule, DataTableComponent],
+  imports: [
+    CommonModule,
+    FormsModule,
+    DataTableComponent,
+    InstitutionDropdownComponent,
+    ButtonComponent,
+  ],
   templateUrl: "./reports.component.html",
 })
 export class ReportsComponent implements OnInit {
@@ -25,9 +36,9 @@ export class ReportsComponent implements OnInit {
   tabs = [
     {
       id: "daily",
-      label: "Daily Reports",
+      label: "Daily/Schedule Reports",
       showFor: ["U", "D", "M", "G"],
-      disabled: false,
+      disabled: true,
     },
     {
       id: "declarations",
@@ -41,12 +52,12 @@ export class ReportsComponent implements OnInit {
       showFor: ["D", "M", "G"],
       disabled: false,
     },
-    {
-      id: "schedule",
-      label: "Schedule Reports",
-      showFor: ["U", "D", "M", "G"],
-      disabled: false,
-    },
+    // {
+    //   id: "schedule",
+    //   label: "Schedule Reports",
+    //   showFor: ["U", "D", "M", "G"],
+    //   disabled: false,
+    // },
   ];
 
   get shouldShowViewDetails(): boolean {
@@ -57,9 +68,9 @@ export class ReportsComponent implements OnInit {
     {
       label: "Download Report",
       type: "success",
-      isDisabled: (row: any) => {
-        return this.activeTab === "daily";
-      },
+      // isDisabled: (row: any) => {
+      //   return this.activeTab === "daily";
+      // },
     },
     {
       label: "View Details",
@@ -77,6 +88,8 @@ export class ReportsComponent implements OnInit {
   tempEndDate: string = "";
   isLoading = false;
   isloadingMessage = "Loading";
+  organizations: Organization[] = [];
+  selectedInstitution?: Organization;
 
   // Sample data structure for each report type
 
@@ -125,13 +138,19 @@ export class ReportsComponent implements OnInit {
   nominationData: any[] = [];
   dailyData: any[] = [];
   scheduleData: any[] = [];
+  currentUser: any;
+  filteredData: any[] = [];
+  isFilterApplied: boolean = false;
 
   constructor(
     private breadcrumbService: BreadcrumbService,
     private authService: AuthService,
     private reportService: ReportService,
     private router: Router,
-    private toaster: ToastService
+    private toaster: ToastService,
+    private organService: OrganizationService,
+    private notificationService: NotificationService,
+    private toastService: ToastService
   ) {
     // Set default dates to current month
     const today = new Date();
@@ -144,11 +163,12 @@ export class ReportsComponent implements OnInit {
     this.tempEndDate = this.endDate;
 
     // Get user type
-    const user = this.authService.getCurrentUser();
-    this.userType = user?.type || "";
+    this.currentUser = this.authService.getCurrentUser();
+    this.userType = this.currentUser?.type || "";
 
     // Set initial active tab based on user type
     this.setInitialActiveTab();
+    this.loadOrganizations();
   }
 
   ngOnInit() {
@@ -156,6 +176,48 @@ export class ReportsComponent implements OnInit {
       { label: "Reports", link: "/reports" },
     ]);
     this.loadData();
+  }
+
+  loadOrganizations() {
+    // this.isLoading = true;
+    this.organService.getOrganizations().subscribe({
+      next: (orgs) => {
+        this.organizations = orgs;
+        // this.isLoading = false;
+      },
+      error: (error) => {
+        this.notificationService.addNotification({
+          title: "Organization Request",
+          message: "Failed To Get Institutions, Please Try Again",
+          type: "error",
+        });
+        this.toastService.show({
+          title: "Organization Request",
+          message: "Failed To Get Institutions, Please Try Again",
+          type: "error",
+        });
+        // this.isLoading = false;
+      },
+    });
+  }
+
+  isGasCompanyAdmin(): boolean {
+    return this.currentUser?.type === "G" && this.currentUser?.role === "admin";
+  }
+
+  onInstitutionSelected(institution: Organization) {
+    this.selectedInstitution = institution;
+    let currentDataa = this.currentData;
+    this.filteredData = currentDataa.filter(
+      (data) => data.institutionCode === institution.code
+    );
+    this.isFilterApplied = true;
+  }
+
+  resetFilter() {
+    this.filteredData = [];
+    this.isFilterApplied = false;
+    this.selectedInstitution = undefined;
   }
 
   get visibleTabs() {
@@ -183,6 +245,9 @@ export class ReportsComponent implements OnInit {
   }
 
   get currentData() {
+    if (this.isFilterApplied) {
+      return this.filteredData;
+    }
     switch (this.activeTab) {
       case "daily":
         return this.dailyData;
@@ -233,13 +298,13 @@ export class ReportsComponent implements OnInit {
 
   getActions(): TableAction[] {
     switch (this.activeTab) {
-      case "daily":
-        return [
-          {
-            label: "Download Report",
-            type: "success",
-          },
-        ];
+      // case "daily":
+      //   return [
+      //     {
+      //       label: "Download Report",
+      //       type: "success",
+      //     },
+      //   ];
       case "declarations":
         return [
           {
@@ -284,7 +349,6 @@ export class ReportsComponent implements OnInit {
       case "daily":
         this.reportService.getDailyReport(this.startDate).subscribe({
           next: (data: any) => {
-            console.log({ data });
             this.dailyData = data;
             this.isLoading = false;
           },
@@ -322,7 +386,7 @@ export class ReportsComponent implements OnInit {
         break;
 
       case "schedule":
-        this.reportService.getApprovadSchedules().subscribe({
+        this.reportService.getApprovadSchedules(this.tempEndDate).subscribe({
           next: (data: any) => {
             this.nominationData = data;
             this.isLoading = false;
@@ -337,7 +401,6 @@ export class ReportsComponent implements OnInit {
   }
 
   onActionClick(event: { action: TableAction; row: Declaration }) {
-    console.log("Action clicked:", event.action.label);
     switch (event.action.label) {
       case "View Details":
         this.router.navigate(["/reports", event.row.requestId]);
@@ -353,10 +416,9 @@ export class ReportsComponent implements OnInit {
   downloadReport(data: any) {
     this.isLoading = true;
     this.isloadingMessage = "Downloading Report";
-    const requestId = data.declarationId;
+    const requestId = data.requestId;
     this.reportService.downloadReport2(requestId).subscribe({
       next: (response) => {
-        console.log(response);
         this.downLoadFile(response, "declaration");
         this.toaster.show({
           title: "Download Report",
@@ -377,11 +439,6 @@ export class ReportsComponent implements OnInit {
     });
   }
 
-  /**
-   * Method is use to download file.
-   * @param data - Array Buffer data
-   * @param type - type of the document.
-   */
   downLoadFile(data: any, product: any) {
     let binaryData = [];
     binaryData.push(data);
