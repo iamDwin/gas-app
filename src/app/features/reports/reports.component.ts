@@ -35,12 +35,6 @@ export class ReportsComponent implements OnInit {
   userType: string = "";
   tabs = [
     {
-      id: "daily",
-      label: "Daily/Schedule Reports",
-      showFor: ["U", "D", "M", "G"],
-      disabled: true,
-    },
-    {
       id: "declarations",
       label: "Declaration Reports",
       showFor: ["U", "M", "G"],
@@ -50,6 +44,12 @@ export class ReportsComponent implements OnInit {
       id: "nominations",
       label: "Nomination Reports",
       showFor: ["D", "M", "G"],
+      disabled: false,
+    },
+    {
+      id: "daily",
+      label: "Daily/Schedule Reports",
+      showFor: ["U", "D", "M", "G"],
       disabled: false,
     },
     // {
@@ -298,13 +298,13 @@ export class ReportsComponent implements OnInit {
 
   getActions(): TableAction[] {
     switch (this.activeTab) {
-      // case "daily":
-      //   return [
-      //     {
-      //       label: "Download Report",
-      //       type: "success",
-      //     },
-      //   ];
+      case "daily":
+        return [
+          {
+            label: "Download Report",
+            type: "success",
+          },
+        ];
       case "declarations":
         return [
           {
@@ -413,13 +413,41 @@ export class ReportsComponent implements OnInit {
     }
   }
 
+  downLoadAll(tab: string) {
+    console.log({ tab });
+    this.isLoading = true;
+    this.isloadingMessage = "Downloading Report";
+    this.reportService
+      .downloadAllReport(this.startDate, this.endDate, tab)
+      .subscribe({
+        next: (response) => {
+          this.downLoadFile(response, `All ${this.activeTab} Report`);
+          this.toaster.show({
+            title: "Download Report",
+            message: "Report generated and downloaded successfully",
+            type: "success",
+          });
+        },
+        error: (error) => {
+          this.toaster.show({
+            title: "Download Error",
+            message: "Failed to download the report",
+            type: "error",
+          });
+        },
+        complete: () => {
+          this.isLoading = false;
+        },
+      });
+  }
+
   downloadReport(data: any) {
     this.isLoading = true;
     this.isloadingMessage = "Downloading Report";
     const requestId = data.requestId;
     this.reportService.downloadReport2(requestId).subscribe({
       next: (response) => {
-        this.downLoadFile(response, "declaration");
+        this.downLoadFile(response, this.activeTab);
         this.toaster.show({
           title: "Download Report",
           message: "Report generated and downloaded successfully",

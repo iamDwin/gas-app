@@ -28,7 +28,7 @@ export interface Institution {
             [value]="selectedInstitution?.name || ''"
             [placeholder]="placeholder"
             readonly
-            class="w-full h-11 px-4 rounded-md border border-gray-300 bg-white text-gray-900 cursor-pointer focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
+            class="w-full h-1- px-4 rounded-xl border border-gray-300 bg-white text-gray-900 cursor-pointer focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
           />
           <div
             class="absolute inset-y-0 right-0 flex items-center pr-2 pointer-events-none"
@@ -51,7 +51,7 @@ export interface Institution {
       <!-- Dropdown -->
       <div
         *ngIf="isOpen"
-        class="absolute z-50 w-full mt-1 bg-white rounded-md shadow-lg max-h-60 overflow-auto border border-gray-200"
+        class="absolute z-50 w-full mt-1 bg-white rounded-xl shadow-lg max-h-60 overflow-auto border border-gray-200"
       >
         <!-- Search -->
         <div class="sticky top-0 bg-white border-b border-gray-200 p-2">

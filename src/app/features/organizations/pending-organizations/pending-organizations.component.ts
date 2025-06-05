@@ -37,7 +37,7 @@ export class PendingOrganizationsComponent implements OnInit {
 
   columns = [
     { prop: "name", name: "Name" },
-    { prop: "code", name: "Code" },
+    // { prop: "code", name: "Code" },
     { prop: "email", name: "Email" },
     { prop: "phone", name: "Phone" },
     { prop: "address", name: "Address" },

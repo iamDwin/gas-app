@@ -118,6 +118,30 @@ export class ReportService {
       .pipe(map((response) => response));
   }
 
+  downloadAllReport(startDate: string, endDate: string, tab?: string) {
+    const user = this.authService.getCurrentUser();
+    if (!user) {
+      return new Observable((subscriber) => subscriber.next([]));
+    }
+    let url =
+      user.type == "M" || user.type == "G"
+        ? `/declaration/api/v1/export_scheduling_report_downstream/${startDate}/${user.name}`
+        : `/declaration/api/v1/export_declaration_report_midstream/${startDate}/${endDate}/${user.name}`;
+    const payload = {
+      startDate: startDate,
+      endDate: endDate,
+      username: user.name,
+    };
+
+    return this.http
+      .post(
+        `${this.apiUrl}${url}`,
+        { ...payload },
+        { responseType: "arraybuffer", headers: this.getHeaders() }
+      )
+      .pipe(map((response) => response));
+  }
+
   downloadReport(id: string): Observable<any> {
     const user = this.authService.getCurrentUser();
     if (!user) {
